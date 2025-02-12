@@ -16,9 +16,9 @@ set(TS_FILES MainWindow_en_US.ts)
 
 set(PROJECT_SOURCES
         main.cpp
-        widget.cpp
-        widget.h
-        widget.ui
+
+
+
         ${TS_FILES}
 )
 
@@ -31,6 +31,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         mainwindow.ui
         bottombar.h bottombar.cpp
         projectlist.h projectlist.cpp
+        applicationwindow.h applicationwindow.cpp
+        projectitem.h projectitem.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET MainWindow APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

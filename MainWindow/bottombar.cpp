@@ -1,5 +1,4 @@
 #include "bottombar.h"
-#include "widget.h"
 #include <QColor>
 #include <QHBoxLayout>
 #include <QPalette>
@@ -8,9 +7,9 @@
 #include <QWidget>
 #include <string>
 
-BottomBar::BottomBar(Widget *parent_, std::string username_,
+BottomBar::BottomBar(QWidget *parent_, std::string username_,
                      std::string project_name_)
-    : Widget(parent_), main_layout(new QHBoxLayout()),
+    : QWidget(parent_), main_layout(new QHBoxLayout()),
       username(new QLabel(username_.c_str())),
       project_name(new QLabel(project_name_.c_str())), palette(new QPalette) {
   palette->setColor(QPalette::Window, QColor(64, 64, 64));

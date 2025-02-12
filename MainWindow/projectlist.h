@@ -1,15 +1,13 @@
 #ifndef PROJECTLIST_H
 #define PROJECTLIST_H
 
+#include <QListWidget>
 #include <QWidget>
-#include<QListWidget>
-#include"widget.h"
 
-class ProjectList : public QListWidget
-{
-    Q_OBJECT
+class ProjectList : public QListWidget {
+  Q_OBJECT
 public:
-    explicit ProjectList(Widget *parent = nullptr);
+  explicit ProjectList(QWidget *parent = nullptr);
 
 signals:
 };
