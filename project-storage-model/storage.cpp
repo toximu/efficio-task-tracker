@@ -1,29 +1,31 @@
 #include "storage.hpp"
 
-void Storage::AddProject(const Project& project) {
-    projects.push_back(project);
+namespace project_storage_model {
+
+void Storage::add_project(const Project &project) {
+  projects_.push_back(project);
 }
 
-void Storage::RemoveProject(int projectId) {
-    projects.erase(std::remove_if(projects.begin(), projects.end(), [projectId](const Project& project) {
-        return project.GetId() == projectId;
-    }), projects.end());
+void Storage::remove_project(int project_id) {
+  projects_.erase(std::remove_if(projects_.begin(), projects_.end(),
+                                 [project_id](const Project &project) {
+                                   return project.get_id() == project_id;
+                                 }),
+                  projects_.end());
 }
 
-const std::vector<Project>& Storage::GetProjects() const {
-    return projects;
+const std::vector<Project> &Storage::get_projects() const { return projects_; }
+
+void Storage::add_user(const User &user) { users_.push_back(user); }
+
+void Storage::remove_user(int user_id) {
+  users_.erase(std::remove_if(users_.begin(), users_.end(),
+                              [user_id](const User &user) {
+                                return user.get_id() == user_id;
+                              }),
+               users_.end());
 }
 
-void Storage::AddUser(const User& user) {
-    users.push_back(user);
-}
+const std::vector<User> &Storage::get_users() const { return users_; }
 
-void Storage::RemoveUser(int userId) {
-    users.erase(std::remove_if(users.begin(), users.end(), [userId](const User& user) {
-        return user.GetId() == userId;
-    }), users.end());
-}
-
-const std::vector<User>& Storage::GetUsers() const {
-    return users;
-}
+} // namespace project_storage_model

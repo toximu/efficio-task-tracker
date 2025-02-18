@@ -1,36 +1,26 @@
 #include "note.hpp"
 
-Note::Note(int id, const std::string& title, const std::string& text)
-    : id(id), title(title), text(text) {}
+namespace project_storage_model {
 
-int Note::GetId() const {
-    return id;
+Note::Note(int id, const std::string &title, const std::string &text)
+    : id_(id), title_(title), text_(text) {}
+
+int Note::get_id() const { return id_; }
+
+const std::string &Note::get_title() const { return title_; }
+
+const std::string &Note::get_text() const { return text_; }
+
+const std::vector<std::string> &Note::get_tags() const { return tags_; }
+
+void Note::set_title(const std::string &title) { this->title_ = title; }
+
+void Note::set_text(const std::string &text) { this->text_ = text; }
+
+void Note::add_tag(const std::string &tag) { tags_.push_back(tag); }
+
+void Note::remove_tag(const std::string &tag) {
+  tags_.erase(std::remove(tags_.begin(), tags_.end(), tag), tags_.end());
 }
 
-const std::string& Note::GetTitle() const {
-    return title;
-}
-
-const std::string& Note::GetText() const {
-    return text;
-}
-
-const std::vector<std::string>& Note::GetTags() const {
-    return tags;
-}
-
-void Note::SetTitle(const std::string& title) {
-    this->title = title;
-}
-
-void Note::SetText(const std::string& text) {
-    this->text = text;
-}
-
-void Note::AddTag(const std::string& tag) {
-    tags.push_back(tag);
-}
-
-void Note::RemoveTag(const std::string& tag) {
-    tags.erase(std::remove(tags.begin(), tags.end(), tag), tags.end());
-}
+} // namespace project_storage_model

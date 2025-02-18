@@ -1,26 +1,24 @@
 #include "user.hpp"
 
-User::User(int id, const std::string& username)
-    : id(id), username(username) {}
+namespace project_storage_model {
 
-int User::GetId() const {
-    return id;
+User::User(int id, const std::string &username)
+    : id_(id), username_(username) {}
+
+int User::get_id() const { return id_; }
+
+const std::string &User::get_username() const { return username_; }
+
+const std::vector<Project> &User::get_projects() const { return projects_; }
+
+void User::add_project(const Project &project) { projects_.push_back(project); }
+
+void User::remove_project(int project_id) {
+  projects_.erase(std::remove_if(projects_.begin(), projects_.end(),
+                                 [project_id](const Project &project) {
+                                   return project.get_id() == project_id;
+                                 }),
+                  projects_.end());
 }
 
-const std::string& User::GetUsername() const {
-    return username;
-}
-
-const std::vector<Project>& User::GetProjects() const {
-    return projects;
-}
-
-void User::AddProject(const Project& project) {
-    projects.push_back(project);
-}
-
-void User::RemoveProject(int projectId) {
-    projects.erase(std::remove_if(projects.begin(), projects.end(), [projectId](const Project& project) {
-        return project.GetId() == projectId;
-    }), projects.end());
-}
+} // namespace project_storage_model

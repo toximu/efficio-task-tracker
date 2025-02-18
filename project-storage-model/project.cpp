@@ -1,34 +1,31 @@
 #include "project.hpp"
 
-Project::Project(int id, const std::string& name, const std::string& description)
-    : id(id), name(name), description(description) {}
+namespace project_storage_model {
 
-int Project::GetId() const {
-    return id;
+Project::Project(int id, const std::string &name,
+                 const std::string &description)
+    : id_(id), name_(name), description_(description) {}
+
+int Project::get_id() const { return id_; }
+
+const std::string &Project::get_name() const { return name_; }
+
+const std::string &Project::get_description() const { return description_; }
+
+const std::vector<Note> &Project::get_notes() const { return notes_; }
+
+void Project::add_note(const Note &note) { notes_.push_back(note); }
+
+void Project::remove_note(int note_id) {
+  notes_.erase(std::remove_if(notes_.begin(), notes_.end(),
+                              [note_id](const Note &note) {
+                                return note.get_id() == note_id;
+                              }),
+               notes_.end());
 }
 
-const std::string& Project::GetName() const {
-    return name;
+void Project::edit_description(const std::string &description) {
+  this->description_ = description;
 }
 
-const std::string& Project::GetDescription() const {
-    return description;
-}
-
-const std::vector<Note>& Project::GetNotes() const {
-    return notes;
-}
-
-void Project::AddNote(const Note& note) {
-    notes.push_back(note);
-}
-
-void Project::RemoveNote(int noteId) {
-    notes.erase(std::remove_if(notes.begin(), notes.end(), [noteId](const Note& note) {
-        return note.GetId() == noteId;
-    }), notes.end());
-}
-
-void Project::EditDescription(const std::string& description) {
-    this->description = description;
-}
+} // namespace project_storage_model

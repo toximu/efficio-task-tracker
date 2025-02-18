@@ -15,6 +15,7 @@
 build/
 bin/
 out/
+gch/
 debug/
 release/
 
