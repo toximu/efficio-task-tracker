@@ -1,1 +1,65 @@
-/.idea
+# Файлы сборки и бинарные артефакты
+build
+build-*
+*/build-*
+release/
+debug/
+*.exe
+*.dll
+*.so
+*.a
+*.lib
+*.o
+*.obj
+*.app
+
+# Автогенерируемые файлы Qt
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+*.moc
+*.qm
+
+# Специфичные для Qt файлы
+.qmake.stash
+*.pro.user
+*.pro.user.*
+
+# Системы сборки (qmake, CMake)
+Makefile
+Makefile.*
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CMakeLists.txt.user
+
+# IDE и редакторы
+.idea/
+.vs/
+.vscode/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.code-workspace
+
+# Временные файлы и кэши
+*~
+*.bak
+*.swp
+*.swo
+*.core
+*.cache
+
+# Специфичные для ОС файлы
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Документация и тестовые данные
+doc/api/
+*.log
+*.out
+
+# Исключение локальных настроек (если есть)
+local.properties
