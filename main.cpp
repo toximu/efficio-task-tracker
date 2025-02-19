@@ -1,7 +1,7 @@
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
-#include "note_edit_window.h"
+#include "note_edit_dialog.h"
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
             break;
         }
     }
-    NoteEditWindow w;
+    NoteEditDialog w;
     w.show();
     return a.exec();
 }

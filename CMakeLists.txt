@@ -16,9 +16,9 @@ set(TS_FILES NoteWidgetEfficio_ru_RU.ts)
 
 set(PROJECT_SOURCES
         main.cpp
-        note_edit_window.cpp
-        note_edit_window.h
-        note_edit_window.ui
+        note_edit_dialog.cpp
+        note_edit_dialog.h
+        note_edit_dialog.ui
         ${TS_FILES}
 )
 
@@ -27,6 +27,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         .clang-format
+        style_sheet.h
+
+
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET NoteWidgetEfficio APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
