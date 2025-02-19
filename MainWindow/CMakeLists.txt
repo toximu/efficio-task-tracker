@@ -33,6 +33,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         projectlist.h projectlist.cpp
         applicationwindow.h applicationwindow.cpp
         projectitem.h projectitem.cpp
+        mainwindowstylesheet.qss
+        notelist.h notelist.cpp
+        notewidget.h notewidget.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET MainWindow APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

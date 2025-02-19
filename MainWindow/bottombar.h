@@ -10,7 +10,6 @@ class BottomBar : public QWidget {
   QHBoxLayout *main_layout;
   QLabel *project_name;
   QLabel *username;
-  QPalette *palette;
 
 public:
   BottomBar(QWidget *parent_, std::string username_, std::string project_name_);

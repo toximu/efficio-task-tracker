@@ -12,7 +12,7 @@ class ProjectItem : public QListWidgetItem {
   Project *project;
 
 public:
-  ProjectItem(std::string text,QListWidget *listview);
+  ProjectItem(std::string text, QListWidget *listview);
 };
 
 #endif // PROJECTITEM_H

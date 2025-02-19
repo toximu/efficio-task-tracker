@@ -30,4 +30,6 @@ int main(int argc, char *argv[]) {
   app_window->show();
   return a.exec();
   delete app_window;
+
+  return 0;
 }
