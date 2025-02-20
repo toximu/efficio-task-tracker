@@ -6,6 +6,7 @@ void Storage::add_project(const Project &project) {
   projects_.push_back(project);
 }
 
+
 void Storage::remove_project(int project_id) {
   projects_.erase(std::remove_if(projects_.begin(), projects_.end(),
                                  [project_id](const Project &project) {
