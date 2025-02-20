@@ -10,8 +10,9 @@ NoteEditDialog::NoteEditDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::NoteEditDialog) {
     ui->setupUi(this);
 
-    setFixedSize(700, 500);
-    setStyleSheet(Ui::style_sheet);
+    setFixedSize(700, 480);
+    setStyleSheet(Ui::dark_theme);
+    ui->buttonsLayout->setAlignment(Qt::AlignLeft);
 
     connect(
         ui->saveButton, &QPushButton::clicked, this,
