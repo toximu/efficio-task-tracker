@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include "bottombar.h"
+#include "notelist.h"
+#include "project.hpp"
 #include "projectitem.h"
 #include "projectlist.h"
 #include <QGridLayout>
@@ -13,14 +15,16 @@
 
 class MainWindow : public QWidget {
   Q_OBJECT
-  QVBoxLayout *main_layout;
-  BottomBar *bottom_bar;
-  QHBoxLayout *content_layout;
-  ProjectList *project_list;
+  QVBoxLayout *main_layout_;
+  BottomBar *bottom_bar_;
+  QHBoxLayout *content_layout_;
+  ProjectList *project_list_;
+  NoteList *note_list_;
 
 public:
   explicit MainWindow(QWidget *parent = nullptr, std::string username = "none");
-  void add_project(std::string text);
+  void add_project(project_storage_model::Project *project);
+  void load_notes(project_storage_model::Project * project);
 signals:
 };
 

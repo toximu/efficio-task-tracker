@@ -1,18 +1,18 @@
 #ifndef PROJECTITEM_H
 #define PROJECTITEM_H
 
+#include "project.hpp"
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QObject>
 #include <QWidget>
 #include <string>
-class Project; // not have yet
 
 class ProjectItem : public QListWidgetItem {
-  Project *project;
+  project_storage_model::Project *project_;
 
 public:
-  ProjectItem(std::string text, QListWidget *listview);
+  ProjectItem(project_storage_model::Project *project, QListWidget *listview);
 };
 
 #endif // PROJECTITEM_H

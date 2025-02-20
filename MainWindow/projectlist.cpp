@@ -2,5 +2,5 @@
 #include <QListWidget>
 ProjectList::ProjectList(QWidget *parent) : QListWidget{parent} {
   this->setObjectName("ProjectList");
-  this->setMaximumWidth(200);
+  this->setFixedWidth(200);
 }
