@@ -27,7 +27,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         .clang-format
-        style_sheet.h
+        note_edit_dialog_styles.h
+        tags_dialog.h tags_dialog.cpp
+        tags_dialog_styles.h
 
 
 
