@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package project_storage_model;
+
+import "project.proto";
+
+message User {
+    int32 id = 1;
+    string username = 2;
+    repeated Project projects = 3;
+}

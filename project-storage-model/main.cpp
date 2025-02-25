@@ -1,7 +1,7 @@
-#include "note.hpp"
-#include "project.hpp"
-#include "storage.hpp"
-#include "user.hpp"
+#include "note.pb.h"
+#include "project.pb.h"
+#include "storage.pb.h"
+#include "user.pb.h"
 
 int main() { 
     return 0; 
