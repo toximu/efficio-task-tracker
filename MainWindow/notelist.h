@@ -7,17 +7,23 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include<vector>
+#include<QListWidgetItem>
 class NoteList : public QWidget {
 
   Q_OBJECT
 
   QHBoxLayout *main_layout_;
+
+
   std::vector<QVBoxLayout *> vertical_layouts_;
   int note_counter = 0;
 
 public:
   void add_note_widget(const project_storage_model::Note *note);
   NoteList(QWidget *parent);
+
+  public slots:
+  void load_project_notes(QListWidgetItem * project);
 };
 
 #endif // NOTELIST_H

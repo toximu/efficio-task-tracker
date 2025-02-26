@@ -21,16 +21,19 @@ MainWindow::MainWindow(QWidget *parent, std::string username)
       bottom_bar_(new BottomBar(this, username, "эффишио - таск трекер.")),
       main_layout_(new QVBoxLayout(this)),
       content_layout_(new QHBoxLayout(this)),
-      project_list_(new ProjectList(this)),
-    note_list_(new NoteList(this))
+note_list_(new NoteList(this)),
+      project_list_(new ProjectList(this))
+
 {
   this->setObjectName("MainWindow");
-
+this->setAttribute(Qt::WA_StyledBackground);
   this->setStyleSheet(
       R"(
-#MainWindow{background-color : blue;}
+#MainWindow {
+    background-color : white;
+}
 #ProjectList {
-    background-color: #ffffff;
+    background-color: #FED6BC;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     padding: 8px;
@@ -94,9 +97,14 @@ MainWindow::MainWindow(QWidget *parent, std::string username)
 }
 
 #NoteWidget {
-    border : 1px solid black;
-    border-radius : 8px;
-background-color : black;
+    background-color: #C6D8FF;
+border-radius: 8px;
+
+}
+
+#NoteList {
+    border : 1px solid #A9A9A9;
+border-radius : 8px;
 }
 
 )");
@@ -116,6 +124,9 @@ background-color : black;
 
   this->setLayout(main_layout_);
 
+  // connections
+   connect(project_list_, &QListWidget::itemClicked,note_list_ ,&NoteList::load_project_notes);
+
 }
 
 void MainWindow::add_project(project_storage_model::Project *project) {
@@ -123,9 +134,5 @@ void MainWindow::add_project(project_storage_model::Project *project) {
       project, static_cast<QListWidget *>(this->project_list_)));
 }
 
-void MainWindow::load_notes(project_storage_model::Project * project){
-    for (const auto & note : project->get_notes()){
-        note_list_->add_note_widget(&note);
-    }
 
-}
+

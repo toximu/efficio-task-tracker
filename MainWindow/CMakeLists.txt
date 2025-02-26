@@ -22,6 +22,8 @@ set(PROJECT_SOURCES
         ${TS_FILES}
 )
 
+
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(MainWindow
         MANUAL_FINALIZATION
@@ -36,7 +38,17 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         mainwindowstylesheet.qss
         notelist.h notelist.cpp
         notewidget.h notewidget.cpp
+        ../project-storage-model/note.cpp
+        ../project-storage-model/project.cpp
+        ../project-storage-model/storage.cpp
+        ../project-storage-model/user.cpp
+        ../project-storage-model/note.hpp
+        ../project-storage-model/project.hpp
+        ../project-storage-model/storage.hpp
+        ../project-storage-model/user.hpp
     )
+
+target_include_directories(MainWindow PRIVATE ../project-storage-model)
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET MainWindow APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)

@@ -20,12 +20,11 @@ class MainWindow : public QWidget {
   QHBoxLayout *content_layout_;
   ProjectList *project_list_;
   NoteList *note_list_;
-
+  friend ProjectList;
 public:
   explicit MainWindow(QWidget *parent = nullptr, std::string username = "none");
   void add_project(project_storage_model::Project *project);
-  void load_notes(project_storage_model::Project * project);
-signals:
+
 };
 
 #endif // MAINWINDOW_H

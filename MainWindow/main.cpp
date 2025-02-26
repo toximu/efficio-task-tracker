@@ -36,9 +36,14 @@ int main(int argc, char *argv[]) {
 
   project_storage_model::Note n1 = project_storage_model::Note(1, "first", "some text");
   project_storage_model::Note n2 = project_storage_model::Note(1, "second", "some texttt");
+  project_storage_model::Note n3 = project_storage_model::Note(1, "first", "some text");
+  project_storage_model::Note n4 = project_storage_model::Note(1, "second", "some texttt");
   p1->add_note(n1);
   p1->add_note(n2);
-  main_window->load_notes(p1);
+  p1->add_note(n3);
+  p1->add_note(n4);
+
+
 
 
 
