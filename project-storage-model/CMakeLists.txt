@@ -1,27 +1,33 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(ProjectStorageModel)
+# Укажите название проекта
+project(MyProject)
 
+# Найдите пакет protobuf (для CMake)
 find_package(Protobuf REQUIRED)
 
+# Укажите путь к вашим .proto файлам
 set(PROTO_FILES
     note.proto
     project.proto
-    user.proto
     storage.proto
+    user.proto
 )
 
+# Сгенерируйте C++ исходники из .proto файлов
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_FILES})
 
+# Укажите исходники вашего проекта
 set(SOURCES
     main.cpp
     ${PROTO_SRCS}
 )
 
-add_executable(my_program ${SOURCES})
+# Укажите директории для заголовочных файлов
+include_directories(${Protobuf_INCLUDE_DIRS})
 
-target_link_libraries(my_program ${PROTOBUF_LIBRARIES})
+# Добавьте исполнимый файл
+add_executable(MyProject ${SOURCES})
 
-include_directories(${PROTOBUF_INCLUDE_DIRS})
-
-target_compile_options(my_program PRIVATE -std=c++11)
+# Линкуем с библиотеками protobuf
+target_link_libraries(MyProject ${Protobuf_LIBRARIES})
