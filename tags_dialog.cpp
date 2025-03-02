@@ -1,8 +1,10 @@
 #include "tags_dialog.h"
+
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
+
 #include "tags_dialog_styles.h"
 
 TagsDialog::TagsDialog(const QList<Tag> &initial_tags, QWidget *parent)
@@ -25,50 +27,49 @@ TagsDialog::TagsDialog(const QList<Tag> &initial_tags, QWidget *parent)
     setStyleSheet(Ui::tags_dialog_light_theme);
 }
 
-TagsDialog::~TagsDialog() {
-}
-
 void TagsDialog::setup_ui() {
     QVBoxLayout *main_layout = new QVBoxLayout(this);
 
     for (int i = 0; i < 5; ++i) {
-        QHBoxLayout *tag_layout = new QHBoxLayout;
+        QHBoxLayout *tag_layout = new QHBoxLayout();
 
-        check_boxes[i] = new QCheckBox(this);
+        check_boxes[i] = std::make_unique<QCheckBox>(this);
         check_boxes[i]->setChecked(false);
-        tag_layout->addWidget(check_boxes[i]);
+        tag_layout->addWidget(check_boxes[i].get());
 
-        color_combo_boxes[i] = new QComboBox(this);
+        color_combo_boxes[i] = std::make_unique<QComboBox>(this);
         color_combo_boxes[i]->addItem("Красный", "#e7624b");
         color_combo_boxes[i]->addItem("Синий", "#165d7b");
         color_combo_boxes[i]->addItem("Розовый", "#bd6dab");
         color_combo_boxes[i]->addItem("Зеленый", "#00b16b");
         color_combo_boxes[i]->addItem("Желтый", "#e69f00");
-        tag_layout->addWidget(color_combo_boxes[i]);
+        tag_layout->addWidget(color_combo_boxes[i].get());
 
-        name_line_edits[i] = new QLineEdit(this);
+        name_line_edits[i] = std::make_unique<QLineEdit>(this);
         name_line_edits[i]->setPlaceholderText(
             "Имя тега " + QString::number(i + 1)
         );
-        tag_layout->addWidget(name_line_edits[i]);
+        tag_layout->addWidget(name_line_edits[i].get());
 
         main_layout->addLayout(tag_layout);
     }
 
     QHBoxLayout *button_layout = new QHBoxLayout;
 
-    ok_button = new QPushButton("OK", this);
+    ok_button = std::make_unique<QPushButton>("OK", this);
     ok_button->setObjectName("ok_button");
-    button_layout->addWidget(ok_button);
+    button_layout->addWidget(ok_button.get());
 
-    cancel_button = new QPushButton("Отмена", this);
+    cancel_button = std::make_unique<QPushButton>("Отмена", this);
     cancel_button->setObjectName("cancel_button");
-    button_layout->addWidget(cancel_button);
+    button_layout->addWidget(cancel_button.get());
 
     main_layout->addLayout(button_layout);
 
-    connect(ok_button, &QPushButton::clicked, this, &TagsDialog::accept);
-    connect(cancel_button, &QPushButton::clicked, this, &TagsDialog::reject);
+    connect(ok_button.get(), &QPushButton::clicked, this, &TagsDialog::accept);
+    connect(
+        cancel_button.get(), &QPushButton::clicked, this, &TagsDialog::reject
+    );
 }
 
 QList<TagsDialog::Tag> TagsDialog::get_selected_tags() const {

@@ -1,4 +1,5 @@
 #include "note_edit_dialog.h"
+
 #include <QDialog>
 #include <QFile>
 #include <QMenu>
@@ -6,6 +7,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QTextStream>
+
 #include "./ui_note_edit_dialog.h"
 #include "note_edit_dialog_styles.h"
 #include "tags_dialog.h"
@@ -70,19 +72,18 @@ void NoteEditDialog::on_join_button_click() {
         painter.setPen(Qt::NoPen);
         painter.drawEllipse(0, 0, 32, 32);
 
-        avatar_label = new QLabel(this);
+        avatar_label = std::make_unique<QLabel>(this);
         avatar_label->setPixmap(pixmap);
         avatar_label->setFixedSize(32, 32);
-        ui->avatarsLayout->addWidget(avatar_label);
+        ui->avatarsLayout->addWidget(avatar_label.get());
 
         ui->joinButton->setText("Покинуть");
     } else {
         ui->membersLabel->setVisible(false);
 
         if (avatar_label) {
-            ui->avatarsLayout->removeWidget(avatar_label);
-            delete avatar_label;
-            avatar_label = nullptr;
+            ui->avatarsLayout->removeWidget(avatar_label.get());
+            avatar_label.reset();
         }
 
         ui->joinButton->setText("Присоединиться");
@@ -102,11 +103,10 @@ void NoteEditDialog::on_add_tags_button_click() {
             ui->tagsLabel->setVisible(true);
         }
 
-        qDeleteAll(tag_labels);
         tag_labels.clear();
 
         for (const TagsDialog::Tag &tag : selected_tags) {
-            QLabel *tag_label = new QLabel(tag.name, this);
+            auto tag_label = std::make_unique<QLabel>(tag.name, this);
             tag_label->setStyleSheet(QString("background-color: %1; "
                                              "color: white; "
                                              "padding: 9px 10px; "
@@ -117,8 +117,8 @@ void NoteEditDialog::on_add_tags_button_click() {
                                              "width: 40px;"
                                              "height: 25px;")
                                          .arg(tag.color));
-            ui->tagsLayout->addWidget(tag_label);
-            tag_labels.append(tag_label);
+            ui->tagsLayout->addWidget(tag_label.get());
+            tag_labels.push_back(std::move(tag_label));
         }
     }
 

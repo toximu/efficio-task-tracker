@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QLabel>
 #include <QLineEdit>
+
+#include <memory>
 #include "tags_dialog.h"
 
 QT_BEGIN_NAMESPACE
@@ -29,8 +31,8 @@ private slots:
 
 private:
     Ui::NoteEditDialog *ui;
-    QLabel *avatar_label;
-    QList<QLabel *> tag_labels;
+    std::unique_ptr<QLabel> avatar_label;
+    std::vector<std::unique_ptr<QLabel>> tag_labels;
     QList<TagsDialog::Tag> selected_tags;
 };
 

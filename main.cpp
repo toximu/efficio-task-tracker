@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+
 #include "note_edit_dialog.h"
 
 int main(int argc, char *argv[]) {
