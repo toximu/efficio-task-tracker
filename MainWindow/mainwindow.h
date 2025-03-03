@@ -13,6 +13,7 @@
 #include <QWidget>
 #include <string>
 
+namespace Ui{
 class MainWindow : public QWidget {
   Q_OBJECT
   QVBoxLayout *main_layout_;
@@ -26,5 +27,5 @@ public:
   void add_project(project_storage_model::Project *project);
 
 };
-
+}
 #endif // MAINWINDOW_H

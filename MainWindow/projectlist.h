@@ -4,6 +4,7 @@
 #include <QListWidget>
 #include <QWidget>
 
+namespace Ui {
 class ProjectList : public QListWidget {
   Q_OBJECT
 public:
@@ -11,5 +12,5 @@ public:
 
 signals:
 };
-
+}
 #endif // PROJECTLIST_H

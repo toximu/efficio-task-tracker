@@ -7,6 +7,8 @@
 #include<QHBoxLayout>
 #include<QPushButton>
 #include<iostream>
+
+namespace Ui{
 class NoteWidget : public QWidget {
   Q_OBJECT
   const  project_storage_model::Note * model_note_;
@@ -21,5 +23,5 @@ private slots:
         std::cout << this->model_note_->get_text() << std::endl;
     }
 };
-
+}
 #endif // NOTEWIDGET_H

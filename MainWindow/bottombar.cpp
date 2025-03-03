@@ -6,7 +6,7 @@
 #include <QSizePolicy>
 #include <QWidget>
 #include <string>
-
+namespace Ui {
 BottomBar::BottomBar(QWidget *parent_, std::string username_,
                      std::string project_name_)
     : QWidget(parent_), main_layout(new QHBoxLayout()),
@@ -25,4 +25,5 @@ BottomBar::BottomBar(QWidget *parent_, std::string username_,
 
   main_layout->addWidget(project_name);
   main_layout->addWidget(username);
+}
 }

@@ -1,6 +1,8 @@
 #include "applicationwindow.h"
 #include "mainwindow.h"
 #include<QPalette>
+
+namespace Ui{
 ApplicationWindow::ApplicationWindow(std::string window_name_)
     : QMainWindow{nullptr} {
     this->setObjectName("ApplicationWindow");
@@ -9,4 +11,5 @@ ApplicationWindow::ApplicationWindow(std::string window_name_)
 
   this->setWindowTitle(window_name_.c_str());
   this->resize(800, 600);
+}
 }

@@ -5,13 +5,15 @@
 #include<QHBoxLayout>
 #include<QPushButton>
 
+
+namespace Ui {
 NoteWidget::NoteWidget(QWidget *parent,const project_storage_model::Note *model_note)
     : QWidget(parent), model_note_(model_note), main_layout_(new QVBoxLayout(this)),
                    open_button_(new QPushButton("Открыть"))
 {
     this->setObjectName("NoteWidget");
     this->setMinimumWidth(100);
-    this->setFixedHeight(70);
+    this->setMinimumHeight(80);
     QLabel * title = new QLabel(model_note_->get_title().c_str(), this);
     QLabel * text = new QLabel(model_note_->get_text().c_str(),this);
     main_layout_->addWidget(title);
@@ -23,4 +25,5 @@ NoteWidget::NoteWidget(QWidget *parent,const project_storage_model::Note *model_
 this->setAttribute(Qt::WA_StyledBackground);
 
 
+}
 }

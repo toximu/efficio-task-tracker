@@ -16,6 +16,7 @@
 #include <QWidget>
 #include <string>
 
+namespace Ui {
 MainWindow::MainWindow(QWidget *parent, std::string username)
     : QWidget(parent),
       bottom_bar_(new BottomBar(this, username, "эффишио - таск трекер.")),
@@ -133,6 +134,6 @@ void MainWindow::add_project(project_storage_model::Project *project) {
   project_list_->addItem(new ProjectItem(
       project, static_cast<QListWidget *>(this->project_list_)));
 }
-
+}
 
 

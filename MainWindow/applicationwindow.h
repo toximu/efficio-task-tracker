@@ -2,7 +2,7 @@
 #define APPLICATIONWINDOW_H
 
 #include <QMainWindow>
-
+namespace Ui {
 class ApplicationWindow : public QMainWindow {
   Q_OBJECT
 
@@ -11,5 +11,5 @@ public:
 
 signals:
 };
-
+}
 #endif // APPLICATIONWINDOW_H

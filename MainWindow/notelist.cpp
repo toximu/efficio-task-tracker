@@ -8,6 +8,7 @@
 #include"note.hpp"
 #include "notewidget.h"
 
+namespace Ui {
 NoteList::NoteList(QWidget *parent)
     : QWidget(parent), main_layout_(new QHBoxLayout(this)),
     vertical_layouts_(std::vector<QVBoxLayout *>())
@@ -34,4 +35,5 @@ void NoteList::load_project_notes(QListWidgetItem * project){
     for (const auto & note : p->project_->get_notes()){
         this->add_note_widget(&note);
     }
+}
 }

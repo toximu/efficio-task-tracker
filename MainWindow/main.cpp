@@ -6,6 +6,9 @@
 #include <QLocale>
 #include <QTranslator>
 #include"note.hpp"
+
+using namespace Ui;
+
 int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
   // QWidget *window = new QWidget();

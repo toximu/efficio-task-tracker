@@ -6,6 +6,8 @@
 #include <QPalette>
 #include <QWidget>
 #include <string>
+
+namespace Ui {
 class BottomBar : public QWidget {
   QHBoxLayout *main_layout;
   QLabel *project_name;
@@ -14,5 +16,6 @@ class BottomBar : public QWidget {
 public:
   BottomBar(QWidget *parent_, std::string username_, std::string project_name_);
 };
+}
 
 #endif // BOTTOMBAR_H

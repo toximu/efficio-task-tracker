@@ -8,6 +8,7 @@
 #include <QWidget>
 #include<vector>
 #include<QListWidgetItem>
+namespace Ui {
 class NoteList : public QWidget {
 
   Q_OBJECT
@@ -25,5 +26,5 @@ public:
   public slots:
   void load_project_notes(QListWidgetItem * project);
 };
-
+}
 #endif // NOTELIST_H
