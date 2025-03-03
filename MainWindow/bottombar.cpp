@@ -7,23 +7,23 @@
 #include <QWidget>
 #include <string>
 namespace Ui {
-BottomBar::BottomBar(QWidget *parent_, std::string username_,
-                     std::string project_name_)
-    : QWidget(parent_), main_layout(new QHBoxLayout()),
-      username(new QLabel(username_.c_str())),
-      project_name(new QLabel(project_name_.c_str())) {
+BottomBar::BottomBar(QWidget *parent, std::string username,
+                     std::string project_name)
+    : QWidget(parent), main_layout_(new QHBoxLayout()),
+      username_(new QLabel(username.c_str())),
+      project_name_(new QLabel(project_name.c_str())) {
 
   this->setObjectName("BottomBar");
-  this->setLayout(main_layout);
+  this->setLayout(main_layout_);
   this->setFixedHeight(40);
 
-  project_name->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-  username->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
+  project_name_->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+  username_->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
 
   this->setSizePolicy(
       QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
 
-  main_layout->addWidget(project_name);
-  main_layout->addWidget(username);
+  main_layout_->addWidget(project_name_);
+  main_layout_->addWidget(username_);
 }
 }

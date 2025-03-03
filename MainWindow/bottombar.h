@@ -9,9 +9,9 @@
 
 namespace Ui {
 class BottomBar : public QWidget {
-  QHBoxLayout *main_layout;
-  QLabel *project_name;
-  QLabel *username;
+  QHBoxLayout *main_layout_;
+  QLabel *project_name_;
+  QLabel *username_;
 
 public:
   BottomBar(QWidget *parent_, std::string username_, std::string project_name_);

@@ -17,10 +17,11 @@ class NoteList : public QWidget {
 
 
   std::vector<QVBoxLayout *> vertical_layouts_;
-  int note_counter = 0;
+  int note_counter_ = 0;
 
 public:
   void add_note_widget(const project_storage_model::Note *note);
+    void clear_note_list();
   NoteList(QWidget *parent);
 
   public slots:

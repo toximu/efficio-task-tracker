@@ -19,11 +19,14 @@
 namespace Ui {
 MainWindow::MainWindow(QWidget *parent, std::string username)
     : QWidget(parent),
+content_widget_(new QWidget(this)),
       bottom_bar_(new BottomBar(this, username, "эффишио - таск трекер.")),
       main_layout_(new QVBoxLayout(this)),
       content_layout_(new QHBoxLayout(this)),
 note_list_(new NoteList(this)),
-      project_list_(new ProjectList(this))
+      project_list_(new ProjectList(this)),
+
+    new_project_button_(new QPushButton("Новый проект",content_widget_))
 
 {
   this->setObjectName("MainWindow");
@@ -114,14 +117,19 @@ border-radius : 8px;
   main_layout_->addWidget(bottom_bar_, Qt::AlignTop);
 
   main_layout_->setAlignment(Qt::AlignCenter);
+  main_layout_->addWidget(content_widget_);
 
-  QWidget * content_widget = new QWidget(this);
-  note_list_->setParent(content_widget);
-  main_layout_->addWidget(content_widget);
-  content_widget->setLayout(content_layout_);
+  content_widget_->setLayout(content_layout_);
+
+  auto right_layout = new QVBoxLayout(content_widget_);
+  right_layout->addWidget(project_list_);
+  right_layout->addWidget(new_project_button_);
+
+
+
   content_layout_->addWidget(note_list_, Qt::AlignRight);
-  content_layout_->addWidget(project_list_, Qt::AlignRight);
-  main_layout_->addLayout(content_layout_, Qt::AlignVCenter);
+  content_layout_->addLayout(right_layout);
+  main_layout_->addWidget(content_widget_);
 
   this->setLayout(main_layout_);
 
@@ -135,5 +143,7 @@ void MainWindow::add_project(project_storage_model::Project *project) {
       project, static_cast<QListWidget *>(this->project_list_)));
 }
 }
+
+
 
 

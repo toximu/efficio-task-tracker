@@ -11,7 +11,7 @@ using namespace Ui;
 
 int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
-  // QWidget *window = new QWidget();
+
 
   QTranslator translator;
   const QStringList uiLanguages = QLocale::system().uiLanguages();
@@ -46,8 +46,9 @@ int main(int argc, char *argv[]) {
   p1->add_note(n3);
   p1->add_note(n4);
 
-
-
+project_storage_model::Note n5 = project_storage_model::Note(1,"just note", "in second project!");
+  p2->add_note(n5);
+p2->add_note({1, "another", "second of second"});
 
 
   app_window->show();

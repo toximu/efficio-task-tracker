@@ -26,14 +26,32 @@ NoteList::NoteList(QWidget *parent)
 }
 
 void NoteList::add_note_widget(const project_storage_model::Note* note){
-    vertical_layouts_[note_counter%4]->addWidget(new NoteWidget(this, note),0,Qt::AlignTop);
-    note_counter++;
+    auto current_layout  = vertical_layouts_[note_counter_%4];
+    if (current_layout->count() > 1) {
+        current_layout->removeItem(current_layout->itemAt(current_layout->count() - 1));
+    }
+    vertical_layouts_[note_counter_%4]->addWidget(new NoteWidget(this, note),0,Qt::AlignTop);
+    current_layout->addStretch();
+    note_counter_++;
 }
 
 void NoteList::load_project_notes(QListWidgetItem * project){
     ProjectItem * p = dynamic_cast<ProjectItem *>(project);
+    this->clear_note_list();
     for (const auto & note : p->project_->get_notes()){
         this->add_note_widget(&note);
+    }
+}
+
+void NoteList::clear_note_list(){
+    for (auto &layout : vertical_layouts_){
+        while (layout->count()){
+            auto item = layout->takeAt(0);
+            auto widget = item->widget();
+            if (widget){
+                widget->deleteLater();
+            }
+        }
     }
 }
 }
