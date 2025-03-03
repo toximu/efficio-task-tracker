@@ -1,12 +1,9 @@
+#include "login_window.h"
+#include "login_window_style_sheet.h"
 #include "registration_window.h"
-#include "./login_window.h"
-#include "./login_window_style_sheet.h"
-
 
 LoginWindow::LoginWindow(QWidget *parent)
-    : QDialog(parent)
-    , ui(new Ui::LoginWindow)
-{
+    : QDialog(parent), ui(new Ui::LoginWindow) {
     ui->setupUi(this);
 
     setFixedSize(380, 480);
@@ -14,15 +11,22 @@ LoginWindow::LoginWindow(QWidget *parent)
     ui->inputPassword->setPlaceholderText("Введите пароль:");
     setStyleSheet(Ui::login_window_light_theme);
     ui->inputPassword->setEchoMode(QLineEdit::Password);
+
+    connect(
+        ui->switchMode, &QPushButton::clicked, this,
+        &LoginWindow::on_switch_mode_clicked
+    );
+    connect(
+        ui->pushEnter, &QPushButton::clicked, this,
+        &LoginWindow::on_push_enter_clicked
+    );
 }
 
-LoginWindow::~LoginWindow()
-{
+LoginWindow::~LoginWindow() {
     delete ui;
 }
 
-void LoginWindow::on_switchMode_clicked()
-{
+void LoginWindow::on_switch_mode_clicked() {
     hide();
     RegistrationWindow registration_window;
     registration_window.show();
@@ -30,14 +34,15 @@ void LoginWindow::on_switchMode_clicked()
     this->close();
 }
 
-void LoginWindow::on_pushEnter_clicked()
-{
+void LoginWindow::on_push_enter_clicked() {
     QString login = ui->inputLogin->text();
     QString password = ui->inputPassword->text();
-    if (login.size()!=0  && password.size()!= 0){
-        QMessageBox::information(this, "Вход", "Вы успешно вошли! Добро пожаловать:)");
+    if (!login.isEmpty() && !password.isEmpty()) {
+        QMessageBox::information(
+            this, "Вход", "Вы успешно вошли! Добро пожаловать:)"
+        );
         this->close();
-    } else {
+    } else if (true) {  // here login and password validation will be added
         QMessageBox::warning(this, "Ошибка", "Неверный логин или пароль!");
     }
 }

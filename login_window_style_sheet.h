@@ -1,5 +1,4 @@
-#ifndef LOGIN_WINDOW_STYLE_SHEET_H
-#define LOGIN_WINDOW_STYLE_SHEET_H
+#pragma once
 
 #include "ui_login_window.h"
 
@@ -82,7 +81,7 @@ QString login_window_light_theme = R"(
     }
 
     QPushButton#pushEnter:hover {
-        background-color: #dadada;
+        background-color: #d58745;
     }
 
     QPushButton#switchMode:hover {
@@ -104,5 +103,3 @@ QString login_window_light_theme = R"(
 )";
 
 }  // namespace Ui
-
-#endif // LOGIN_WINDOW_STYLE_SHEET_H

@@ -1,5 +1,4 @@
-#ifndef REGISTRATION_WINDOW_STYLE_SHEET_H
-#define REGISTRATION_WINDOW_STYLE_SHEET_H
+#pragma once
 
 #include "ui_registration_window.h"
 
@@ -82,7 +81,7 @@ QString registration_window_light_theme = R"(
     }
 
     QPushButton#pushRegistration:hover {
-        background-color: #dadada;
+        background-color: #d58745;
     }
 
     QPushButton#switchMode:hover {
@@ -104,12 +103,3 @@ QString registration_window_light_theme = R"(
 )";
 
 }  // namespace Ui
-
-#endif // REGISTRATION_WINDOW_STYLE_SHEET_H
-
-
-
-
-
-
-

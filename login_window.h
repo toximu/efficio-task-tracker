@@ -1,12 +1,11 @@
-#ifndef LOGIN_WINDOW_H
-#define LOGIN_WINDOW_H
+#pragma once
 
 #include <QDialog>
 #include <QLineEdit>
-#include <QWidget>
-#include <QVBoxLayout>
-#include <QPushButton>
 #include <QMessageBox>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -16,9 +15,7 @@ class LoginWindow;
 
 QT_END_NAMESPACE
 
-
-class LoginWindow : public QDialog
-{
+class LoginWindow : public QDialog {
     Q_OBJECT
 
 public:
@@ -26,12 +23,10 @@ public:
     ~LoginWindow();
 
 private slots:
-    void on_switchMode_clicked();
+    void on_switch_mode_clicked();
 
-    void on_pushEnter_clicked();
+    void on_push_enter_clicked();
 
 private:
     Ui::LoginWindow *ui;
 };
-#endif // LOGIN_WINDOW_H
-

@@ -1,12 +1,9 @@
-#include "./login_window.h"
-
-
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+#include "login_window.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
     QTranslator translator;
@@ -18,7 +15,7 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    LoginWindow login_window_;
-    login_window_.show();
-    return login_window_.exec();
+    LoginWindow login_window;
+    login_window.show();
+    return login_window.exec();
 }
