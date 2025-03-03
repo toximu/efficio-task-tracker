@@ -38,6 +38,7 @@ void NoteList::add_note_widget(const project_storage_model::Note* note){
 void NoteList::load_project_notes(QListWidgetItem * project){
     ProjectItem * p = dynamic_cast<ProjectItem *>(project);
     this->clear_note_list();
+    note_counter_ = 0;
     for (const auto & note : p->project_->get_notes()){
         this->add_note_widget(&note);
     }
