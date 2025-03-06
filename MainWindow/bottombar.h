@@ -16,6 +16,6 @@ class BottomBar : public QWidget {
 public:
   BottomBar(QWidget *parent_, std::string username_, std::string project_name_);
 };
-}
+} // namespace Ui
 
 #endif // BOTTOMBAR_H

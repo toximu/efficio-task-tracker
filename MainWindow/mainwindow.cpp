@@ -1,8 +1,8 @@
 #include "mainwindow.h"
 #include "bottombar.h"
+#include "notelist.h"
 #include "project.hpp"
 #include "projectlist.h"
-#include"notelist.h"
 #include <QFile>
 #include <QGridLayout>
 #include <QLabel>
@@ -18,19 +18,17 @@
 
 namespace Ui {
 MainWindow::MainWindow(QWidget *parent, std::string username)
-    : QWidget(parent),
-content_widget_(new QWidget(this)),
+    : QWidget(parent), content_widget_(new QWidget(this)),
       bottom_bar_(new BottomBar(this, username, "эффишио - таск трекер.")),
       main_layout_(new QVBoxLayout(this)),
-      content_layout_(new QHBoxLayout(this)),
-note_list_(new NoteList(this)),
+      content_layout_(new QHBoxLayout(this)), note_list_(new NoteList(this)),
       project_list_(new ProjectList(this)),
 
-    new_project_button_(new QPushButton("Новый проект",content_widget_))
+      new_project_button_(new QPushButton("Новый проект", content_widget_))
 
 {
   this->setObjectName("MainWindow");
-this->setAttribute(Qt::WA_StyledBackground);
+  this->setAttribute(Qt::WA_StyledBackground);
   this->setStyleSheet(
       R"(
 #MainWindow {
@@ -113,7 +111,6 @@ border-radius : 8px;
 
 )");
 
-
   main_layout_->addWidget(bottom_bar_, Qt::AlignTop);
 
   main_layout_->setAlignment(Qt::AlignCenter);
@@ -125,8 +122,6 @@ border-radius : 8px;
   right_layout->addWidget(project_list_);
   right_layout->addWidget(new_project_button_);
 
-
-
   content_layout_->addWidget(note_list_, Qt::AlignRight);
   content_layout_->addLayout(right_layout);
   main_layout_->addWidget(content_widget_);
@@ -134,16 +129,12 @@ border-radius : 8px;
   this->setLayout(main_layout_);
 
   // connections
-   connect(project_list_, &QListWidget::itemClicked,note_list_ ,&NoteList::load_project_notes);
-
+  connect(project_list_, &QListWidget::itemClicked, note_list_,
+          &NoteList::load_project_notes);
 }
 
 void MainWindow::add_project(project_storage_model::Project *project) {
   project_list_->addItem(new ProjectItem(
       project, static_cast<QListWidget *>(this->project_list_)));
 }
-}
-
-
-
-
+} // namespace Ui

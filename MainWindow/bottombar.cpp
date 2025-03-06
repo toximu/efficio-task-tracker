@@ -26,4 +26,4 @@ BottomBar::BottomBar(QWidget *parent, std::string username,
   main_layout_->addWidget(project_name_);
   main_layout_->addWidget(username_);
 }
-}
+} // namespace Ui

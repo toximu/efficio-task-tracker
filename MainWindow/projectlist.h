@@ -12,5 +12,5 @@ public:
 
 signals:
 };
-}
+} // namespace Ui
 #endif // PROJECTLIST_H

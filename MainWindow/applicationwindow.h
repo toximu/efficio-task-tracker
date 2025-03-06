@@ -11,5 +11,5 @@ public:
 
 signals:
 };
-}
+} // namespace Ui
 #endif // APPLICATIONWINDOW_H

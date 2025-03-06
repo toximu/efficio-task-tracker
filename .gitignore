@@ -63,3 +63,5 @@ doc/api/
 
 # Исключение локальных настроек (если есть)
 local.properties
+
+main.cpp

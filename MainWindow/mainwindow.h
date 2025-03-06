@@ -10,11 +10,11 @@
 #include <QHBoxLayout>
 #include <QListWidget>
 #include <QMainWindow>
+#include <QPushButton>
 #include <QWidget>
 #include <string>
-#include<QPushButton>
 
-namespace Ui{
+namespace Ui {
 class MainWindow : public QWidget {
   Q_OBJECT
   QVBoxLayout *main_layout_;
@@ -22,15 +22,15 @@ class MainWindow : public QWidget {
   QHBoxLayout *content_layout_;
   ProjectList *project_list_;
   NoteList *note_list_;
-  QWidget * content_widget_;
-  QPushButton * new_project_button_;
-  void create_note_list_(QListWidgetItem * project);
+  QWidget *content_widget_;
+  QPushButton *new_project_button_;
+  void create_note_list_(QListWidgetItem *project);
 
   friend ProjectList;
+
 public:
   explicit MainWindow(QWidget *parent = nullptr, std::string username = "none");
   void add_project(project_storage_model::Project *project);
-
 };
-}
+} // namespace Ui
 #endif // MAINWINDOW_H
