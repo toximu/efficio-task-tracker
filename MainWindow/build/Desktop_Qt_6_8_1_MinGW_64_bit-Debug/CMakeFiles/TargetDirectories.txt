@@ -1,9 +1,0 @@
-C:/Users/txm/Documents/task-tracker/MainWindow/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/MainWindow.dir
-C:/Users/txm/Documents/task-tracker/MainWindow/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/edit_cache.dir
-C:/Users/txm/Documents/task-tracker/MainWindow/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/rebuild_cache.dir
-C:/Users/txm/Documents/task-tracker/MainWindow/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/list_install_components.dir
-C:/Users/txm/Documents/task-tracker/MainWindow/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/install.dir
-C:/Users/txm/Documents/task-tracker/MainWindow/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/install/local.dir
-C:/Users/txm/Documents/task-tracker/MainWindow/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/install/strip.dir
-C:/Users/txm/Documents/task-tracker/MainWindow/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/MainWindow_autogen_timestamp_deps.dir
-C:/Users/txm/Documents/task-tracker/MainWindow/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/MainWindow_autogen.dir
