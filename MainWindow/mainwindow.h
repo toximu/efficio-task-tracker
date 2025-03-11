@@ -14,6 +14,8 @@
 #include <QWidget>
 #include <string>
 
+#include "storage.hpp"
+
 namespace Ui {
 class MainWindow : public QWidget {
   Q_OBJECT
@@ -24,13 +26,17 @@ class MainWindow : public QWidget {
   NoteList *note_list_;
   QWidget *content_widget_;
   QPushButton *new_project_button_;
-  void create_note_list_(QListWidgetItem *project);
+  QPushButton *new_note_button_;
+  project_storage_model::Storage *storage_;
+
 
   friend ProjectList;
-
+private slots:
+  void add_project();
+  void add_note();
 public:
-  explicit MainWindow(QWidget *parent = nullptr, std::string username = "none");
-  void add_project(project_storage_model::Project *project);
+  explicit MainWindow(QWidget *parent = nullptr, std::string username = "none", project_storage_model::Storage *storage = nullptr);
+
 };
 } // namespace Ui
 #endif // MAINWINDOW_H

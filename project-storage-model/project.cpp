@@ -14,7 +14,7 @@ const std::string &Project::get_description() const { return description_; }
 
 const std::vector<Note> &Project::get_notes() const { return notes_; }
 
-void Project::add_note(const Note &note) { notes_.push_back(note); }
+Note& Project::add_note(const Note &note) {return notes_.emplace_back(note); }
 
 void Project::remove_note(int note_id) {
   notes_.erase(std::remove_if(notes_.begin(), notes_.end(),

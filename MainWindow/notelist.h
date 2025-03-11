@@ -1,16 +1,13 @@
 #ifndef NOTELIST_H
 #define NOTELIST_H
-
 #include "note.hpp"
-#include <QHBoxLayout>
 #include <QListWidgetItem>
-#include <QObject>
 #include <QVBoxLayout>
 #include <QWidget>
 #include <vector>
 namespace Ui {
 class NoteList : public QWidget {
-
+  friend class MainWindow;
   Q_OBJECT
 
   QHBoxLayout *main_layout_;

@@ -2,8 +2,8 @@
 
 namespace project_storage_model {
 
-void Storage::add_project(const Project &project) {
-  projects_.push_back(project);
+Project& Storage::add_project(const Project &project) {
+  return projects_.emplace_back(project);
 }
 
 void Storage::remove_project(int project_id) {

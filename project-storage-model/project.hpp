@@ -16,7 +16,7 @@ public:
   const std::string &get_description() const;
   const std::vector<Note> &get_notes() const;
 
-  void add_note(const Note &note);
+  Note& add_note(const Note &note);
   void remove_note(int note_id);
   void edit_description(const std::string &description);
 

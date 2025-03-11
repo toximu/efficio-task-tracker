@@ -9,7 +9,7 @@ namespace project_storage_model {
 
 class Storage {
 public:
-  void add_project(const Project &project);
+  Project& add_project(const Project &project);
   void remove_project(int project_id);
   const std::vector<Project> &get_projects() const;
 
