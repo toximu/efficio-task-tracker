@@ -28,4 +28,9 @@ void Storage::remove_user(int user_id) {
 
 const std::vector<User> &Storage::get_users() const { return users_; }
 
+
+Storage::Storage(int n){
+    projects_.reserve(n);
+    users_.reserve(n);
+}
 } // namespace project_storage_model

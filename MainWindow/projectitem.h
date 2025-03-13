@@ -15,7 +15,7 @@ class ProjectItem : public QListWidgetItem {
   friend class MainWindow;
 
 public:
-  ProjectItem(QListWidget *listview,project_storage_model::Project *project);
+  ProjectItem(QListWidget *listview, project_storage_model::Project *project);
 };
 } // namespace Ui
 #endif // PROJECTITEM_H

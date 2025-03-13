@@ -3,6 +3,7 @@
 #include "notewidget.h"
 #include "projectitem.h"
 #include <QHBoxLayout>
+#include <QMessageBox>
 #include <QObject>
 #include <QVBoxLayout>
 #include <QWidget>
@@ -36,7 +37,10 @@ void NoteList::add_note_widget(const project_storage_model::Note *note) {
 }
 
 void NoteList::load_project_notes(QListWidgetItem *project) {
+
   ProjectItem *p = dynamic_cast<ProjectItem *>(project);
+  assert(p != nullptr);
+  qDebug() << "Адрес проекта"<< p->project_->get_name() << ":" <<p->project_;
   this->clear_note_list();
   note_counter_ = 0;
   for (const auto &note : p->project_->get_notes()) {

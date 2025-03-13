@@ -16,7 +16,7 @@ public:
   void add_user(const User &user);
   void remove_user(int user_id);
   const std::vector<User> &get_users() const;
-
+  Storage(int n);
 private:
   std::vector<Project> projects_;
   std::vector<User> users_;

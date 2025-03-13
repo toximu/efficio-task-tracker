@@ -47,7 +47,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ../project-storage-model/storage.hpp
         ../project-storage-model/user.hpp
     )
-
+    target_compile_options(MainWindow PRIVATE -Wall -Wextra -Wpedantic)
 target_include_directories(MainWindow PRIVATE ../project-storage-model)
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET MainWindow APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

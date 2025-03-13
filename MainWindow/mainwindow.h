@@ -20,7 +20,7 @@ namespace Ui {
 class MainWindow : public QWidget {
   Q_OBJECT
   QVBoxLayout *main_layout_;
-  BottomBar *bottom_bar_;
+  BottomBar *top_bar_;
   QHBoxLayout *content_layout_;
   ProjectList *project_list_;
   NoteList *note_list_;
@@ -29,14 +29,14 @@ class MainWindow : public QWidget {
   QPushButton *new_note_button_;
   project_storage_model::Storage *storage_;
 
-
   friend ProjectList;
 private slots:
   void add_project();
   void add_note();
-public:
-  explicit MainWindow(QWidget *parent = nullptr, std::string username = "none", project_storage_model::Storage *storage = nullptr);
 
+public:
+  explicit MainWindow(QWidget *parent = nullptr, std::string username = "none",
+                      project_storage_model::Storage *storage = nullptr);
 };
 } // namespace Ui
 #endif // MAINWINDOW_H
