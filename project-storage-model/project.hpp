@@ -3,7 +3,7 @@
 
 #include "note.hpp"
 #include <string>
-#include <vector>
+#include <list>
 
 namespace project_storage_model {
 
@@ -14,9 +14,9 @@ public:
   int get_id() const;
   const std::string &get_name() const;
   const std::string &get_description() const;
-  const std::vector<Note> &get_notes() const;
+  const std::list<Note> &get_notes() const;
 
-  void add_note(const Note &note);
+  Note & add_note(const Note &note);
   void remove_note(int note_id);
   void edit_description(const std::string &description);
 
@@ -24,7 +24,7 @@ private:
   int id_;
   std::string name_;
   std::string description_;
-  std::vector<Note> notes_;
+  std::list<Note> notes_;
 };
 
 } // namespace project_storage_model

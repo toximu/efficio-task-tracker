@@ -11,7 +11,7 @@ const std::string &Note::get_title() const { return title_; }
 
 const std::string &Note::get_text() const { return text_; }
 
-const std::vector<std::string> &Note::get_tags() const { return tags_; }
+const std::list<std::string> &Note::get_tags() const { return tags_; }
 
 void Note::set_title(const std::string &title) { this->title_ = title; }
 

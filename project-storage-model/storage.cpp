@@ -2,9 +2,11 @@
 
 namespace project_storage_model {
 
-void Storage::add_project(const Project &project) {
-  projects_.push_back(project);
+Project& Storage::add_project(const Project &project) {
+    projects_.push_back(project);  
+    return projects_.back();     
 }
+
 
 
 void Storage::remove_project(int project_id) {
@@ -15,9 +17,9 @@ void Storage::remove_project(int project_id) {
                   projects_.end());
 }
 
-const std::vector<Project> &Storage::get_projects() const { return projects_; }
+const std::list<Project> &Storage::get_projects() const { return projects_; }
 
-void Storage::add_user(const User &user) { users_.push_back(user); }
+User& Storage::add_user(const User &user) { users_.push_back(user); return users_.back(); }
 
 void Storage::remove_user(int user_id) {
   users_.erase(std::remove_if(users_.begin(), users_.end(),
@@ -27,6 +29,6 @@ void Storage::remove_user(int user_id) {
                users_.end());
 }
 
-const std::vector<User> &Storage::get_users() const { return users_; }
+const std::list<User> &Storage::get_users() const { return users_; }
 
 } // namespace project_storage_model
