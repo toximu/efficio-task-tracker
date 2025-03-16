@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package project_storage_model;
+
+message Note {
+    int32 id = 1;
+    string title = 2;
+    string text = 3;
+    repeated string tags = 4;
+}
