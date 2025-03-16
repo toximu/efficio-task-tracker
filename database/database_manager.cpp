@@ -3,23 +3,23 @@
 #include <QMessageBox>
 
 DatabaseManager::DatabaseManager() {
-    QCoreApplication::addLibraryPath("/usr/lib/x86_64-linux-gnu/qt6/plugins");
+    QSqlQuery query;
+
     database_ = QSqlDatabase::addDatabase("QPSQL");
     database_.setHostName("localhost");
     database_.setPort(5433);
     database_.setDatabaseName("efficio");
     database_.setUserName("efficio");
     database_.setPassword("admin");
+    database_.open();
 
-    if (!database_.open()) {
-        const QString error = database_.lastError().text();
-
-        QMessageBox::critical(
-            nullptr, "Database Error", "Cannot connect to database:\n" + error
-        );
-    } else {
-        qDebug() << "OK";
-    }
+    query.exec(
+        "CREATE TABLE IF NOT EXISTS notes ("
+        "id SERIAL PRIMARY KEY, "
+        "title TEXT NOT NULL, "
+        "content TEXT NOT NULL"
+        ")"
+    );
 }
 
 DatabaseManager::~DatabaseManager() {
@@ -37,19 +37,19 @@ bool DatabaseManager::check_connection() const {
     return database_.isOpen();
 }
 
-QSqlQuery DatabaseManager::execute_query(
-    const QString &query,
+bool DatabaseManager::execute_query(
+    QSqlQuery &query,
+    const QString &query_str,
     const QVariantList &params
 ) {
-    QSqlQuery q;
-    q.prepare(query);
-    for (const auto &param : params) {
-        q.addBindValue(param);
+    query.prepare(query_str);
+    for (int i = 0; i < params.size(); ++i) {
+        query.bindValue(i, params[i]);
     }
 
-    if (!q.exec()) {
-        qDebug() << "Query execution error:" << q.lastError().text();
+    if (!query.exec()) {
+        qDebug() << "Query execution error:" << query.lastError().text();
+        return false;
     }
-
-    return q;
+    return true;
 }

@@ -23,7 +23,7 @@ class NoteEditDialog final : public QDialog {
 public:
     explicit NoteEditDialog(
         QWidget *parent = nullptr,
-        std::unique_ptr<Note> note = nullptr
+        std::unique_ptr<Note> note = std::make_unique<Note>(0, "NULL", "NULL")
     );
     ~NoteEditDialog() override;
 

@@ -10,8 +10,11 @@ class DatabaseManager final : public QObject {
 public:
     static DatabaseManager &get_instance();
     [[nodiscard]] bool check_connection() const;
-    QSqlQuery
-    execute_query(const QString &query, const QVariantList &params = {});
+    bool execute_query(
+        QSqlQuery &query,
+        const QString &query_str,
+        const QVariantList &params = {}
+    );
 
 private:
     explicit DatabaseManager();
