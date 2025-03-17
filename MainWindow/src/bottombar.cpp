@@ -1,4 +1,4 @@
-#include "bottombar.h"
+#include "../include/bottombar.h"
 #include <QColor>
 #include <QHBoxLayout>
 #include <QPalette>

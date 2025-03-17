@@ -1,5 +1,5 @@
-#include "notewidget.h"
-#include "note.hpp"
+#include "../include/notewidget.h"
+#include "../../project-storage-model/include/note.hpp"
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>

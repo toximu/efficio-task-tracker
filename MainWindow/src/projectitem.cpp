@@ -1,8 +1,5 @@
-#include "projectitem.h"
+#include "../include/projectitem.h"
 #include <QListWidget>
-#include <QListWidgetItem>
-#include <QWidget>
-#include <string>
 
 namespace Ui {
 ProjectItem::ProjectItem(QListWidget *list_view,

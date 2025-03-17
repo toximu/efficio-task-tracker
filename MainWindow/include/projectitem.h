@@ -2,7 +2,7 @@
 #define PROJECTITEM_H
 
 #include "notelist.h"
-#include "project.hpp"
+#include "../../project-storage-model/include/project.hpp"
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QObject>

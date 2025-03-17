@@ -1,7 +1,7 @@
 #ifndef PROJECTLIST_H
 #define PROJECTLIST_H
 
-#include "project.hpp"
+#include "../../project-storage-model/include/project.hpp"
 #include <QListWidget>
 #include <QWidget>
 

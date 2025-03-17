@@ -1,5 +1,7 @@
-#include "projectlist.h"
-#include "mainwindow.h"
+#include "../include/projectlist.h"
+#include "../include/mainwindow.h"
+#include "../../project-storage-model/include/project.hpp"
+#include "../include/projectitem.h"
 #include <QListWidget>
 
 namespace Ui {

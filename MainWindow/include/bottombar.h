@@ -3,7 +3,6 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QPalette>
 #include <QWidget>
 #include <string>
 

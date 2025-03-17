@@ -1,8 +1,9 @@
-#include "mainwindow.h"
-#include "bottombar.h"
-#include "notelist.h"
-#include "project.hpp"
-#include "projectlist.h"
+#include "../include/mainwindow.h"
+#include "../include/bottombar.h"
+#include "../include/notelist.h"
+#include "../../project-storage-model/include/project.hpp"
+#include "../include/projectlist.h"
+#include "../include/projectitem.h"
 #include <QFile>
 #include <QInputDialog>
 #include <QListWidget>
@@ -151,7 +152,7 @@ void MainWindow::add_project() {
 
 void MainWindow::add_note() {
   auto project_item = dynamic_cast<ProjectItem *>(project_list_->currentItem());
-    qDebug() << "Note add to " << project_item->project_->get_name() << "its address: " << project_item->project_;
+    // qDebug() << "Note add to " << project_item->project_->get_name() << "its address: " << project_item->project_;
   if (project_item) {
     auto &note = project_item->project_->add_note({1, "empty", ""});
     note_list_->add_note_widget(&note);

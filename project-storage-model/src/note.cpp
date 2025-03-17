@@ -1,4 +1,4 @@
-#include "note.hpp"
+#include "../include/note.hpp"
 
 namespace project_storage_model {
 
