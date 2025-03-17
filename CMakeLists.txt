@@ -13,29 +13,29 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
-set(MainWindow_dir ${CMAKE_SOURCE_DIR}/MainWindow/)
+set(MainWindow_dir ${CMAKE_SOURCE_DIR}/ui/MainWindow/)
 set(project-storage-model_dir ${CMAKE_SOURCE_DIR}/project-storage-model/)
 
 set(TS_FILES ${MainWindow_dir}MainWindow_en_US.ts)
 
-include_directories(MainWindow/include project-storage-model/include)
+include_directories(ui/MainWindow/include project-storage-model/include)
 
 set(PROJECT_SOURCES
         main.cpp
-        MainWindow/include/mainwindow.h
-        MainWindow/src/mainwindow.cpp
-        MainWindow/include/bottombar.h
-        MainWindow/src/bottombar.cpp
-        MainWindow/include/projectlist.h
-        MainWindow/src/projectlist.cpp
-        MainWindow/include/applicationwindow.h
-        MainWindow/src/applicationwindow.cpp
-        MainWindow/include/projectitem.h
-        MainWindow/src/projectitem.cpp
-        MainWindow/include/notelist.h
-        MainWindow/src/notelist.cpp
-        MainWindow/include/notewidget.h
-        MainWindow/src/notewidget.cpp
+        ui/MainWindow/include/mainwindow.h
+        ui/MainWindow/src/mainwindow.cpp
+        ui/MainWindow/include/bottombar.h
+        ui/MainWindow/src/bottombar.cpp
+        ui/MainWindow/include/projectlist.h
+        ui/MainWindow/src/projectlist.cpp
+        ui/MainWindow/include/applicationwindow.h
+        ui/MainWindow/src/applicationwindow.cpp
+        ui/MainWindow/include/projectitem.h
+        ui/MainWindow/src/projectitem.cpp
+        ui/MainWindow/include/notelist.h
+        ui/MainWindow/src/notelist.cpp
+        ui/MainWindow/include/notewidget.h
+        ui/MainWindow/src/notewidget.cpp
         project-storage-model/src/note.cpp
         project-storage-model/src/project.cpp
         project-storage-model/src/storage.cpp
