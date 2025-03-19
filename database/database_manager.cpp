@@ -1,13 +1,14 @@
 #include "database_manager.hpp"
 #include <QApplication>
 #include <QMessageBox>
+#include <QSqlError>
 
 DatabaseManager::DatabaseManager() {
     QSqlQuery query;
 
     database_ = QSqlDatabase::addDatabase("QPSQL");
     database_.setHostName("localhost");
-    database_.setPort(5433);
+    database_.setPort(5432);
     database_.setDatabaseName("efficio");
     database_.setUserName("efficio");
     database_.setPassword("admin");
@@ -43,7 +44,7 @@ bool DatabaseManager::execute_query(
     const QVariantList &params
 ) {
     query.prepare(query_str);
-    for (int i = 0; i < params.size(); ++i) {
+    for (int i = 0; i < params.size(); i++) {
         query.bindValue(i, params[i]);
     }
 

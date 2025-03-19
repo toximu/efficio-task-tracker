@@ -23,7 +23,7 @@ class NoteEditDialog final : public QDialog {
 public:
     explicit NoteEditDialog(
         QWidget *parent = nullptr,
-        std::unique_ptr<Note> note = std::make_unique<Note>(0, "NULL", "NULL")
+        Note *note = new Note(0, "NULL", "NULL")
     );
     ~NoteEditDialog() override;
 
@@ -38,7 +38,7 @@ private:
     std::unique_ptr<QLabel> avatar_label_;
     std::vector<std::unique_ptr<QLabel>> tag_labels_;
     QList<TagsDialog::Tag> selected_tags_;
-    std::unique_ptr<Note> note_;
+    Note *note_;
 
     [[nodiscard]] bool try_save_note() const;
 };

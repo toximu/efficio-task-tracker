@@ -1,12 +1,9 @@
 #ifndef DATABASE_MANAGER_HPP
 #define DATABASE_MANAGER_HPP
 
-#include <QSqlError>
 #include <QSqlQuery>
 
-class DatabaseManager final : public QObject {
-    Q_OBJECT
-
+class DatabaseManager final {
 public:
     static DatabaseManager &get_instance();
     [[nodiscard]] bool check_connection() const;
@@ -18,7 +15,7 @@ public:
 
 private:
     explicit DatabaseManager();
-    ~DatabaseManager() override;
+    ~DatabaseManager();
 
     QSqlDatabase database_;
 };
