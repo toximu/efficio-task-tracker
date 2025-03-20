@@ -1,16 +1,20 @@
-#ifndef DATABASE_MANAGER_HPP
-#define DATABASE_MANAGER_HPP
+#ifndef DATABASE_MANAGER_H
+#define DATABASE_MANAGER_H
 
+#include <QSqlDatabase>
+#include <QSqlError>
 #include <QSqlQuery>
+#include <QString>
 
-class DatabaseManager final {
+class DatabaseManager {
 public:
     static DatabaseManager &get_instance();
     [[nodiscard]] bool check_connection() const;
+
     bool execute_query(
         QSqlQuery &query,
         const QString &query_str,
-        const QVariantList &params = {}
+        const QVariantList &params
     );
 
 private:
@@ -20,4 +24,4 @@ private:
     QSqlDatabase database_;
 };
 
-#endif  // DATABASE_MANAGER_HPP
+#endif  // DATABASE_MANAGER_H

@@ -11,11 +11,11 @@
 #include "note_edit_dialog_styles.h"
 #include "tags_dialog.h"
 
-NoteEditDialog::NoteEditDialog(QWidget *parent, std::unique_ptr<Note> note)
+NoteEditDialog::NoteEditDialog(QWidget *parent, Note *note)
     : QDialog(parent),
       ui_(new Ui::NoteEditDialog),
       avatar_label_(nullptr),
-      note_(std::move(note)) {
+      note_(note) {
     ui_->setupUi(this);
 
     setFixedSize(700, 480);
