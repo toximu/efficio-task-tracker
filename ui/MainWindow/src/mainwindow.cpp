@@ -1,9 +1,9 @@
-#include "../include/mainwindow.h"
-#include "../include/bottombar.h"
-#include "../include/notelist.h"
-#include "../../project-storage-model/include/project.hpp"
-#include "../include/projectlist.h"
-#include "../include/projectitem.h"
+#include "mainwindow.h"
+#include "bottombar.h"
+#include "notelist.h"
+#include "project.hpp"
+#include "projectlist.h"
+#include "projectitem.h"
 #include <QFile>
 #include <QInputDialog>
 #include <QListWidget>

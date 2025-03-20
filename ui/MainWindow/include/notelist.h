@@ -1,6 +1,6 @@
 #ifndef NOTELIST_H
 #define NOTELIST_H
-#include "../../project-storage-model/include/note.hpp"
+#include "note.hpp"
 #include <QListWidgetItem>
 #include <QVBoxLayout>
 #include <QWidget>

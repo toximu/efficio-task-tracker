@@ -3,15 +3,15 @@
 
 #include "bottombar.h"
 #include "notelist.h"
-#include "../../project-storage-model/include/project.hpp"
 #include "projectlist.h"
 #include <QHBoxLayout>
 #include <QListWidget>
 #include <QMainWindow>
 #include <QPushButton>
 #include <QWidget>
+#include <QObject>
 #include <string>
-#include "../../project-storage-model/include/storage.hpp"
+#include "storage.hpp"
 
 namespace Ui {
 class MainWindow : public QWidget {

@@ -1,8 +1,5 @@
-#include "../include/bottombar.h"
-#include <QColor>
+#include "bottombar.h"
 #include <QHBoxLayout>
-#include <QPalette>
-#include <QSize>
 #include <QSizePolicy>
 #include <QWidget>
 #include <string>

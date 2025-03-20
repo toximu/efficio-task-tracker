@@ -1,8 +1,7 @@
 #ifndef NOTEWIDGET_H
 #define NOTEWIDGET_H
 
-#include "../../project-storage-model/include/note.hpp"
-#include <QHBoxLayout>
+#include "note.hpp"
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
