@@ -1,7 +1,7 @@
-#include "../include/notelist.h"
-#include "../../project-storage-model/include/note.hpp"
-#include "../include/notewidget.h"
-#include "../include/projectitem.h"
+#include "notelist.h"
+#include "note.hpp"
+#include "notewidget.h"
+#include "projectitem.h"
 #include <QHBoxLayout>
 #include <QMessageBox>
 #include <QObject>

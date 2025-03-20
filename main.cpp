@@ -5,7 +5,6 @@
 #include <QLocale>
 #include <QMainWindow>
 #include <QTranslator>
-
 #include "storage.hpp"
 
 using namespace Ui;

@@ -1,4 +1,4 @@
-#include "../include/projectitem.h"
+#include "projectitem.h"
 #include <QListWidget>
 
 namespace Ui {

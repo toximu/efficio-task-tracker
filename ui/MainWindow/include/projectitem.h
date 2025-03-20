@@ -2,11 +2,9 @@
 #define PROJECTITEM_H
 
 #include "notelist.h"
-#include "../../project-storage-model/include/project.hpp"
+#include "project.hpp"
 #include <QListWidget>
-#include <QListWidgetItem>
 #include <QObject>
-#include <QWidget>
 
 namespace Ui {
 class ProjectItem : public QListWidgetItem {

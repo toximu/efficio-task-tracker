@@ -1,5 +1,5 @@
-#include "../include/applicationwindow.h"
-#include "../include/mainwindow.h"
+#include "applicationwindow.h"
+#include "mainwindow.h"
 #include <QPalette>
 
 namespace Ui {
