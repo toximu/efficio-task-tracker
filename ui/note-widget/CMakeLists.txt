@@ -1,71 +1,51 @@
 cmake_minimum_required(VERSION 3.16)
-set(QT_NO_VULKAN_DETECTION TRUE)
-
 project(NoteWidgetEfficio VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_PREFIX_PATH "D:/Programs/Qt/6.8.2/mingw_64/lib/cmake")
+set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Sql)
 
-include_directories(
-        ${CMAKE_SOURCE_DIR}/../../scripts
-        ${CMAKE_SOURCE_DIR}/../../database
-)
+file(GLOB NOTE_WIDGET_SRC "src/*.cpp")
+file(GLOB NOTE_WIDGET_INCLUDE "include/*.h")
+file(GLOB NOTE_WIDGET_UI "ui/*.ui")
 
 set(TS_FILES NoteWidgetEfficio_ru_RU.ts)
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/ui)
 
-set(PROJECT_SOURCES
-        main.cpp
-        note_edit_dialog.cpp
-        note_edit_dialog.h
-        note_edit_dialog.ui
-        ../../database/database_manager.cpp
-        ../../database/database_manager.hpp
-        ../../database/note_dao.cpp
-        ../../database/note_dao.hpp
-        ../../scripts/note.cpp
-        tags_dialog.h
-        tags_dialog.cpp
-        ../../scripts/user.hpp
-        ../../scripts/user.cpp
-        ../../scripts/project.cpp
-        ../../scripts/storage.cpp
+add_library(${PROJECT_NAME} STATIC
+        ${NOTE_WIDGET_SRC}
+        ${NOTE_WIDGET_UI}
+        ${TS_FILES}
 )
 
-qt_add_executable(NoteWidgetEfficio
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-        .clang-format
-        note_edit_dialog_styles.h
-        tags_dialog_styles.h
+target_include_directories(NoteWidgetEfficio PUBLIC
+        ${CMAKE_SOURCE_DIR}/../../scripts
+        ${CMAKE_SOURCE_DIR}/../../database
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-target_link_libraries(NoteWidgetEfficio PRIVATE
+target_link_libraries(NoteWidgetEfficio PUBLIC
         Qt6::Core
         Qt6::Widgets
         Qt6::Sql
 )
 
 set_target_properties(NoteWidgetEfficio PROPERTIES
-        ${BUNDLE_ID_OPTION}
-        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-        MACOSX_BUNDLE TRUE
-        WIN32_EXECUTABLE TRUE
+        ARCHIVE_OUTPUT_NAME NoteWidgetEfficio
+        POSITION_INDEPENDENT_CODE ON
 )
 
 include(GNUInstallDirs)
 install(TARGETS NoteWidgetEfficio
-        BUNDLE DESTINATION .
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-
-qt_finalize_executable(NoteWidgetEfficio)
+install(DIRECTORY include/
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
+        FILES_MATCHING PATTERN "*.h*"
+)
