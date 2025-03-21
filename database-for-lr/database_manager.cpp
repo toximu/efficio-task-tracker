@@ -14,7 +14,7 @@ DatabaseManager::DatabaseManager() {
     database_.open();
 
     query.exec(
-        "CREATE TABLE IF NOT EXISTS logins ("
+        "CREATE TABLE IF NOT EXISTS users ("
         "login VARCHAR(50) PRIMARY KEY, "
         "password VARCHAR(50) NOT NULL "
         ")"

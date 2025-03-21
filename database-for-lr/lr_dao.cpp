@@ -10,6 +10,7 @@ QString LRDao::hash_password(const QString &password) {
     return hash.toHex();
 }
 
+
 bool LRDao::register_user(const QString &login, const QString &password) {
     // maybe in future make it thread-safe?
     QSqlQuery query;
@@ -25,7 +26,7 @@ bool LRDao::register_user(const QString &login, const QString &password) {
     }
     QString hashed_password = LRDao::hash_password(password);
     QString insert_query_str =
-        "INSERT INTO users (login, password) VALUES (?, ?)";
+        "INSERT INTO users (login, password) VALUES (:login, :password)";
     QVariantList insert_params = {login, hashed_password};
 
     return DatabaseManager::get_instance().execute_query(

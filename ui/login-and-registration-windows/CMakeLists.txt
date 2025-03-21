@@ -20,7 +20,7 @@ link_directories(/path/to/postgresql/lib)
 
 
 include_directories(
-        ${CMAKE_SOURCE_DIR}/../database-for-lr
+        ${CMAKE_SOURCE_DIR}/../../database-for-lr
 )
 
 set(TS_FILES login_window_ru_RU.ts)
@@ -33,16 +33,16 @@ set(PROJECT_SOURCES
         registration_window.cpp
         registration_window.h
         registration_window.ui
-        ../database-for-lr/database_manager.cpp
-        ../database-for-lr/database_manager.hpp
-        ../database-for-lr/lr_dao.cpp
-        ../database-for-lr/lr_dao.hpp     
+        ../../database-for-lr/database_manager.cpp
+        ../../database-for-lr/database_manager.hpp
+        ../../database-for-lr/lr_dao.cpp
+        ../../database-for-lr/lr_dao.hpp     
 )
 
 qt_add_executable(login_window
     MANUAL_FINALIZATION
     ${PROJECT_SOURCES}
-    ../.clang-format
+    #../.clang-format
     registration_window_style_sheet.h
     login_window_style_sheet.h
 

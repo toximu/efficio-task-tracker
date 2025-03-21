@@ -6,6 +6,11 @@
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
+    if (!DatabaseManager::get_instance().check_connection()) {
+        qDebug() << "Failed to connect to database!";
+        return -1;
+    }
+
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();
     for (const QString &locale : uiLanguages) {
