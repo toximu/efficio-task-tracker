@@ -21,6 +21,13 @@ DatabaseManager::DatabaseManager() {
         "content TEXT NOT NULL"
         ")"
     );
+
+    query.exec(
+        "CREATE TABLE IF NOT EXISTS logins ("
+        "login VARCHAR(50) PRIMARY KEY, "
+        "password VARCHAR(50) NOT NULL "
+        ")"
+    );
 }
 
 DatabaseManager::~DatabaseManager() {

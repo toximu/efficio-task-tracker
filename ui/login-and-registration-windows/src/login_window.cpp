@@ -3,6 +3,9 @@
 #include "login_window_style_sheet.h"
 #include "lr_dao.hpp"
 #include "registration_window.h"
+#include "mainwindow.h"
+#include "bottombar.h"
+#include "notelist.h"
 
 LoginWindow::LoginWindow(QWidget *parent)
     : QDialog(parent), ui(new Ui::LoginWindow) {
@@ -56,11 +59,13 @@ void LoginWindow::on_push_enter_clicked() {
                 this, "Вход", "Вы успешно вошли! Добро пожаловать :)"
             );
             hide();
-            //      here should be switch to main window? smth like this i
-            //      guess:
-            // MainWindow main_window;
-            // main_window.show();
-            // main_window.exec();
+            project_storage_model::Storage storage;
+            ApplicationWindow *app_window = new ApplicationWindow("efficio");
+            MainWindow *main_window = new MainWindow(app_window, "username", &storage);
+
+            app_window->setCentralWidget(main_window);
+            app_window->show();
+
             this->close();
         } else {
             QMessageBox::warning(
