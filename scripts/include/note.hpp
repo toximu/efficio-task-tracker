@@ -1,7 +1,6 @@
 #ifndef NOTE_HPP
 #define NOTE_HPP
 
-#include <algorithm>
 #include <list>
 #include <string>
 
@@ -11,9 +10,9 @@ class Note {
 public:
     Note(int id, const std::string &title, const std::string &text);
 
-    int get_id() const;
-    const std::string &get_title() const;
-    const std::string &get_text() const;
+    [[nodiscard]] int get_id() const;
+    [[nodiscard]] const std::string &get_title() const;
+    [[nodiscard]] const std::string &get_text() const;
     const std::list<std::string> &get_tags() const;
 
     void set_title(const std::string &title);

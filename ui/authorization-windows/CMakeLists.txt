@@ -32,7 +32,7 @@ set(HEADERS
 
 file(GLOB TS_FILES "*.ts")
 
-add_library(AuthorizationWindows STATIC ${SOURCES} ${HEADERS} ${UI_FILES} ${QM_FILES})
+add_library(AuthorizationWindows STATIC ${SOURCES} ${HEADERS} ${UI_FILES})
 
 target_include_directories(AuthorizationWindows
         PUBLIC

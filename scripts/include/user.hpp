@@ -11,8 +11,8 @@ class User {
 public:
     User(int id, const std::string &username);
 
-    int get_id() const;
-    const std::string &get_username() const;
+    [[nodiscard]] int get_id() const;
+    [[nodiscard]] const std::string &get_username() const;
     const std::list<Project> &get_projects() const;
 
     Project &add_project(const Project &project);

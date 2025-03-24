@@ -1,4 +1,5 @@
 #include "../include/storage.hpp"
+#include <algorithm>
 
 namespace project_storage_model {
 

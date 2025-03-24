@@ -1,15 +1,16 @@
 #include "../include/user.hpp"
+#include <algorithm>
 
 namespace project_storage_model {
 
-User::User(int id, const std::string &username) : id_(id), username_(username) {
+User::User(int id, const std::string &username) : id_(std::move(id)), username_(std::move(username)) {
 }
 
-int User::get_id() const {
+[[nodiscard]] int User::get_id() const {
     return id_;
 }
 
-const std::string &User::get_username() const {
+[[nodiscard]] const std::string &User::get_username() const {
     return username_;
 }
 

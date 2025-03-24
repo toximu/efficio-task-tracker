@@ -1,20 +1,21 @@
 #include "../include/note.hpp"
+#include <algorithm>
 
 namespace project_storage_model {
 
 Note::Note(int id, const std::string &title, const std::string &text)
-    : id_(id), title_(title), text_(text) {
+    : id_(std::move(id)), title_(std::move(title)), text_(std::move(text)) {
 }
 
-int Note::get_id() const {
+[[nodiscard]] int Note::get_id() const {
     return id_;
 }
 
-const std::string &Note::get_title() const {
+[[nodiscard]] const std::string &Note::get_title() const {
     return title_;
 }
 
-const std::string &Note::get_text() const {
+[[nodiscard]] const std::string &Note::get_text() const {
     return text_;
 }
 

@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.16)
 
 project(EfficioTaskTracker LANGUAGES CXX)
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -16,13 +20,13 @@ add_subdirectory(ui/note-widget)
 add_executable(EfficioTaskTracker main.cpp)
 
 target_link_libraries(EfficioTaskTracker PRIVATE
+        Qt6::Widgets
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Sql
         Database
         Scripts
         AuthorizationWindows
         MainWindow
         NoteWidget
-        Qt6::Widgets
-        Qt6::Core
-        Qt6::Gui
-        Qt6::Sql
 )

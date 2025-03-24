@@ -1,4 +1,5 @@
 #include "../include/project.hpp"
+#include <algorithm>
 
 namespace project_storage_model {
 
@@ -7,18 +8,18 @@ Project::Project(
     const std::string &name,
     const std::string &description
 )
-    : id_(id), name_(name), description_(description) {
+    : id_(std::move(id)), name_(std::move(name)), description_(std::move(description)) {
 }
 
-int Project::get_id() const {
+[[nodiscard]] int Project::get_id() const {
     return id_;
 }
 
-const std::string &Project::get_name() const {
+[[nodiscard]] const std::string &Project::get_name() const {
     return name_;
 }
 
-const std::string &Project::get_description() const {
+[[nodiscard]] const std::string &Project::get_description() const {
     return description_;
 }
 
