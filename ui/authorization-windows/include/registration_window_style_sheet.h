@@ -4,7 +4,7 @@
 
 namespace Ui {
 QString registration_window_dark_theme = R"(
-    QDialog {
+    QWidget {
         background-color: #202020;
     }
 
@@ -53,7 +53,7 @@ QString registration_window_dark_theme = R"(
 )";
 
 QString registration_window_light_theme = R"(
-    QDialog {
+    QWidget {
         background-color: #f5f5f5;
     }
 

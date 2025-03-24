@@ -1,12 +1,23 @@
 #include "registration_window.h"
+#include <QApplication>
 #include <QChar>
+#include <QLocale>
+#include <QMainWindow>
+#include <QScreen>
+#include <QStyle>
+#include <QTimer>
+#include "applicationwindow.h"
+#include "bottombar.h"
 #include "database_manager.hpp"
 #include "login_window.h"
 #include "lr_dao.hpp"
+#include "mainwindow.h"
+#include "notelist.h"
+#include "registration_window.h"
 #include "registration_window_style_sheet.h"
 
 RegistrationWindow::RegistrationWindow(QWidget *parent)
-    : QDialog(parent), ui(new Ui::RegistrationWindow) {
+    : QWidget(parent), ui(new Ui::RegistrationWindow) {
     ui->setupUi(this);
 
     setFixedSize(380, 480);
@@ -33,10 +44,23 @@ RegistrationWindow::~RegistrationWindow() {
 }
 
 void RegistrationWindow::on_switch_mode_clicked() {
-    hide();
-    LoginWindow login_window;
-    login_window.show();
-    login_window.exec();
+    QWidget *parent = this->parentWidget();
+
+    QMainWindow *app_window = qobject_cast<QMainWindow *>(parent);
+
+    if (QWidget *old = app_window->centralWidget()) {
+        old->deleteLater();
+    }
+    project_storage_model::Storage storage;
+    LoginWindow *login_window = new LoginWindow(app_window);
+
+    app_window->setCentralWidget(login_window);
+    QRect screenGeometry = QApplication::primaryScreen()->availableGeometry();
+    int x = (screenGeometry.width() - login_window->width()) / 2;
+    int y = (screenGeometry.height() - login_window->height()) / 2;
+    app_window->move(x, y);
+
+    this->close();
 }
 
 bool RegistrationWindow::is_strong_and_valid_password(const QString &password) {
@@ -117,7 +141,6 @@ void RegistrationWindow::on_push_registration_clicked() {
                 hide();
                 LoginWindow login_window;
                 login_window.show();
-                login_window.exec();
             }
         }
     } else {

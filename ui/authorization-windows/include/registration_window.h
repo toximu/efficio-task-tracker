@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QDialog>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
@@ -15,7 +14,7 @@ class RegistrationWindow;
 
 QT_END_NAMESPACE
 
-class RegistrationWindow : public QDialog {
+class RegistrationWindow : public QWidget {
     Q_OBJECT
 
 public:

@@ -1,6 +1,9 @@
 #include <QApplication>
 #include <QLocale>
 #include <QMainWindow>
+#include <QScreen>
+#include <QStyle>
+#include <QTimer>
 #include <QTranslator>
 #include "applicationwindow.h"
 #include "login_window.h"
@@ -22,7 +25,14 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    LoginWindow login_window;
-    login_window.show();
-    return login_window.exec();
+    Ui::ApplicationWindow *app_window = new Ui::ApplicationWindow("efficio");
+    LoginWindow *login_window = new LoginWindow(app_window);
+
+    app_window->setCentralWidget(login_window);
+    QRect screenGeometry = QApplication::primaryScreen()->availableGeometry();
+    int x = (screenGeometry.width() - login_window->width()) / 2;
+    int y = (screenGeometry.height() - login_window->height()) / 2;
+    app_window->move(x, y);
+    app_window->show();
+    return a.exec();
 }

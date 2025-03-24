@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QDialog>
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QPushButton>
@@ -17,11 +16,11 @@ class LoginWindow;
 
 QT_END_NAMESPACE
 
-class LoginWindow : public QDialog {
+class LoginWindow : public QWidget {
     Q_OBJECT
 
 public:
-    LoginWindow(QWidget *parent = nullptr);
+    explicit LoginWindow(QWidget *parent = nullptr);
     ~LoginWindow();
 
 private slots:

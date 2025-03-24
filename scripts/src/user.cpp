@@ -3,7 +3,8 @@
 
 namespace project_storage_model {
 
-User::User(int id, const std::string &username) : id_(std::move(id)), username_(std::move(username)) {
+User::User(int id, const std::string &username)
+    : id_(std::move(id)), username_(std::move(username)) {
 }
 
 [[nodiscard]] int User::get_id() const {

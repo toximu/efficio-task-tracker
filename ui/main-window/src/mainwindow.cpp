@@ -32,6 +32,7 @@ MainWindow::MainWindow(
       storage_(storage) {
     this->setObjectName("main-window");
     this->setAttribute(Qt::WA_StyledBackground);
+    setFixedSize(800, 600);
     this->setStyleSheet(
         R"(
 #main-window {

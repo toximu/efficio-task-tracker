@@ -1,15 +1,21 @@
 #include "login_window.h"
+#include <QApplication>
+#include <QLocale>
+#include <QMainWindow>
+#include <QScreen>
+#include <QStyle>
+#include <QTimer>
 #include "applicationwindow.h"
+#include "bottombar.h"
 #include "database_manager.hpp"
 #include "login_window_style_sheet.h"
 #include "lr_dao.hpp"
-#include "registration_window.h"
 #include "mainwindow.h"
-#include "bottombar.h"
 #include "notelist.h"
+#include "registration_window.h"
 
 LoginWindow::LoginWindow(QWidget *parent)
-    : QDialog(parent), ui(new Ui::LoginWindow) {
+    : QWidget(parent), ui(new Ui::LoginWindow) {
     ui->setupUi(this);
 
     setFixedSize(380, 480);
@@ -33,10 +39,23 @@ LoginWindow::~LoginWindow() {
 }
 
 void LoginWindow::on_switch_mode_clicked() {
-    hide();
-    RegistrationWindow registration_window;
-    registration_window.show();
-    registration_window.exec();
+    QWidget *parent = this->parentWidget();
+
+    QMainWindow *app_window = qobject_cast<QMainWindow *>(parent);
+
+    if (QWidget *old = app_window->centralWidget()) {
+        old->deleteLater();
+    }
+    project_storage_model::Storage storage;
+    RegistrationWindow *registration_window =
+        new RegistrationWindow(app_window);
+
+    app_window->setCentralWidget(registration_window);
+    QRect screenGeometry = QApplication::primaryScreen()->availableGeometry();
+    int x = (screenGeometry.width() - registration_window->width()) / 2;
+    int y = (screenGeometry.height() - registration_window->height()) / 2;
+    app_window->move(x, y);
+
     this->close();
 }
 
@@ -59,13 +78,23 @@ void LoginWindow::on_push_enter_clicked() {
             QMessageBox::information(
                 this, "Вход", "Вы успешно вошли! Добро пожаловать :)"
             );
-            hide();
+            QWidget *parent = this->parentWidget();
+
+            QMainWindow *app_window = qobject_cast<QMainWindow *>(parent);
+
+            if (QWidget *old = app_window->centralWidget()) {
+                old->deleteLater();
+            }
             project_storage_model::Storage storage;
-            Ui::ApplicationWindow *app_window = new Ui::ApplicationWindow("efficio");
-            Ui::MainWindow *main_window = new Ui::MainWindow(app_window, "username", &storage);
+            Ui::MainWindow *main_window =
+                new Ui::MainWindow(app_window, "username", &storage);
 
             app_window->setCentralWidget(main_window);
-            app_window->show();
+            QRect screenGeometry =
+                QApplication::primaryScreen()->availableGeometry();
+            int x = (screenGeometry.width() - main_window->width()) / 2;
+            int y = (screenGeometry.height() - main_window->height()) / 2;
+            app_window->move(x, y);
 
             this->close();
         } else {

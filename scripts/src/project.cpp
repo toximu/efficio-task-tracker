@@ -8,7 +8,9 @@ Project::Project(
     const std::string &name,
     const std::string &description
 )
-    : id_(std::move(id)), name_(std::move(name)), description_(std::move(description)) {
+    : id_(std::move(id)),
+      name_(std::move(name)),
+      description_(std::move(description)) {
 }
 
 [[nodiscard]] int Project::get_id() const {

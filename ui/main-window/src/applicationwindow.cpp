@@ -10,6 +10,5 @@ ApplicationWindow::ApplicationWindow(std::string window_name_)
     this->setAttribute(Qt::WA_StyledBackground);
 
     this->setWindowTitle(window_name_.c_str());
-    this->resize(800, 600);
 }
 }  // namespace Ui
