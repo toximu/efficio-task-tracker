@@ -50,10 +50,10 @@ psql -U efficio -d efficio -h localhost
 5. Build and start app
 
 ```bash
-cd ui/note-widget/build
+mkdir -p build && cd build
 cmake ..
 make
-./NoteWidgetEfficio -platform xcb
+./EfficioTaskTracker -platform xcb
 ```
 
 ## Technologies Used
