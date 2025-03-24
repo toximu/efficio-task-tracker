@@ -133,8 +133,8 @@ border-radius : 8px;
   // connections
   connect(project_list_, &QListWidget::itemClicked, note_list_,
           &NoteList::load_project_notes);
-  connect(new_note_button_, &QPushButton::clicked, this, &add_note);
-  connect(new_project_button_, &QPushButton::clicked, this, &add_project);
+  connect(new_note_button_, &QPushButton::clicked, this, &Ui::MainWindow::add_note);
+  connect(new_project_button_, &QPushButton::clicked, this, &Ui::MainWindow::add_project);
 }
 
 void MainWindow::add_project() {

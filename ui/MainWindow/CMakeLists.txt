@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.16)
 project(MainWindow)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -8,7 +8,10 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets Core LinguistTools)
+#find_package(Qt6 REQUIRED COMPONENTS Widgets Core LinguistTools)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Sql)
+find_package(PostgreSQL REQUIRED)
+link_directories(/path/to/postgresql/lib)
 
 file(GLOB MAIN_WINDOW_SRC "src/*")
 file(GLOB MAIN_WINDOW_INCLUDE "include/*")

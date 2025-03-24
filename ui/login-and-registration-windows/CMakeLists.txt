@@ -17,15 +17,15 @@ find_package(Qt6 COMPONENTS Core Widgets Gui REQUIRED)
 set(TS_FILES login_window_ru_RU.ts)
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/ui)
 
-file(GLOB LOGIN_REGISTRATION_WINDOW_SRC "src/*")
-file(GLOB LOGIN_REGISTRATION_WINDOW_INCLUDE "include/*")
-file(GLOB LOGIN_REGISTRATION_WINDOW_UI "ui/*")
+file(GLOB LOGIN_REGISTRATION_WINDOWS_SRC "src/*")
+file(GLOB LOGIN_REGISTRATION_WINDOWS_INCLUDE "include/*")
+file(GLOB LOGIN_REGISTRATION_WINDOWS_UI "ui/*")
 
 
-add_library(${PROJECT_NAME} STATIC
-        ${NOTE_WIDGET_SRC}
-        ${NOTE_WIDGET_UI}
-        ${TS_FILES}
+add_library(${PROJECT_NAME}
+    ${LOGIN_REGISTRATION_WINDOWS_SRC}
+        ${LOGIN_REGISTRATION_WINDOWS_INCLUDE}
+        login_window_ru_RU.ts
 )
 
 target_include_directories(LoginRegistrationWindows PUBLIC
@@ -55,5 +55,7 @@ install(DIRECTORY include/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
         FILES_MATCHING PATTERN "*.h*"
 )
+
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets Qt6::Core)
 
 qt_finalize_executable(LoginRegistrationWindows)

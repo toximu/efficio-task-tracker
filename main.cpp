@@ -6,6 +6,8 @@
 #include "mainwindow.h"
 #include "note.hpp"
 #include "storage.hpp"
+#include "registration_window.h"
+#include "login_window.h"
 
 using namespace Ui;
 
@@ -22,7 +24,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    LoginWindow login_window;
+    Ui::LoginWindow login_window;
     login_window.show();
     return login_window.exec();
 }

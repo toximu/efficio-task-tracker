@@ -39,7 +39,7 @@ void NoteList::load_project_notes(QListWidgetItem *project) {
 
   ProjectItem *p = dynamic_cast<ProjectItem *>(project);
   assert(p != nullptr);
-  qDebug() << "Адрес проекта"<< p->project_->get_name() << ":" <<p->project_;
+  qDebug() << "Адрес проекта" << QString::fromStdString(p->project_->get_name()) << ":" <<p->project_;
   this->clear_note_list();
   note_counter_ = 0;
   for (const auto &note : p->project_->get_notes()) {
