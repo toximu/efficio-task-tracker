@@ -28,11 +28,11 @@ MainWindow::MainWindow(QWidget *parent, std::string username,
       new_note_button_(new QPushButton("Новая заметка", this)),
     storage_(storage)
 {
-  this->setObjectName("MainWindow");
+  this->setObjectName("main-window");
   this->setAttribute(Qt::WA_StyledBackground);
   this->setStyleSheet(
       R"(
-#MainWindow {
+#main-window {
     background-color : white;
 }
 #ProjectList {

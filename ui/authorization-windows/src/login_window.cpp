@@ -1,4 +1,5 @@
 #include "login_window.h"
+#include "applicationwindow.h"
 #include "database_manager.hpp"
 #include "login_window_style_sheet.h"
 #include "lr_dao.hpp"
@@ -60,8 +61,8 @@ void LoginWindow::on_push_enter_clicked() {
             );
             hide();
             project_storage_model::Storage storage;
-            ApplicationWindow *app_window = new ApplicationWindow("efficio");
-            MainWindow *main_window = new MainWindow(app_window, "username", &storage);
+            Ui::ApplicationWindow *app_window = new Ui::ApplicationWindow("efficio");
+            Ui::MainWindow *main_window = new Ui::MainWindow(app_window, "username", &storage);
 
             app_window->setCentralWidget(main_window);
             app_window->show();

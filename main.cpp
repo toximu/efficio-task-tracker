@@ -9,8 +9,6 @@
 #include "registration_window.h"
 #include "login_window.h"
 
-using namespace Ui;
-
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
@@ -24,7 +22,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    Ui::LoginWindow login_window;
+    LoginWindow login_window;
     login_window.show();
     return login_window.exec();
 }
