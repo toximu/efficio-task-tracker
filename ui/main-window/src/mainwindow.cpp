@@ -1,9 +1,5 @@
 #include "mainwindow.h"
-#include "bottombar.h"
-#include "notelist.h"
-#include "project.hpp"
-#include "projectlist.h"
-#include "projectitem.h"
+#include <QDebug>
 #include <QFile>
 #include <QInputDialog>
 #include <QListWidget>
@@ -12,26 +8,32 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include <string>
-#include <QDebug>
-
+#include "bottombar.h"
+#include "notelist.h"
+#include "project.hpp"
+#include "projectitem.h"
+#include "projectlist.h"
 
 namespace Ui {
-MainWindow::MainWindow(QWidget *parent, std::string username,
-                       project_storage_model::Storage *storage)
-    : QWidget(parent),main_layout_(new QVBoxLayout(this)),
-    top_bar_(new BottomBar(this, username, "эффишио - таск трекер.")),
-    content_layout_(new QHBoxLayout(this)),
-    project_list_(new ProjectList(this)),
-    note_list_(new NoteList(this)),
-    content_widget_(new QWidget(this)),
-    new_project_button_(new QPushButton("Новый проект", this)),
+MainWindow::MainWindow(
+    QWidget *parent,
+    std::string username,
+    project_storage_model::Storage *storage
+)
+    : QWidget(parent),
+      main_layout_(new QVBoxLayout(this)),
+      top_bar_(new BottomBar(this, username, "эффишио - таск трекер.")),
+      content_layout_(new QHBoxLayout(this)),
+      project_list_(new ProjectList(this)),
+      note_list_(new NoteList(this)),
+      content_widget_(new QWidget(this)),
+      new_project_button_(new QPushButton("Новый проект", this)),
       new_note_button_(new QPushButton("Новая заметка", this)),
-    storage_(storage)
-{
-  this->setObjectName("main-window");
-  this->setAttribute(Qt::WA_StyledBackground);
-  this->setStyleSheet(
-      R"(
+      storage_(storage) {
+    this->setObjectName("main-window");
+    this->setAttribute(Qt::WA_StyledBackground);
+    this->setStyleSheet(
+        R"(
 #main-window {
     background-color : white;
 }
@@ -110,57 +112,68 @@ border-radius: 8px;
 border-radius : 8px;
 }
 
-)");
+)"
+    );
 
-  main_layout_->addWidget(top_bar_, Qt::AlignTop);
+    main_layout_->addWidget(top_bar_, Qt::AlignTop);
 
-  main_layout_->setAlignment(Qt::AlignCenter);
-  main_layout_->addWidget(content_widget_);
+    main_layout_->setAlignment(Qt::AlignCenter);
+    main_layout_->addWidget(content_widget_);
 
-  content_widget_->setLayout(content_layout_);
+    content_widget_->setLayout(content_layout_);
 
-  auto right_layout = new QVBoxLayout(content_widget_);
-  right_layout->addWidget(project_list_);
-  right_layout->addWidget(new_project_button_);
-  right_layout->addWidget(new_note_button_);
+    auto right_layout = new QVBoxLayout(content_widget_);
+    right_layout->addWidget(project_list_);
+    right_layout->addWidget(new_project_button_);
+    right_layout->addWidget(new_note_button_);
 
-  content_layout_->addWidget(note_list_, Qt::AlignRight);
-  content_layout_->addLayout(right_layout);
-  main_layout_->addWidget(content_widget_);
+    content_layout_->addWidget(note_list_, Qt::AlignRight);
+    content_layout_->addLayout(right_layout);
+    main_layout_->addWidget(content_widget_);
 
-  this->setLayout(main_layout_);
+    this->setLayout(main_layout_);
 
-  // connections
-  connect(project_list_, &QListWidget::itemClicked, note_list_,
-          &NoteList::load_project_notes);
-  connect(new_note_button_, &QPushButton::clicked, this, &Ui::MainWindow::add_note);
-  connect(new_project_button_, &QPushButton::clicked, this, &Ui::MainWindow::add_project);
+    // connections
+    connect(
+        project_list_, &QListWidget::itemClicked, note_list_,
+        &NoteList::load_project_notes
+    );
+    connect(
+        new_note_button_, &QPushButton::clicked, this, &Ui::MainWindow::add_note
+    );
+    connect(
+        new_project_button_, &QPushButton::clicked, this,
+        &Ui::MainWindow::add_project
+    );
 }
 
 void MainWindow::add_project() {
-
-  bool ok;
-  QString name_of_project =
-      QInputDialog::getText(nullptr, "Название проекта:", "Введите название",
-                            QLineEdit::Normal, "", &ok);
-  if (ok) {
-    auto &project = storage_->add_project(
-        project_storage_model::Project(1, name_of_project.toStdString(), ""));
-    project_list_->add_project(&project);
-  }
+    bool ok;
+    QString name_of_project = QInputDialog::getText(
+        nullptr, "Название проекта:", "Введите название", QLineEdit::Normal, "",
+        &ok
+    );
+    if (ok) {
+        auto &project = storage_->add_project(
+            project_storage_model::Project(1, name_of_project.toStdString(), "")
+        );
+        project_list_->add_project(&project);
+    }
 }
 
 void MainWindow::add_note() {
-  auto project_item = dynamic_cast<ProjectItem *>(project_list_->currentItem());
-    // qDebug() << "Note add to " << project_item->project_->get_name() << "its address: " << project_item->project_;
-  if (project_item) {
-    auto &note = project_item->project_->add_note({1, "empty", ""});
-    note_list_->add_note_widget(&note);
-  } else {
-    QMessageBox msg;
-    msg.setText("Проект не выбран!");
-    msg.exec();
-  }
+    auto project_item =
+        dynamic_cast<ProjectItem *>(project_list_->currentItem());
+    // qDebug() << "Note add to " << project_item->project_->get_name() << "its
+    // address: " << project_item->project_;
+    if (project_item) {
+        auto &note = project_item->project_->add_note({1, "empty", ""});
+        note_list_->add_note_widget(&note);
+    } else {
+        QMessageBox msg;
+        msg.setText("Проект не выбран!");
+        msg.exec();
+    }
 }
 
-} // namespace Ui
+}  // namespace Ui

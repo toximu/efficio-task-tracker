@@ -1,19 +1,19 @@
 #ifndef PROJECTITEM_H
 #define PROJECTITEM_H
 
-#include "notelist.h"
-#include "project.hpp"
 #include <QListWidget>
 #include <QObject>
+#include "notelist.h"
+#include "project.hpp"
 
 namespace Ui {
 class ProjectItem : public QListWidgetItem {
-  project_storage_model::Project *project_;
-  friend NoteList;
-  friend class MainWindow;
+    project_storage_model::Project *project_;
+    friend NoteList;
+    friend class MainWindow;
 
 public:
-  ProjectItem(QListWidget *listview, project_storage_model::Project *project);
+    ProjectItem(QListWidget *listview, project_storage_model::Project *project);
 };
-} // namespace Ui
-#endif // PROJECTITEM_H
+}  // namespace Ui
+#endif  // PROJECTITEM_H

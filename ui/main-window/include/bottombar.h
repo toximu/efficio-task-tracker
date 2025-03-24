@@ -8,13 +8,17 @@
 
 namespace Ui {
 class BottomBar : public QWidget {
-  QHBoxLayout *main_layout_;
-  QLabel *project_name_;
-  QLabel *username_;
+    QHBoxLayout *main_layout_;
+    QLabel *project_name_;
+    QLabel *username_;
 
 public:
-  BottomBar(QWidget *parent_, std::string username_, std::string project_name_);
+    BottomBar(
+        QWidget *parent_,
+        std::string username_,
+        std::string project_name_
+    );
 };
-} // namespace Ui
+}  // namespace Ui
 
-#endif // BOTTOMBAR_H
+#endif  // BOTTOMBAR_H

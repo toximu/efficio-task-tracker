@@ -3,11 +3,11 @@
 #include <QMainWindow>
 #include <QTranslator>
 #include "applicationwindow.h"
+#include "login_window.h"
 #include "mainwindow.h"
 #include "note.hpp"
-#include "storage.hpp"
 #include "registration_window.h"
-#include "login_window.h"
+#include "storage.hpp"
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);

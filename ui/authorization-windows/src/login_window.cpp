@@ -1,12 +1,12 @@
 #include "login_window.h"
 #include "applicationwindow.h"
+#include "bottombar.h"
 #include "database_manager.hpp"
 #include "login_window_style_sheet.h"
 #include "lr_dao.hpp"
-#include "registration_window.h"
 #include "mainwindow.h"
-#include "bottombar.h"
 #include "notelist.h"
+#include "registration_window.h"
 
 LoginWindow::LoginWindow(QWidget *parent)
     : QDialog(parent), ui(new Ui::LoginWindow) {
@@ -44,38 +44,53 @@ void LoginWindow::on_push_enter_clicked() {
     QString login = ui->inputLogin->text();
     QString password = ui->inputPassword->text();
 
-    if (!login.isEmpty() && !password.isEmpty()) {
-        if (login.size() > 50) {
-            QMessageBox::warning(
-                this, "Ошибка",
-                "Длина логина не должна превышать пятидесяти символов"
-            );
-        } else if (password.size() > 50) {
-            QMessageBox::warning(
-                this, "Ошибка",
-                "Длина пароля не должна превышать пятидесяти символов"
-            );
-        } else if (LRDao::validate_user(login, password)) {
-            QMessageBox::information(
-                this, "Вход", "Вы успешно вошли! Добро пожаловать :)"
-            );
-            hide();
-            project_storage_model::Storage storage;
-            Ui::ApplicationWindow *app_window = new Ui::ApplicationWindow("efficio");
-            Ui::MainWindow *main_window = new Ui::MainWindow(app_window, "username", &storage);
+    QMessageBox::information(
+        this, "Вход", "Вы успешно вошли! Добро пожаловать :)"
+    );
+    hide();
+    project_storage_model::Storage storage;
+    Ui::ApplicationWindow *app_window = new Ui::ApplicationWindow("efficio");
+    Ui::MainWindow *main_window =
+        new Ui::MainWindow(app_window, "username", &storage);
 
-            app_window->setCentralWidget(main_window);
-            app_window->show();
+    app_window->setCentralWidget(main_window);
+    app_window->show();
 
-            this->close();
-        } else {
-            QMessageBox::warning(
-                this, "Ошибка ввода данных", "Неверный логин или пароль!"
-            );
-        }
-    } else {
-        QMessageBox::warning(
-            this, "Ошибка ввода данных", "Пожалуйста, заполните все поля!"
-        );
-    }
+    this->close();
+
+    // if (!login.isEmpty() && !password.isEmpty()) {
+    //     if (login.size() > 50) {
+    //         QMessageBox::warning(
+    //             this, "Ошибка",
+    //             "Длина логина не должна превышать пятидесяти символов"
+    //         );
+    //     } else if (password.size() > 50) {
+    //         QMessageBox::warning(
+    //             this, "Ошибка",
+    //             "Длина пароля не должна превышать пятидесяти символов"
+    //         );
+    //     } else if (LRDao::validate_user(login, password)) {
+    //         QMessageBox::information(
+    //             this, "Вход", "Вы успешно вошли! Добро пожаловать :)"
+    //         );
+    //         hide();
+    //         project_storage_model::Storage storage;
+    //         Ui::ApplicationWindow *app_window = new
+    //         Ui::ApplicationWindow("efficio"); Ui::MainWindow *main_window =
+    //         new Ui::MainWindow(app_window, "username", &storage);
+
+    //         app_window->setCentralWidget(main_window);
+    //         app_window->show();
+
+    //         this->close();
+    //     } else {
+    //         QMessageBox::warning(
+    //             this, "Ошибка ввода данных", "Неверный логин или пароль!"
+    //         );
+    //     }
+    // } else {
+    //     QMessageBox::warning(
+    //         this, "Ошибка ввода данных", "Пожалуйста, заполните все поля!"
+    //     );
+    // }
 }
