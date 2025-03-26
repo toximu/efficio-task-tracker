@@ -11,7 +11,7 @@
 class LRDao {
 public:
     LRDao() = default;
-    static bool register_user(const QString &login, const QString &password);
+    static bool try_register_user(const QString &login, const QString &password);
     static bool validate_user(const QString &login, const QString &password);
 
 private:

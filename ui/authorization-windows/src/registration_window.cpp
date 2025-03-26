@@ -127,7 +127,7 @@ void RegistrationWindow::on_push_registration_clicked() {
                 "Длина пароля не должна превышать пятидесяти символов"
             );
         } else if (is_strong_and_valid_password(created_password)) {
-            if (!LRDao::register_user(created_login, created_password)) {
+            if (!LRDao::try_register_user(created_login, created_password)) {
                 QMessageBox::warning(
                     this, "Ошибка",
                     "Пользователь с таким именем уже существует. Пожалуйста, "
@@ -138,9 +138,7 @@ void RegistrationWindow::on_push_registration_clicked() {
                     this, "Регистрация",
                     "Вы успешно зарегистрировались! Пожалуйста, выполните вход."
                 );
-                hide();
-                LoginWindow login_window;
-                login_window.show();
+                on_switch_mode_clicked(); // TODO: fix
             }
         }
     } else {

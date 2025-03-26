@@ -11,12 +11,12 @@ public:
         QSqlQuery &query,
         const QString &query_str,
         const QVariantList &params = {}
-    );
+    ) const;
+    [[nodiscard]] QSqlDatabase get_database() const;
 
 private:
     explicit DatabaseManager();
     ~DatabaseManager();
-
     QSqlDatabase database_;
 };
 
