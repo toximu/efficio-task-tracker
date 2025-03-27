@@ -11,7 +11,7 @@ QString LRDao::hash_password(const QString &password) {
     return hash.toHex();
 }
 
-bool LRDao::try_register_user(const QString &login, const QString &password) {
+int LRDao::try_register_user(const QString &login, const QString &password) {
     QSqlQuery query;
 
     const bool is_login_free = DatabaseManager::get_instance().execute_query(
@@ -21,15 +21,15 @@ bool LRDao::try_register_user(const QString &login, const QString &password) {
     );
 
     if (!is_login_free) {
-        return false;
+        return -1;
     }
 
     QSqlQuery insert_query;
-    return DatabaseManager::get_instance().execute_query(
+    return static_cast<int>(DatabaseManager::get_instance().execute_query(
         insert_query,
         "INSERT INTO users (login, password) VALUES (?, ?)",
         {login, password}
-    );
+    ));
 }
 
 

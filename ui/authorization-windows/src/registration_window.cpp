@@ -127,7 +127,13 @@ void RegistrationWindow::on_push_registration_clicked() {
                 "Длина пароля не должна превышать пятидесяти символов"
             );
         } else if (is_strong_and_valid_password(created_password)) {
-            if (!LRDao::try_register_user(created_login, created_password)) {
+            int try_register_user = LRDao::try_register_user(created_login, created_password);
+            if (try_register_user == 0) {
+                QMessageBox::warning(
+                    this, "Ошибка",
+                    "Извините, разрабы дауны и не подключили толком бд."
+                );
+            } else if(try_register_user == -1) {
                 QMessageBox::warning(
                     this, "Ошибка",
                     "Пользователь с таким именем уже существует. Пожалуйста, "
