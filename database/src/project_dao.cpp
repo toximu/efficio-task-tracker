@@ -3,6 +3,8 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QVector>
+#include <iostream>
+#include <ostream>
 #include "database_manager.hpp"
 
 namespace DB {
@@ -33,14 +35,16 @@ bool ProjectDAO::get_project(
 ) {
     QSqlQuery query;
     QString query_str =
-        "SELECT (name, notes) FROM projects "
+        "SELECT name, array_to_string(notes, ',') FROM projects "
         "WHERE id = ?";
     const QVariantList params = {id};
     bool is_successful =
         DatabaseManager::get_instance().execute_query(query, query_str, params);
-    if (is_successful) {
+
+    if (is_successful && query.next()) {
         name = query.value("name").toString().toStdString();
-        for (auto i : query.value("notes").toList()) {
+
+        for (auto i : query.value(1).toString().split(",")) {
             notes.push_back(i.toInt());
         }
         return true;

@@ -1,4 +1,6 @@
 #include "note_dao.hpp"
+#include <iostream>
+#include <ostream>
 #include "database_manager.hpp"
 
 bool NoteDao::initialize_note(int &id) {
@@ -58,9 +60,11 @@ std::vector<Note> NoteDao::get_all_notes() {
 Note NoteDao::get_note_by_id(int id) {
     QSqlQuery query;
     DatabaseManager::get_instance().execute_query(
-        query, "SELECT * FROM notes WHERE id = :id", {id}
+        query, "SELECT * FROM notes WHERE id = ?", {id}
     );
+    query.next();
     auto title = query.value("title").toString().toStdString();
     auto text = query.value("content").toString().toStdString();
+    // std::cout << title << ", " << text << std::endl;
     return {id, title, text};
 }

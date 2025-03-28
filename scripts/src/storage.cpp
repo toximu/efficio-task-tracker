@@ -20,7 +20,7 @@ void Storage::remove_project(int project_id) {
     );
 }
 
-const std::list<Project> &Storage::get_projects() const {
+std::list<Project> &Storage::get_projects() {
     return projects_;
 }
 

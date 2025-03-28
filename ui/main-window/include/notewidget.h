@@ -1,6 +1,7 @@
 #ifndef NOTEWIDGET_H
 #define NOTEWIDGET_H
 
+#include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
@@ -13,7 +14,8 @@ class NoteWidget : public QWidget {
     const project_storage_model::Note *model_note_;
     QVBoxLayout *main_layout_;
     QPushButton *open_button_;
-
+    QLabel *title_label_;
+    QLabel *text_label_;
 public:
     explicit NoteWidget(
         QWidget *parent = nullptr,

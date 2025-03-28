@@ -69,9 +69,10 @@ bool LRDao::get_user_projects(const std::string &login, std::vector<int> &projec
     if (is_success && query.next() && query.value(0).isValid()) {
         QStringList ps = query.value(0).toString().split(",");
         for (auto i : ps) {
-            // todo dodelat
+
             projects.push_back(i.toInt());
         }
+
         return true;
     }
     return false;

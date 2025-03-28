@@ -11,7 +11,7 @@ class Storage {
 public:
     Project &add_project(const Project &project);
     void remove_project(int project_id);
-    const std::list<Project> &get_projects() const;
+    std::list<Project> &get_projects();
 
     User &add_user(const User &user);
     void remove_user(int user_id);

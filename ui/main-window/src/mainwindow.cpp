@@ -41,22 +41,19 @@ MainWindow::MainWindow(
     this->setStyleSheet(main_window_style);
 
     main_layout_->addWidget(top_bar_, Qt::AlignTop);
-
     main_layout_->setAlignment(Qt::AlignCenter);
     main_layout_->addWidget(content_widget_);
-
     content_widget_->setLayout(content_layout_);
-
     auto right_layout = new QVBoxLayout(content_widget_);
     right_layout->addWidget(project_list_);
     right_layout->addWidget(new_project_button_);
     right_layout->addWidget(new_note_button_);
-
     content_layout_->addWidget(note_list_, Qt::AlignRight);
     content_layout_->addLayout(right_layout);
     main_layout_->addWidget(content_widget_);
-
     this->setLayout(main_layout_);
+
+    this->project_list_->load_projects(storage);
 
     // connections
     connect(
@@ -96,6 +93,7 @@ void MainWindow::add_note() {
         dynamic_cast<ProjectItem *>(project_list_->currentItem());
     if (project_item) {
         if (int id = 0; NoteDao::initialize_note(id)) {
+            DB::ProjectDAO::add_note_to_project(project_item->project_->get_id(), id);
             auto &note =
                 project_item->project_->add_note({id, "Пустая заметка", ""});
             note_list_->add_note_widget(&note);

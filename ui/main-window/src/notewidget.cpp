@@ -17,10 +17,10 @@ NoteWidget::NoteWidget(
     this->setObjectName("NoteWidget");
     this->setMinimumWidth(100);
     this->setMinimumHeight(80);
-    QLabel *title = new QLabel(model_note_->get_title().c_str(), this);
-    QLabel *text = new QLabel(model_note_->get_text().c_str(), this);
-    main_layout_->addWidget(title);
-    main_layout_->addWidget(text);
+    title_label_ = new QLabel(model_note_->get_title().c_str(), this);
+    text_label_ = new QLabel(model_note_->get_text().c_str(), this);
+    main_layout_->addWidget(title_label_);
+    main_layout_->addWidget(text_label_);
     main_layout_->addWidget(open_button_);
 
     connect(
@@ -36,7 +36,9 @@ void NoteWidget::open_note_window() const {
         const_cast<Note *>(model_note_)
     );
     dialog->setAttribute(Qt::WA_DeleteOnClose);
-    dialog->show();
-    // todo update note
+    dialog->exec();
+    text_label_->setText(model_note_->get_text().c_str());
+    title_label_->setText(model_note_->get_title().c_str());
+    main_layout_->update();
 }
 }  // namespace Ui

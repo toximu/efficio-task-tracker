@@ -5,6 +5,8 @@
 #include <QScreen>
 #include <QStyle>
 #include <QTimer>
+#include <iostream>
+#include <ostream>
 #include "applicationwindow.h"
 #include "bottombar.h"
 #include "database_manager.hpp"
@@ -13,6 +15,7 @@
 #include "mainwindow.h"
 #include "notelist.h"
 #include "registration_window.h"
+#include "serialization.hpp"
 
 LoginWindow::LoginWindow(QWidget *parent)
     : QWidget(parent), ui(new Ui::LoginWindow) {
@@ -86,8 +89,11 @@ void LoginWindow::on_push_enter_clicked() {
                 old->deleteLater();
             }
             // todo load all projects of user to storage
+            project_storage_model::Storage *storage = new project_storage_model::Storage();
+            Serialization::get_storage(*storage, login.toStdString());
+
             Ui::MainWindow *main_window =
-                new Ui::MainWindow(app_window, login.toStdString(), std::make_unique<project_storage_model::Storage>());
+                new Ui::MainWindow(app_window, login.toStdString(), storage);
 
             app_window->setCentralWidget(main_window);
             app_window->resize(800,600);
