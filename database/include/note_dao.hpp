@@ -12,8 +12,8 @@ public:
     static bool initialize_note(int& id);
     static bool update_note(const Note &note);
     bool delete_note(int id) const;
-    [[nodiscard]] std::vector<Note> get_all_notes() const;
-    [[nodiscard]] Note get_note_by_id(int id) const;
+    [[nodiscard]] static std::vector<Note> get_all_notes();
+    [[nodiscard]] static Note get_note_by_id(int id);
 };
 
 #endif  // NOTEDAO_HPP

@@ -43,7 +43,7 @@ bool NoteDao::delete_note(int id) const {
     );
 }
 
-std::vector<Note> NoteDao::get_all_notes() const {
+std::vector<Note> NoteDao::get_all_notes() {
     QSqlQuery query;
     std::vector<Note> notes;
     DatabaseManager::get_instance().execute_query(query, "SELECT * FROM notes");
@@ -58,7 +58,7 @@ std::vector<Note> NoteDao::get_all_notes() const {
     return notes;
 }
 
-Note NoteDao::get_note_by_id(int id) const {
+Note NoteDao::get_note_by_id(int id) {
     QSqlQuery query;
     DatabaseManager::get_instance().execute_query(
         query, "SELECT * FROM notes WHERE id = :id", {id}

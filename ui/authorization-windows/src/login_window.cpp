@@ -5,6 +5,7 @@
 #include <QScreen>
 #include <QStyle>
 #include <QTimer>
+#include <cassert>
 #include "applicationwindow.h"
 #include "bottombar.h"
 #include "database_manager.hpp"
@@ -13,6 +14,7 @@
 #include "mainwindow.h"
 #include "notelist.h"
 #include "registration_window.h"
+#include "serialization.hpp"
 
 LoginWindow::LoginWindow(QWidget *parent)
     : QWidget(parent), ui(new Ui::LoginWindow) {
@@ -78,24 +80,31 @@ void LoginWindow::on_push_enter_clicked() {
             QMessageBox::information(
                 this, "Вход", "Вы успешно вошли! Добро пожаловать :)"
             );
-            QWidget *parent = this->parentWidget();
 
-            QMainWindow *app_window = qobject_cast<QMainWindow *>(parent);
 
-            if (QWidget *old = app_window->centralWidget()) {
-                old->deleteLater();
+            project_storage_model::Storage *storage = new project_storage_model::Storage();
+            if (Serialization::get_storage(*storage, login.toStdString())) {
+                QWidget *parent = this->parentWidget();
+
+                QMainWindow *app_window = qobject_cast<QMainWindow *>(parent);
+
+                if (QWidget *old = app_window->centralWidget()) {
+                    old->deleteLater();
+                }
+
+                Ui::MainWindow *main_window =
+                    new Ui::MainWindow(app_window, login.toStdString(), storage);
+                app_window->setCentralWidget(main_window);
+                app_window->resize(800,600);
+                QRect screenGeometry =
+                    QApplication::primaryScreen()->availableGeometry();
+                int x = (screenGeometry.width() - main_window->width()) / 2;
+                int y = (screenGeometry.height() - main_window->height()) / 2;
+                app_window->move(x, y);
             }
 
-            Ui::MainWindow *main_window =
-                new Ui::MainWindow(app_window, login.toStdString(), std::make_unique<project_storage_model::Storage>());
 
-            app_window->setCentralWidget(main_window);
-            app_window->resize(800,600);
-            QRect screenGeometry =
-                QApplication::primaryScreen()->availableGeometry();
-            int x = (screenGeometry.width() - main_window->width()) / 2;
-            int y = (screenGeometry.height() - main_window->height()) / 2;
-            app_window->move(x, y);
+
 
             this->close();
         } else {

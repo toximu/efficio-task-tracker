@@ -4,7 +4,7 @@
 
 class Serialization {
     public:
-        static bool get_storage(project_storage_model::Storage &storage);
+        static bool get_storage(project_storage_model::Storage &storage,const std::string& login);
 };
 
 

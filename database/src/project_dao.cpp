@@ -33,7 +33,7 @@ bool ProjectDAO::get_project(
 ) {
     QSqlQuery query;
     QString query_str =
-        "SELECT name, notes FROM projects"
+        "SELECT (name, notes) FROM projects "
         "WHERE id = ?";
     const QVariantList params = {id};
     bool is_successful =

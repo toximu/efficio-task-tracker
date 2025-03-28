@@ -22,7 +22,7 @@ namespace Ui {
 MainWindow::MainWindow(
     QWidget *parent,
     std::string username,
-    std::unique_ptr<project_storage_model::Storage> storage
+    project_storage_model::Storage* storage
 )
     : QWidget(parent),
         username(username),
@@ -34,7 +34,7 @@ MainWindow::MainWindow(
       content_widget_(new QWidget(this)),
       new_project_button_(new QPushButton("Новый проект", this)),
       new_note_button_(new QPushButton("Новая заметка", this)),
-      storage_(std::move(storage)) {
+      storage_(storage) {
     this->setObjectName("main-window");
     this->setAttribute(Qt::WA_StyledBackground);
     this->setMinimumSize(QSize(800, 600));
