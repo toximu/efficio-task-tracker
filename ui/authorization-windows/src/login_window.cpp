@@ -86,11 +86,13 @@ void LoginWindow::on_push_enter_clicked() {
                 old->deleteLater();
             }
             // todo load all projects of user to storage
-            Ui::MainWindow *main_window =
-                new Ui::MainWindow(app_window, login.toStdString(), std::make_unique<project_storage_model::Storage>());
+            Ui::MainWindow *main_window = new Ui::MainWindow(
+                app_window, login.toStdString(),
+                std::make_unique<project_storage_model::Storage>()
+            );
 
             app_window->setCentralWidget(main_window);
-            app_window->resize(800,600);
+            app_window->resize(800, 600);
             // QRect screenGeometry =
             //     QApplication::primaryScreen()->availableGeometry();
             // int x = (screenGeometry.width() - main_window->width()) / 2;

@@ -18,6 +18,10 @@ NoteEditDialog::NoteEditDialog(QWidget *parent, Note *note)
       note_(note) {
     ui_->setupUi(this);
 
+    ui_->titleLineEdit->setText(QString::fromStdString(note_->get_title()));
+    ui_->descriptionTextEdit->setText(QString::fromStdString(note_->get_text())
+    );
+
     setFixedSize(700, 480);
     setStyleSheet(Ui::light_theme);
     ui_->buttonsLayout->setAlignment(Qt::AlignLeft);
@@ -61,7 +65,12 @@ void NoteEditDialog::on_save_button_click() {
 
     if (try_save_note()) {
         QMessageBox::information(this, "Заметка сохранена", message);
+    } else {
+        QMessageBox::information(
+            this, "Ошибка", "Не удалось сохранить заметку"
+        );
     }
+    this->close();
 }
 
 void NoteEditDialog::on_join_button_click() {

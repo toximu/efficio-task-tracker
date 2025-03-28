@@ -29,7 +29,7 @@ set(HEADERS
 
 file(GLOB TS_FILES "*.ts")
 
-add_library(NoteWidget STATIC ${SOURCES} ${UI_FILES})
+add_library(NoteWidget STATIC ${SOURCES} ${HEADERS} ${UI_FILES})
 
 target_include_directories(NoteWidget
         PUBLIC
