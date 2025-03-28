@@ -85,9 +85,9 @@ void LoginWindow::on_push_enter_clicked() {
             if (QWidget *old = app_window->centralWidget()) {
                 old->deleteLater();
             }
-            project_storage_model::Storage storage{};
+            // todo load all projects of user to storage
             Ui::MainWindow *main_window =
-                new Ui::MainWindow(app_window, "username", &storage);
+                new Ui::MainWindow(app_window, login.toStdString(), std::make_unique<project_storage_model::Storage>());
 
             app_window->setCentralWidget(main_window);
             app_window->resize(800,600);

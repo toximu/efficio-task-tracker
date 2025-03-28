@@ -135,5 +135,5 @@ void NoteEditDialog::on_add_tags_button_click() {
 bool NoteEditDialog::try_save_note() const {
     note_->set_title(ui_->titleLineEdit->text().toStdString());
     note_->set_text(ui_->descriptionTextEdit->toPlainText().toStdString());
-    return NoteDao::create_note(*note_);
+    return NoteDao::update_note(*note_);
 }
