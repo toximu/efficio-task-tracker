@@ -61,7 +61,10 @@ bool DatabaseManager::check_connection() const {
     return database_.isOpen();
 }
 
-bool DatabaseManager::execute_query(QSqlQuery &query, const QString &query_str, const QVariantList &params
+bool DatabaseManager::execute_query(
+    QSqlQuery &query,
+    const QString &query_str,
+    const QVariantList &params
 ) const {
     QSqlQuery temp(database_);
     query = std::move(temp);

@@ -31,10 +31,7 @@ int LRDao::try_register_user(const QString &login, const QString &password) {
     ));
 }
 
-bool LRDao::validate_user(
-    const QString &login,
-    const QString &password
-) {
+bool LRDao::validate_user(const QString &login, const QString &password) {
     QSqlQuery query;
 
     const QString query_str =
@@ -55,8 +52,7 @@ bool LRDao::add_project_to_user(std::string user_login, int project_id) {
 
     const QVariantList params = {
         QString::fromStdString(std::to_string(project_id)),
-        QString::fromStdString(user_login)
-    };
+        QString::fromStdString(user_login)};
 
     return DatabaseManager::get_instance().execute_query(
         query, query_str, params

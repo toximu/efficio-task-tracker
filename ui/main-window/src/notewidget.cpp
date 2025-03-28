@@ -1,8 +1,9 @@
 #include "notewidget.h"
 #include <QHBoxLayout>
-#include <QLabel>
 #include <QPushButton>
+#include <QWidget>
 #include "note.hpp"
+#include "note_edit_dialog.h"
 
 namespace Ui {
 NoteWidget::NoteWidget(
@@ -27,5 +28,15 @@ NoteWidget::NoteWidget(
     );
     this->setLayout(main_layout_);
     this->setAttribute(Qt::WA_StyledBackground);
+}
+
+void NoteWidget::open_note_window() const {
+    auto dialog = new ::NoteEditDialog(
+        const_cast<QWidget *>(qobject_cast<const QWidget *>(this)),
+        const_cast<Note *>(model_note_)
+    );
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->show();
+    // todo update note
 }
 }  // namespace Ui

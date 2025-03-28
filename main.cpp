@@ -1,9 +1,9 @@
 #include <QApplication>
+#include <QDebug>
 #include <QLocale>
 #include <QScreen>
 #include <QTimer>
 #include <QTranslator>
-#include<QDebug>
 #include "applicationwindow.h"
 #include "login_window.h"
 #include "mainwindow.h"
@@ -12,7 +12,6 @@
 #include "storage.hpp"
 
 int main(int argc, char *argv[]) {
-
     QApplication a(argc, argv);
 
     QTranslator translator;

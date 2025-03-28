@@ -1,10 +1,7 @@
 #include "note_dao.hpp"
-#include <QSqlQuery>
-#include <iostream>
-#include <ostream>
 #include "database_manager.hpp"
 
-bool NoteDao::initialize_note(int& id) {
+bool NoteDao::initialize_note(int &id) {
     QSqlQuery query;
     const auto is_successful = DatabaseManager::get_instance().execute_query(
         query,

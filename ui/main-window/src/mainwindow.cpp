@@ -9,14 +9,14 @@
 #include <QWidget>
 #include <string>
 #include "bottombar.h"
+#include "lr_dao.hpp"
+#include "main_window_style.hpp"
+#include "note_dao.hpp"
 #include "notelist.h"
 #include "project.hpp"
 #include "project_dao.hpp"
 #include "projectitem.h"
 #include "projectlist.h"
-#include "main_window_style.hpp"
-#include "note_dao.hpp"
-#include "lr_dao.hpp"
 
 namespace Ui {
 MainWindow::MainWindow(
@@ -25,7 +25,7 @@ MainWindow::MainWindow(
     project_storage_model::Storage* storage
 )
     : QWidget(parent),
-        username(username),
+      username(username),
       main_layout_(new QVBoxLayout(this)),
       top_bar_(new BottomBar(this, username, "эффишио - таск трекер.")),
       content_layout_(new QHBoxLayout(this)),
@@ -88,7 +88,6 @@ void MainWindow::add_project() {
             );
             project_list_->add_project(&project);
         }
-
     }
 }
 
@@ -97,7 +96,8 @@ void MainWindow::add_note() {
         dynamic_cast<ProjectItem *>(project_list_->currentItem());
     if (project_item) {
         if (int id = 0; NoteDao::initialize_note(id)) {
-            auto &note = project_item->project_->add_note({id, "Пустая заметка", ""});
+            auto &note =
+                project_item->project_->add_note({id, "Пустая заметка", ""});
             note_list_->add_note_widget(&note);
         }
     } else {

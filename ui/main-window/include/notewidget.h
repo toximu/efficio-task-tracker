@@ -22,9 +22,7 @@ public:
 
 private slots:
 
-    void open_note_window() const {
-        std::cout << this->model_note_->get_text() << std::endl;
-    }
+    void open_note_window() const;
 };
 }  // namespace Ui
 #endif  // NOTEWIDGET_H

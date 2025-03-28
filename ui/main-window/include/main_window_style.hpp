@@ -1,6 +1,7 @@
 #ifndef MAIN_WINDOW_STYLE_HPP
 #define MAIN_WINDOW_STYLE_HPP
 #include <QString>
+
 namespace Ui {
 
 QString main_window_style = R"(
