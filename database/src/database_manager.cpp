@@ -25,7 +25,7 @@ DatabaseManager::DatabaseManager() {
         "CREATE TABLE IF NOT EXISTS notes ("
         "id SERIAL PRIMARY KEY, "
         "title TEXT NOT NULL, "
-        "content TEXT NOT NULL"
+        "content TEXT"
         ")"
     );
 
@@ -33,6 +33,7 @@ DatabaseManager::DatabaseManager() {
         "CREATE TABLE IF NOT EXISTS users ("
         "login VARCHAR(50) PRIMARY KEY, "
         "password VARCHAR(50) NOT NULL "
+        "projects INT[]"
         ")"
     );
 

@@ -1,13 +1,15 @@
 #include "note_dao.hpp"
 #include <QSqlQuery>
+#include <iostream>
+#include <ostream>
 #include "database_manager.hpp"
 
 bool NoteDao::initialize_note(int& id) {
     QSqlQuery query;
     const auto is_successful = DatabaseManager::get_instance().execute_query(
         query,
-        "INSERT INTO notes (title) "
-        "VALUES ('Пустая заметка')"
+        "INSERT INTO notes (title, content) "
+        "VALUES ('Пустая заметка', '')"
         "RETURNING id"
     );
     if (is_successful && query.next()) {

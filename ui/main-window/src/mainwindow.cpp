@@ -16,6 +16,7 @@
 #include "projectlist.h"
 #include "main_window_style.hpp"
 #include "note_dao.hpp"
+#include "lr_dao.hpp"
 
 namespace Ui {
 MainWindow::MainWindow(
@@ -24,6 +25,7 @@ MainWindow::MainWindow(
     std::unique_ptr<project_storage_model::Storage> storage
 )
     : QWidget(parent),
+        username(username),
       main_layout_(new QVBoxLayout(this)),
       top_bar_(new BottomBar(this, username, "эффишио - таск трекер.")),
       content_layout_(new QHBoxLayout(this)),
@@ -78,10 +80,11 @@ void MainWindow::add_project() {
     );
     if (ok) {
         int id = 0;
-        // todo add project to user
+
         if (DB::ProjectDAO::create_project(name_of_project.toStdString(), id)) {
+            LRDao::add_project_to_user(username, id);
             auto &project = storage_->add_project(
-                project_storage_model::Project(id, name_of_project.toStdString(), "")
+                Project(id, name_of_project.toStdString(), "")
             );
             project_list_->add_project(&project);
         }

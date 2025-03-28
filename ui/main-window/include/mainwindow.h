@@ -16,6 +16,7 @@
 namespace Ui {
 class MainWindow : public QWidget {
     Q_OBJECT
+    std::string username;
     QVBoxLayout *main_layout_;
     BottomBar *top_bar_;
     QHBoxLayout *content_layout_;
