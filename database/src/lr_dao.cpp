@@ -39,7 +39,8 @@ bool LRDao::validate_user(const QString &login, const QString &password) {
     const QString query_str = "SELECT * FROM users WHERE login = ? AND password = ?";
     const QVariantList params = {login, password};
 
-    return DatabaseManager::get_instance().execute_query(
+    const auto success = DatabaseManager::get_instance().execute_query(
         query, query_str, params
     );
+    return query.next() && success;
 }

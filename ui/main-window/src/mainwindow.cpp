@@ -15,6 +15,7 @@
 #include "projectitem.h"
 #include "projectlist.h"
 #include "main_window_style.hpp"
+#include "note_dao.hpp"
 
 namespace Ui {
 MainWindow::MainWindow(
@@ -92,9 +93,10 @@ void MainWindow::add_note() {
     auto project_item =
         dynamic_cast<ProjectItem *>(project_list_->currentItem());
     if (project_item) {
-        // todo create note in db
-        auto &note = project_item->project_->add_note({1, "Пустая заметка", ""});
-        note_list_->add_note_widget(&note);
+        if (int id = 0; NoteDao::initialize_note(id)) {
+            auto &note = project_item->project_->add_note({id, "Пустая заметка", ""});
+            note_list_->add_note_widget(&note);
+        }
     } else {
         QMessageBox msg;
         msg.setText("Проект не выбран!");

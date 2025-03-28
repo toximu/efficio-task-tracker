@@ -2,21 +2,22 @@
 #include <QSqlQuery>
 #include "database_manager.hpp"
 
-bool NoteDao::create_note(const Note &note) {
+bool NoteDao::initialize_note(int& id) {
     QSqlQuery query;
-    const QVariantList params = {
-        QString::fromStdString(note.get_title()),
-        QString::fromStdString(note.get_text())};
-
-    return DatabaseManager::get_instance().execute_query(
+    const auto is_successful = DatabaseManager::get_instance().execute_query(
         query,
-        "INSERT INTO notes (title, content) "
-        "VALUES (:title, :content)",
-        params
+        "INSERT INTO notes (title) "
+        "VALUES ('Пустая заметка')"
+        "RETURNING id"
     );
+    if (is_successful && query.next()) {
+        id = query.value(0).toInt();
+        return true;
+    }
+    return false;
 }
 
-bool NoteDao::update_note(const Note &note) const {
+bool NoteDao::update_note(const Note &note) {
     QSqlQuery query;
     const QString sql_query =
         "UPDATE notes SET "
