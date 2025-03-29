@@ -45,15 +45,15 @@ GRANT ALL PRIVILEGES ON DATABASE efficio TO efficio;
 psql -U efficio -d efficio -h localhost
 ```
 
-> After that run the server on address **localhost** and **port** 5433 in your pgAdmin4
+> After that run the server on address **localhost** and **port** 5432 in your pgAdmin4
 
 5. Build and start app
 
 ```bash
-cd ui/note-widget/build
+mkdir -p build && cd build
 cmake ..
 make
-./NoteWidgetEfficio -platform xcb
+./EfficioTaskTracker -platform xcb
 ```
 
 ## Technologies Used

@@ -1,15 +1,15 @@
 #include <QApplication>
+#include <QDebug>
 #include <QLocale>
-#include <QMainWindow>
+#include <QScreen>
+#include <QTimer>
 #include <QTranslator>
 #include "applicationwindow.h"
+#include "login_window.h"
 #include "mainwindow.h"
 #include "note.hpp"
-#include "storage.hpp"
 #include "registration_window.h"
-#include "login_window.h"
-
-using namespace Ui;
+#include "storage.hpp"
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
@@ -23,8 +23,15 @@ int main(int argc, char *argv[]) {
             break;
         }
     }
+    qDebug("wdwqdwq");
+    Ui::ApplicationWindow *app_window = new Ui::ApplicationWindow("efficio");
+    LoginWindow *login_window = new LoginWindow(app_window);
 
-    Ui::LoginWindow login_window;
-    login_window.show();
-    return login_window.exec();
+    app_window->setCentralWidget(login_window);
+    QRect screenGeometry = QApplication::primaryScreen()->availableGeometry();
+    int x = (screenGeometry.width() - login_window->width()) / 2;
+    int y = (screenGeometry.height() - login_window->height()) / 2;
+    app_window->move(x, y);
+    app_window->show();
+    return a.exec();
 }
