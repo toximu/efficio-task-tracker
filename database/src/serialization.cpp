@@ -14,16 +14,16 @@ bool Serialization::get_storage(project_storage_model::Storage &storage, const s
     std::vector<int> projects;
     if (LRDao::get_user_projects(login, projects)) {
         for (auto p : projects) {
-            // std::cout << p << std::endl;
             std::string project_name;
             std::vector<int> notes;
             if (DB::ProjectDAO::get_project(p, project_name, notes)) {
                 std::cout << project_name << std::endl;
                 Project project{p, project_name, ""};
                 for (auto n : notes) {
-                    std::cout << n << std::endl;
-                    auto note = NoteDao::get_note_by_id(n);
-                    project.add_note(note);
+                    if (n != 0) {
+                        auto note = NoteDao::get_note_by_id(n);
+                        project.add_note(note);
+                    }
                 }
                 storage.add_project(Project(project));
             } else {

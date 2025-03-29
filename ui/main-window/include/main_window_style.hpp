@@ -78,10 +78,16 @@ border-radius: 8px;
 
 }
 
+#NoteWidget QLabel {
+   text-overflow: ellipsis;
+}
+
 #NoteList {
     border : 1px solid #A9A9A9;
 border-radius : 8px;
 }
+
+
 
 )";
 
