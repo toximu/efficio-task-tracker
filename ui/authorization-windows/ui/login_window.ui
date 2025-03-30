@@ -101,7 +101,7 @@ border-radius: 10px;</string>
 border-radius: 10px;</string>
     </property>
     <property name="text">
-     <string>Еще нет аккаунта? Зарегестрируйтесь!</string>
+     <string>Еще нет аккаунта? Зарегистрируйтесь!</string>
     </property>
    </widget>
   </widget>
