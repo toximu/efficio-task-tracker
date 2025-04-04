@@ -16,6 +16,7 @@ class NoteWidget : public QWidget {
     QPushButton *open_button_;
     QLabel *title_label_;
     QLabel *text_label_;
+
 public:
     explicit NoteWidget(
         QWidget *parent = nullptr,

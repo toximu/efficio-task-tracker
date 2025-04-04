@@ -25,7 +25,7 @@ class MainWindow : public QWidget {
     QWidget *content_widget_;
     QPushButton *new_project_button_;
     QPushButton *new_note_button_;
-    project_storage_model::Storage* storage_;
+    project_storage_model::Storage *storage_;
 
     friend ProjectList;
 private slots:
@@ -36,7 +36,7 @@ public:
     explicit MainWindow(
         QWidget *parent = nullptr,
         std::string username = "none",
-        project_storage_model::Storage* storage = nullptr
+        project_storage_model::Storage *storage = nullptr
     );
 };
 }  // namespace Ui

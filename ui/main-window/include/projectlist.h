@@ -11,7 +11,8 @@ class ProjectList : public QListWidget {
     Q_OBJECT
     friend class MainWindow;
     void add_project(project_storage_model::Project *project);
-    void load_projects(project_storage_model::Storage*storage);
+    void load_projects(project_storage_model::Storage *storage);
+
 public:
     explicit ProjectList(QWidget *parent = nullptr);
 

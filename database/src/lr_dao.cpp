@@ -1,13 +1,12 @@
 #include "lr_dao.hpp"
 #include <QCryptographicHash>
 #include <QDebug>
-#include <iostream>
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QVariantList>
+#include <iostream>
 
 QString LRDao::hash_password(const QString &password) {
-    // TODO: make hash shorter
     const QByteArray hash =
         QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256);
     return hash.toHex();
@@ -59,17 +58,21 @@ bool LRDao::add_project_to_user(std::string user_login, int project_id) {
     );
 }
 
-bool LRDao::get_user_projects(const std::string &login, std::vector<int> &projects) {
+bool LRDao::get_user_projects(
+    const std::string &login,
+    std::vector<int> &projects
+) {
     QSqlQuery query;
-    const QString query_str = "SELECT array_to_string(projects, ',') FROM users WHERE login = ?";
+    const QString query_str =
+        "SELECT array_to_string(projects, ',') FROM users WHERE login = ?";
 
     const QVariantList params = {QString::fromStdString(login)};
-    bool is_success = DatabaseManager::get_instance().execute_query(query, query_str, params);
+    bool is_success =
+        DatabaseManager::get_instance().execute_query(query, query_str, params);
 
     if (is_success && query.next() && query.value(0).isValid()) {
         QStringList ps = query.value(0).toString().split(",");
         for (auto i : ps) {
-
             projects.push_back(i.toInt());
         }
 

@@ -15,7 +15,7 @@ void ProjectList::add_project(project_storage_model::Project *project) {
     this->addItem(new ProjectItem(static_cast<QListWidget *>(this), project));
 }
 
-void ProjectList::load_projects(project_storage_model::Storage* storage) {
+void ProjectList::load_projects(project_storage_model::Storage *storage) {
     for (project_storage_model::Project &pr : storage->get_projects()) {
         add_project(&pr);
     }
