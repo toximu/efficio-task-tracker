@@ -9,8 +9,10 @@
 #include "project_dao.hpp"
 #include "storage.hpp"
 
-bool Serialization::get_storage(project_storage_model::Storage &storage, const std::string& login) {
-
+bool Serialization::get_storage(
+    project_storage_model::Storage &storage,
+    const std::string &login
+) {
     std::vector<int> projects;
     if (LRDao::get_user_projects(login, projects)) {
         for (auto p : projects) {
@@ -33,7 +35,6 @@ bool Serialization::get_storage(project_storage_model::Storage &storage, const s
             }
         }
     } else {
-
         std::cout << "get projects";
 
         return false;

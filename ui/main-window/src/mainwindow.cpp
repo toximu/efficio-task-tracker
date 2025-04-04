@@ -22,7 +22,7 @@ namespace Ui {
 MainWindow::MainWindow(
     QWidget *parent,
     std::string username,
-    project_storage_model::Storage* storage
+    project_storage_model::Storage *storage
 )
     : QWidget(parent),
       username(username),
@@ -93,7 +93,9 @@ void MainWindow::add_note() {
         dynamic_cast<ProjectItem *>(project_list_->currentItem());
     if (project_item) {
         if (int id = 0; NoteDao::initialize_note(id)) {
-            DB::ProjectDAO::add_note_to_project(project_item->project_->get_id(), id);
+            DB::ProjectDAO::add_note_to_project(
+                project_item->project_->get_id(), id
+            );
             auto &note =
                 project_item->project_->add_note({id, "Пустая заметка", ""});
             note_list_->add_note_widget(&note);

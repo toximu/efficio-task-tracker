@@ -25,7 +25,6 @@ NoteWidget::NoteWidget(
     text_label_->setWordWrap(false);
     title_label_->setWordWrap(false);
     text_label_->setTextInteractionFlags(Qt::TextSelectableByMouse);
-   
 
     main_layout_->addWidget(open_button_);
 
