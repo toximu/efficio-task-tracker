@@ -12,7 +12,8 @@ namespace Ui {
 NoteList::NoteList(QWidget *parent)
     : QWidget(parent),
       main_layout_(new QHBoxLayout(this)),
-      vertical_layouts_(std::vector<QVBoxLayout *>()) {
+      vertical_layouts_(std::vector<QVBoxLayout *>()){
+
     this->setAttribute(Qt::WA_StyledBackground);
     this->setObjectName("NoteList");
     this->setLayout(main_layout_);

@@ -13,6 +13,29 @@ QString main_window_style = R"(
 #main-window QLabel {
     font-weight: bold;
 }
+
+QScrollBar:vertical {
+    border: none;
+    background: transparent;
+    width: 10px;
+    margin: 0;
+}
+QScrollBar::handle:vertical {
+    background: #c0c0c0;
+    border-radius: 5px;
+    min-height: 20px;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+        background: none;
+        height: 0px;
+    }
+QScrollArea {
+    border: none;
+    background: transparent;
+}
+
 #ProjectList {
     background-color: #FED6BC;
     border: 1px solid #e0e0e0;
@@ -44,7 +67,7 @@ QString main_window_style = R"(
 
 #ProjectList QScrollBar:vertical {
     border: none;
-    background: #f0f0f0;
+    background: #FED6BC;
     width: 10px;
     margin: 0;
 }
@@ -78,17 +101,16 @@ QString main_window_style = R"(
     font-size: 14px;
 }
 
-
-
 #NoteList {
-    border : 1px solid #A9A9A9;
-border-radius : 8px;
+    border : none;
+    margin : 0;
+    background: transparent;
 }
 
 #NoteWidget {
     background-color: #A2E4B8;
-border-radius: 8px;
-
+    border-radius: 8px;
+    margin: 0;
 }
 
 #NoteWidget QPushButton {

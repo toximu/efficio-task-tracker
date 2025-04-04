@@ -14,6 +14,7 @@ class NoteList : public QWidget {
     QHBoxLayout *main_layout_;
 
     std::vector<QVBoxLayout *> vertical_layouts_;
+
     int note_counter_ = 0;
 
 public:

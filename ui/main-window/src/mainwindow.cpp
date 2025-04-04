@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <QScrollArea>
 #include <string>
 #include "bottombar.h"
 #include "lr_dao.hpp"
@@ -48,7 +49,10 @@ MainWindow::MainWindow(
     right_layout->addWidget(project_list_);
     right_layout->addWidget(new_project_button_);
     right_layout->addWidget(new_note_button_);
-    content_layout_->addWidget(note_list_, Qt::AlignRight);
+    QScrollArea* scrollArea = new QScrollArea(content_widget_);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidget(note_list_);
+    content_layout_->addWidget(scrollArea, Qt::AlignRight);
     content_layout_->addLayout(right_layout);
     main_layout_->addWidget(content_widget_);
     this->setLayout(main_layout_);
