@@ -27,7 +27,7 @@
 border-radius: 10px;</string>
    </property>
    <property name="text">
-    <string>Зарегестрироваться</string>
+    <string>Зарегистрироваться</string>
    </property>
   </widget>
   <widget class="QPushButton" name="switchMode">
