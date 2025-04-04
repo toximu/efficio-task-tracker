@@ -27,7 +27,7 @@ MainWindow::MainWindow(
     : QWidget(parent),
       username(username),
       main_layout_(new QVBoxLayout(this)),
-      top_bar_(new BottomBar(this, username, "эффишио - таск трекер.")),
+      top_bar_(new BottomBar(this, username, "Efficio - таск трекер")),
       content_layout_(new QHBoxLayout(this)),
       project_list_(new ProjectList(this)),
       note_list_(new NoteList(this)),

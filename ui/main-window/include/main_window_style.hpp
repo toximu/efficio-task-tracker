@@ -7,6 +7,11 @@ namespace Ui {
 QString main_window_style = R"(
 #main-window {
     background-color : white;
+
+}
+
+#main-window QLabel {
+    font-weight: bold;
 }
 #ProjectList {
     background-color: #FED6BC;
@@ -14,7 +19,8 @@ QString main_window_style = R"(
     border-radius: 8px;
     padding: 8px;
     outline: 0;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Arial';
+    font-weight: bold;
     font-size: 14px;
     color: #000000;
 }
@@ -68,26 +74,39 @@ QString main_window_style = R"(
 
 #BottomBar QLabel {
     color : white;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Arial';
     font-size: 14px;
 }
 
-#NoteWidget {
-    background-color: #C6D8FF;
-border-radius: 8px;
 
-}
-
-#NoteWidget QLabel {
-   text-overflow: ellipsis;
-}
 
 #NoteList {
     border : 1px solid #A9A9A9;
 border-radius : 8px;
 }
 
+#NoteWidget {
+    background-color: #A2E4B8;
+border-radius: 8px;
 
+}
+
+#NoteWidget QPushButton {
+    font-family: 'Arial';
+    border-radius: 10px;
+    background-color: #4D9970;
+    color: white;
+    padding: 5px 10px;
+}
+
+
+QPushButton {
+    font-family: 'Arial';
+    border-radius: 10px;
+    background-color: #fea36b;
+    color: white;
+    padding: 5px 10px;
+}
 
 )";
 

@@ -21,6 +21,12 @@ NoteWidget::NoteWidget(
     text_label_ = new QLabel(model_note_->get_text().c_str(), this);
     main_layout_->addWidget(title_label_);
     main_layout_->addWidget(text_label_);
+
+    text_label_->setWordWrap(false);
+    title_label_->setWordWrap(false);
+    text_label_->setTextInteractionFlags(Qt::TextSelectableByMouse);
+   
+
     main_layout_->addWidget(open_button_);
 
     connect(
@@ -39,10 +45,6 @@ void NoteWidget::open_note_window() const {
     dialog->exec();
     text_label_->setText(model_note_->get_text().c_str());
     title_label_->setText(model_note_->get_title().c_str());
-    text_label_->setWordWrap(false);
-    title_label_->setWordWrap(false);
-    text_label_->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    text_label_->setStyleSheet("QLabel { text-overflow: ellipsis; }");
     main_layout_->update();
 }
 }  // namespace Ui
