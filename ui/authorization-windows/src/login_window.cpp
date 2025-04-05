@@ -98,11 +98,11 @@ void LoginWindow::on_push_enter_clicked() {
 
             app_window->setCentralWidget(main_window);
             app_window->resize(800, 600);
-            // QRect screenGeometry =
-            //     QApplication::primaryScreen()->availableGeometry();
-            // int x = (screenGeometry.width() - main_window->width()) / 2;
-            // int y = (screenGeometry.height() - main_window->height()) / 2;
-            // app_window->move(x, y);
+            QRect screenGeometry =
+                QApplication::primaryScreen()->availableGeometry();
+            int x = (screenGeometry.width() - main_window->width()) / 2;
+            int y = (screenGeometry.height() - main_window->height()) / 2;
+            app_window->move(x, y);
 
             this->close();
         } else {

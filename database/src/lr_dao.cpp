@@ -4,7 +4,6 @@
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QVariantList>
-#include <iostream>
 
 QString LRDao::hash_password(const QString &password) {
     const QByteArray hash =
@@ -24,10 +23,10 @@ int LRDao::try_register_user(const QString &login, const QString &password) {
     }
 
     QSqlQuery insert_query;
-    return static_cast<int>(DatabaseManager::get_instance().execute_query(
+    return DatabaseManager::get_instance().execute_query(
         insert_query, "INSERT INTO users (login, password) VALUES (?, ?)",
         {login, password}
-    ));
+    );
 }
 
 bool LRDao::validate_user(const QString &login, const QString &password) {
@@ -67,7 +66,7 @@ bool LRDao::get_user_projects(
         "SELECT array_to_string(projects, ',') FROM users WHERE login = ?";
 
     const QVariantList params = {QString::fromStdString(login)};
-    bool is_success =
+    const bool is_success =
         DatabaseManager::get_instance().execute_query(query, query_str, params);
 
     if (is_success && query.next() && query.value(0).isValid()) {

@@ -6,7 +6,6 @@
 class DatabaseManager final {
 public:
     static DatabaseManager &get_instance();
-    [[nodiscard]] bool check_connection() const;
     bool execute_query(
         QSqlQuery &query,
         const QString &query_str,

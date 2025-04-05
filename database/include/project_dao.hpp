@@ -1,11 +1,6 @@
 #ifndef PROJECT_DAO_HPP
 #define PROJECT_DAO_HPP
 
-#include <QByteArray>
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
-#include <QString>
 #include "database_manager.hpp"
 #include "project.hpp"
 

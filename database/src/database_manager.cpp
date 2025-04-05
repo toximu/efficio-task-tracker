@@ -4,28 +4,23 @@
 #include <QSqlError>
 
 DatabaseManager::DatabaseManager() {
-    qDebug() << "Available drivers:" << QSqlDatabase::drivers();
-
     database_ = QSqlDatabase::addDatabase("QPSQL");
     database_.setHostName("localhost");
     database_.setPort(5432);
     database_.setDatabaseName("efficio");
     database_.setUserName("efficio");
     database_.setPassword("admin");
+    database_.open();
 
-    if (!database_.open()) {
-        qDebug() << "Failed to open database:" << database_.lastError();
-    } else {
-        qDebug() << "Database opened successfully!";
-    }
-
-    qDebug() << "Is driver valid?" << database_.isValid();
     QSqlQuery query(database_);
     query.exec(
         "CREATE TABLE IF NOT EXISTS notes ("
         "id SERIAL PRIMARY KEY, "
         "title TEXT NOT NULL, "
-        "content TEXT"
+        "content TEXT, "
+        "members VARCHAR(50)[], "
+        "date VARCHAR(50), "
+        "tags VARCHAR(50)[]"
         ")"
     );
 
@@ -54,11 +49,10 @@ DatabaseManager::~DatabaseManager() {
 
 DatabaseManager &DatabaseManager::get_instance() {
     static DatabaseManager instance;
+    if (!instance.database_.isOpen() && !instance.database_.open()) {
+        throw std::runtime_error("Lost connection with database");
+    }
     return instance;
-}
-
-bool DatabaseManager::check_connection() const {
-    return database_.isOpen();
 }
 
 bool DatabaseManager::execute_query(
