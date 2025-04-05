@@ -16,7 +16,7 @@ NoteWidget::NoteWidget(
       open_button_(new QPushButton("Открыть")) {
     this->setObjectName("NoteWidget");
     this->setMinimumWidth(100);
-    this->setMinimumHeight(80);
+    this->setFixedHeight(100);
     title_label_ = new QLabel(model_note_->get_title().c_str(), this);
     text_label_ = new QLabel(model_note_->get_text().c_str(), this);
     

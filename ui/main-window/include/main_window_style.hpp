@@ -12,6 +12,29 @@ QString main_window_style = R"(
 #main-window QLabel {
     font-weight: bold;
 }
+
+QScrollBar:vertical {
+    border: none;
+    background: transparent;
+    width: 10px;
+    margin: 0;
+}
+QScrollBar::handle:vertical {
+    background: #c0c0c0;
+    border-radius: 5px;
+    min-height: 20px;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+        background: none;
+        height: 0px;
+    }
+QScrollArea {
+    border: none;
+    background: transparent;
+}
+
 #ProjectList {
     background-color: white;
     border-radius: 8px;
@@ -42,7 +65,7 @@ QString main_window_style = R"(
 
 #ProjectList QScrollBar:vertical {
     border: none;
-    background: #f0f0f0;
+    background: #FED6BC;
     width: 10px;
     margin: 0;
 }
