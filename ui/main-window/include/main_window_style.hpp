@@ -6,27 +6,25 @@ namespace Ui {
 
 QString main_window_style = R"(
 #main-window {
-    background-color : white;
-
+    background-color : #f5f5f5;
 }
 
 #main-window QLabel {
     font-weight: bold;
 }
 #ProjectList {
-    background-color: #FED6BC;
-    border: 1px solid #e0e0e0;
+    background-color: white;
     border-radius: 8px;
     padding: 8px;
     outline: 0;
     font-family: 'Arial';
     font-weight: bold;
     font-size: 14px;
-    color: #000000;
+    color:rgb(44, 44, 44);
 }
 
 #ProjectList::item {
-    background-color: transparent;
+    background-color:rgb(207, 236, 233);
     border: none;
     padding: 10px;
     margin: 2px;
@@ -34,11 +32,11 @@ QString main_window_style = R"(
 }
 
 #ProjectList::item:hover {
-    background-color: #f5f5f5;
+    background-color: rgb(178, 226, 221);
 }
 
 #ProjectList::item:selected {
-    background-color: #007aff;
+    background-color: #089083;
     color: #ffffff;
 }
 
@@ -66,7 +64,7 @@ QString main_window_style = R"(
 }
 
 #BottomBar {
-    background-color: black;
+    background-color: rgb(33, 44, 50);
     border-radius: 8px;
     padding: 8px;
     outline: 0;
@@ -78,38 +76,41 @@ QString main_window_style = R"(
     font-size: 14px;
 }
 
-
-
 #NoteList {
-    border : 1px solid #A9A9A9;
-border-radius : 8px;
+    border-radius : 8px;
+    background-color: white;
 }
 
 #NoteWidget {
-    background-color: #A2E4B8;
-border-radius: 8px;
-
+    background-color: #ffdda2;
+    border-radius: 8px;
 }
 
 #NoteWidget QPushButton {
     font-family: 'Arial';
+    font-size: 13px;
+    font-weight: bold;
     border-radius: 10px;
-    background-color: #4D9970;
-    color: white;
+    background-color:rgb(241, 201, 132);
+    color: rgb(33, 44, 50);
     padding: 5px 10px;
 }
 
-
 QPushButton {
     font-family: 'Arial';
+    font-size: 13px;
+    font-weight: bold;
     border-radius: 10px;
     background-color: #fea36b;
     color: white;
     padding: 5px 10px;
+    min-width: 60px;
+    min-height: 25px;
 }
 
 )";
 
-}
 
-#endif
+}  // namespace Ui
+
+#endif  // MAIN_WINDOW_STYLE_HPP

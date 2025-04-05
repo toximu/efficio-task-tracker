@@ -19,6 +19,10 @@ NoteWidget::NoteWidget(
     this->setMinimumHeight(80);
     title_label_ = new QLabel(model_note_->get_title().c_str(), this);
     text_label_ = new QLabel(model_note_->get_text().c_str(), this);
+    
+    title_label_->setStyleSheet("color: rgb(33, 44, 50);");
+    text_label_->setStyleSheet("color: rgb(33, 44, 50);");
+    
     main_layout_->addWidget(title_label_);
     main_layout_->addWidget(text_label_);
 
