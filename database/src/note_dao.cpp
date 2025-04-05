@@ -1,4 +1,5 @@
 #include "note_dao.hpp"
+#include <iostream>
 #include "database_manager.hpp"
 
 bool NoteDao::initialize_note(int &id) {
@@ -67,12 +68,29 @@ std::vector<Note> NoteDao::get_all_notes() {
 Note NoteDao::get_note_by_id(int id) {
     QSqlQuery query;
     DatabaseManager::get_instance().execute_query(
-        query, "SELECT * FROM notes WHERE id = ?", {id}
+        query, "SELECT title, content, array_to_string(tags, ','), date, array_to_string(members, ',') FROM notes WHERE id = ?", {id}
     );
     query.next();
-    auto title = query.value("title").toString().toStdString();
-    auto text = query.value("content").toString().toStdString();
-    return {id, title, text};
+    auto title = query.value(0).toString().toStdString();
+    auto text = query.value(1).toString().toStdString();
+    auto date = query.value(3).toString().toStdString();
+    Note result{id, title, text};
+    auto tags_list = query.value(2).toString().split(",");
+
+    if (!tags_list.empty() && tags_list[0] != "") {
+        for (const auto& tag_str : tags_list) {
+
+            result.add_tag(tag_str.split(':')[0].toStdString(), tag_str.split(':')[1].toStdString());
+        }
+    }
+    auto member_list = query.value(4).toString().split(",");
+    if (!member_list.empty() && member_list[0] != "") {
+        for (const auto& member : member_list) {
+            result.add_member(member.toStdString());
+        }
+    }
+
+    return result;
 }
 
 QString NoteDao::convert_string_set_to_postgres_array(const std::unordered_set<std::string>& string_set) {
