@@ -1,30 +1,34 @@
 #include <QApplication>
 #include <QLocale>
-#include <QMainWindow>
+#include <QScreen>
+#include <QTimer>
 #include <QTranslator>
 #include "applicationwindow.h"
-#include "mainwindow.h"
-#include "note.hpp"
-#include "storage.hpp"
-#include "registration_window.h"
 #include "login_window.h"
-
-using namespace Ui;
+#include "mainwindow.h"
 
 int main(int argc, char *argv[]) {
-    QApplication a(argc, argv);
+    QApplication application(argc, argv);
 
     QTranslator translator;
-    const QStringList uiLanguages = QLocale::system().uiLanguages();
-    for (const QString &locale : uiLanguages) {
-        const QString baseName = "MainWindow_" + QLocale(locale).name();
-        if (translator.load(":/i18n/" + baseName)) {
-            a.installTranslator(&translator);
+    const QStringList ui_languages = QLocale::system().uiLanguages();
+    for (const QString &locale : ui_languages) {
+        const QString base_name = "MainWindow_" + QLocale(locale).name();
+        if (translator.load(":/i18n/" + base_name)) {
+            QApplication::installTranslator(&translator);
             break;
         }
     }
 
-    Ui::LoginWindow login_window;
-    login_window.show();
-    return login_window.exec();
+    auto *app_window = new Ui::ApplicationWindow("EFFICIO");
+    auto *login_window = new LoginWindow(app_window);
+
+    app_window->setCentralWidget(login_window);
+    const QRect screen_geometry = QApplication::primaryScreen()->availableGeometry();
+    const int x = (screen_geometry.width() - login_window->width()) / 2;
+    const int y = (screen_geometry.height() - login_window->height()) / 2;
+    app_window->move(x, y);
+    app_window->show();
+
+    return QApplication::exec();
 }

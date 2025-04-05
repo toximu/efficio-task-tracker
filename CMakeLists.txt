@@ -1,33 +1,32 @@
-cmake_minimum_required(VERSION 3.21)
-project(Efficio VERSION 1.0)
+cmake_minimum_required(VERSION 3.16)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+project(EfficioTaskTracker LANGUAGES CXX)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets Sql)
-find_package(PostgreSQL REQUIRED)
-link_directories(/path/to/postgresql/lib)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_subdirectory("ui/MainWindow")
-add_subdirectory("project-storage-model")
-add_subdirectory("ui/login-and-registration-windows")
+find_package(Qt6 COMPONENTS Widgets Core Gui Sql REQUIRED)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_subdirectory(scripts)
+add_subdirectory(database)
+add_subdirectory(ui/main-window)
+add_subdirectory(ui/authorization-windows)
+add_subdirectory(ui/note-widget)
 
-target_include_directories(${PROJECT_NAME} PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/ui/login-and-registration-windows/include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/ui/MainWindow/include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/database"
-)
+add_executable(EfficioTaskTracker main.cpp)
 
-target_link_libraries(Efficio
-    Qt6::Widgets
-    Qt6::Core
-    Qt6::Sql
-    MainWindow
-    LoginAndRegistrationWindows
+target_link_libraries(EfficioTaskTracker PRIVATE
+        Qt6::Widgets
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Sql
+        Database
+        Scripts
+        AuthorizationWindows
+        MainWindow
+        NoteWidget
 )

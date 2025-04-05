@@ -1,4 +1,4 @@
-# Файлы сборки и бинарные артефакты
+*build*
 build
 build-*
 */build-*
@@ -13,19 +13,16 @@ debug/
 *.obj
 *.app
 
-# Автогенерируемые файлы Qt
 moc_*.cpp
 ui_*.h
 qrc_*.cpp
 *.moc
 *.qm
 
-# Специфичные для Qt файлы
 .qmake.stash
 *.pro.user
 *.pro.user.*
 
-# Системы сборки (qmake, CMake)
 Makefile
 Makefile.*
 CMakeCache.txt
@@ -33,7 +30,6 @@ CMakeFiles/
 cmake_install.cmake
 CMakeLists.txt.user
 
-# IDE и редакторы
 .idea/
 .vs/
 .vscode/
@@ -43,7 +39,6 @@ CMakeLists.txt.user
 *.vcxproj.user
 *.code-workspace
 
-# Временные файлы и кэши
 *~
 *.bak
 *.swp
@@ -51,16 +46,12 @@ CMakeLists.txt.user
 *.core
 *.cache
 
-# Специфичные для ОС файлы
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# Документация и тестовые данные
 doc/api/
 *.log
 *.out
 
-# Исключение локальных настроек (если есть)
 local.properties
-
