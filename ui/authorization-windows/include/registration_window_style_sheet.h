@@ -10,14 +10,16 @@ QString registration_window_light_theme = R"(
 
     QLabel {
         font-family: 'Arial';
+        background-color: transparent;
         font-size: 13px;
         color: #089083;
         padding: 1px;
     }
 
     QPushButton#pushRegistration {
+        font-weight: bold;
         font-family: 'Arial';
-        border-radius: 10px;
+        border-radius: 8px;
         background-color: #fea36b;
         color: white;
         padding: 5px 10px;

@@ -10,13 +10,16 @@ QString login_window_light_theme = R"(
 
     QLabel {
         font-family: 'Arial';
+        font-weight: bold;
         font-size: 13px;
         color: #089083;
         padding: 1px;
+        background-color: transparent;
     }
 
     QPushButton#pushEnter {
         font-family: 'Arial';
+        font-weight: bold;
         border-radius: 10px;
         background-color: #fea36b;
         color: white;
@@ -25,6 +28,7 @@ QString login_window_light_theme = R"(
 
     QPushButton#switchMode {
         font-family: 'Arial';
+        font-weight: bold;
         border-radius: 10px;
         background-color: white;
         color: #fea36b;
