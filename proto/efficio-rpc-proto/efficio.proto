@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+import "model-proto/model.proto";
+
+package Efficio;
+
+service Updates {
+  rpc SendUpdateStream (stream ClientUpdate) returns (Empty) {}
+  rpc GetUpdateStream (Empty) returns (stream ServerUpdate) {}
+}
+
+service Requests {
+  // unary methods where we need to get smth back
+  rpc CreateNote (NoteCreateRequest) returns (NoteCreateResponse) {}
+  rpc CreateProject (ProjectCreateRequest) returns (ProjectCreateResponse) {}
+  rpc TryJoinProject (ProjectTryJoinRequest) returns (ProjectTryJoinResponse) {}
+  rpc TryAuthenticateUser (AuthRequest) returns (AuthResponse) {}
+  rpc TryRegister1User (AuthRequest) returns (AuthResponse) {}
+  rpc Logout (LogoutRequest) returns (LogoutResponse) {}
+}
+
+message Empty {
+
+}
+
+message ClientUpdate {
+  User user = 1; // "cookie"
+  oneof request_event {
+    NoteUpdated note_change = 2;
+    NoteDeleted note_delete = 3;
+    ProjectLeft project_leave = 4;
+    ProjectUpdate project_update = 5;
+  }
+}
+
+message ServerUpdate {
+  User user = 1;
+  oneof response_event {
+    NoteUpdated note_change = 2;
+    NoteDeleted note_delete = 3;
+    ProjectUpdate project_update = 4;
+  }
+}
+
+message NoteCreateRequest {
+  User user = 1;
+  optional string note_title = 2; // default = "Пустая заметка"
+}
+
+message NoteCreateResponse {
+  oneof response {
+    Note note = 1;
+    string error_text = 2;
+  }
+}
+
+message ProjectCreateRequest {
+  User user = 1;
+  string project_title = 2;
+}
+
+message ProjectCreateResponse {
+  oneof response {
+    Project project = 1;
+    string error_text = 2;
+  }
+}
+
+message ProjectTryJoinRequest {
+  User user = 1;
+  string code = 2;
+}
+
+message ProjectTryJoinResponse {
+  oneof response {
+    Project project = 1;
+    string error_text = 2;
+  }
+}
+
+message AuthRequest {
+  User user = 1;
+}
+
+message AuthResponse {
+  oneof Response {
+    User user = 1;
+    string error_text = 2;
+  }
+}
+
+message LogoutRequest {
+  User user = 1;
+}
+
+message LogoutResponse {
+  optional string error_text = 1;
+}
+
+// common updates
+
+message NoteUpdated {
+  Note note = 1;
+}
+
+message NoteDeleted {
+  Note note = 1;
+}
+
+message ProjectUpdate { // title changed or smth
+  Project project = 1;
+}
+
+// client updates
+
+message ProjectLeft {
+  string code = 1;
+}
+
+// server updates
