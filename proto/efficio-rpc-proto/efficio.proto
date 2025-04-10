@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "model-proto/model.proto";
 
-package Efficio;
+package Efficio_proto;
 
 service Updates {
   rpc SendUpdateStream (stream ClientUpdate) returns (Empty) {}
@@ -26,18 +26,17 @@ message Empty {
 message ClientUpdate {
   User user = 1; // "cookie"
   oneof request_event {
-    NoteUpdated note_change = 2;
-    NoteDeleted note_delete = 3;
-    ProjectLeft project_leave = 4;
-    ProjectUpdate project_update = 5;
+    NoteUpdate note_update = 2;
+    NoteDelete note_delete = 3;
+    ProjectLeave project_leave = 4;
+    ProjectUpdate project_updated = 5;
   }
 }
 
 message ServerUpdate {
-  User user = 1;
   oneof response_event {
-    NoteUpdated note_change = 2;
-    NoteDeleted note_delete = 3;
+    NoteUpdate note_update = 2;
+    NoteDelete note_delete = 3;
     ProjectUpdate project_update = 4;
   }
 }
@@ -99,11 +98,11 @@ message LogoutResponse {
 
 // common updates
 
-message NoteUpdated {
+message NoteUpdate {
   Note note = 1;
 }
 
-message NoteDeleted {
+message NoteDelete {
   Note note = 1;
 }
 
@@ -113,7 +112,7 @@ message ProjectUpdate { // title changed or smth
 
 // client updates
 
-message ProjectLeft {
+message ProjectLeave {
   string code = 1;
 }
 

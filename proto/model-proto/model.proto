@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package Efficio;
+package Efficio_proto;
 
 message Note {
   message tag {

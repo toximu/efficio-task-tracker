@@ -14,6 +14,7 @@ set(MODEL_PROTO_FILES
 set(EFFICIO_RPC_PROTO_FILES
         efficio-rpc-proto/efficio.proto
         main.cpp
+        main.cpp
 )
 
 add_library(model-proto STATIC ${MODEL_PROTO_FILES})
@@ -65,11 +66,4 @@ protobuf_generate(
         GENERATE_EXTENSIONS .grpc.pb.h .grpc.pb.cc
         PROTOC_OUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/efficio-rpc-proto/
         PLUGIN "protoc-gen-grpc=${grpc_cpp_plugin_location}"
-)
-
-add_executable(test main.cpp)
-target_link_libraries(test
-        PUBLIC
-model-proto
-efficio-rpc
 )
