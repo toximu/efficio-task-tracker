@@ -4,11 +4,12 @@ import "model-proto/model.proto";
 
 package Efficio_proto;
 
-service Updates {
-  rpc UpdateStream (stream ClientUpdate) returns (stream ServerUpdate) {}
-  rpc CreateNote (NoteCreateRequest) returns (NoteCreateResponse) {}
-  rpc CreateProject (ProjectCreateRequest) returns (ProjectCreateResponse) {}
-  rpc TryJoinProject (ProjectTryJoinRequest) returns (ProjectTryJoinResponse) {}
+service Update {
+  rpc GetNote (GetNoteRequest) returns (GetNoteResponse) {}
+  rpc GetProject (GetProjectRequest) returns (GetProjectResponse) {}
+  rpc CreateNote (CreateNoteRequest) returns (CreateNoteResponse) {}
+  rpc CreateProject (CreateProjectRequest) returns (CreateProjectResponse) {}
+  rpc TryJoinProject (TryJoinProjectRequest) returns (TryJoinProjectResponse) {}
 }
 
 service Auth {
@@ -16,59 +17,59 @@ service Auth {
   rpc TryRegister1User (AuthRequest) returns (AuthResponse) {}
 }
 
-
-message Empty {
-
-}
-
-message ClientUpdate {
-  User user = 1; // "cookie"
-  oneof request_event {
-    NoteUpdate note_update = 2;
-    NoteDelete note_delete = 3;
-    ProjectLeave project_leave = 4;
-    ProjectUpdate project_updated = 5;
-  }
-}
-
-message ServerUpdate {
-  oneof response_event {
-    NoteUpdate note_update = 2;
-    NoteDelete note_delete = 3;
-    ProjectUpdate project_update = 4;
-  }
-}
-
-message NoteCreateRequest {
+message GetNoteRequest {
   User user = 1;
-  optional string note_title = 2; // default = "Пустая заметка"
+  int32 id = 2;
 }
 
-message NoteCreateResponse {
+message GetNoteResponse {
   oneof response {
     Note note = 1;
     string error_text = 2;
   }
 }
 
-message ProjectCreateRequest {
+message GetProjectRequest {
+  string code = 1;
+}
+
+message GetProjectResponse {
+  oneof response {
+    Project project = 1;
+    string error_string = 2;
+  }
+}
+
+message CreateNoteRequest {
+  User user = 1;
+  optional string note_title = 2; // default = "Пустая заметка"
+}
+
+message CreateNoteResponse {
+  oneof response {
+    Note note = 1;
+    string error_text = 2;
+  }
+}
+
+message CreateProjectRequest {
   User user = 1;
   string project_title = 2;
 }
 
-message ProjectCreateResponse {
+message CreateProjectResponse {
   oneof response {
     Project project = 1;
     string error_text = 2;
   }
 }
 
-message ProjectTryJoinRequest {
+message TryJoinProjectRequest {
   User user = 1;
   string code = 2;
 }
 
-message ProjectTryJoinResponse {
+message TryJoinProjectResponse {
   oneof response {
     Project project = 1;
     string error_text = 2;
@@ -85,25 +86,3 @@ message AuthResponse {
     string error_text = 2;
   }
 }
-
-// common updates
-
-message NoteUpdate {
-  Note note = 1;
-}
-
-message NoteDelete {
-  Note note = 1;
-}
-
-message ProjectUpdate { // title changed or smth
-  Project project = 1;
-}
-
-// client updates
-
-message ProjectLeave {
-  string code = 1;
-}
-
-// server updates

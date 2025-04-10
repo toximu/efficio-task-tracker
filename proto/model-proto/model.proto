@@ -16,7 +16,7 @@ message Note {
   }
   int32 id = 1;
   string title = 2;
-  string text = 3;
+  optional string text = 3;
   repeated tag tags = 4;
   repeated string members = 5;
   optional string date = 6;
@@ -25,16 +25,12 @@ message Note {
 message Project {
   string code = 1; // like id, unique, 6 chars
   string title = 2;
-  repeated int32 notes = 3;
+  repeated Note notes = 3;
   repeated string members = 4;
 }
 
 message Storage {
-  message ProjectWithNotes { // to not to make Project heavy
-    Project project = 1;
-    repeated Note notes = 2;
-  }
-  repeated ProjectWithNotes projects = 1;
+  repeated Project projects = 1;
 }
 
 message User { // in different methods we will use different fields

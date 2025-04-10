@@ -19,7 +19,6 @@ bool Serialization::get_storage(
             std::string project_name;
             std::vector<int> notes;
             if (DB::ProjectDAO::get_project(p, project_name, notes)) {
-                std::cout << project_name << std::endl;
                 Project project{p, project_name, ""};
                 for (auto n : notes) {
                     if (n != 0) {
@@ -29,13 +28,12 @@ bool Serialization::get_storage(
                 }
                 storage.add_project(Project(project));
             } else {
-                std::cout << "get project";
 
                 return false;
             }
         }
     } else {
-        std::cout << "get projects";
+
 
         return false;
     }
