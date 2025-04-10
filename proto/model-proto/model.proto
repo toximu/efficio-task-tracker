@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package Efficio_proto;
+
+message Note {
+  message tag {
+    enum colors {
+      Red = 0;
+      Blue = 1;
+      Pink = 2;
+      Green = 3;
+      Yellow = 4;
+    }
+    string text = 1;
+    colors color = 2;
+  }
+  int32 id = 1;
+  string title = 2;
+  optional string text = 3;
+  repeated tag tags = 4;
+  repeated string members = 5;
+  optional string date = 6;
+}
+
+message Project {
+  string code = 1; // like id, unique, 6 chars
+  string title = 2;
+  repeated Note notes = 3;
+  repeated string members = 4;
+}
+
+message Storage {
+  repeated Project projects = 1;
+}
+
+message User { // in different methods we will use different fields
+  optional string login = 1;
+  optional string hashed_password = 2;
+  optional string token = 3;
+  optional Storage storage = 4;
+}

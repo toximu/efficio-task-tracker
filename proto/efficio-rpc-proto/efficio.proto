@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+import "model-proto/model.proto";
+
+package Efficio_proto;
+
+service Update {
+  rpc GetNote (GetNoteRequest) returns (GetNoteResponse) {}
+  rpc GetProject (GetProjectRequest) returns (GetProjectResponse) {}
+  rpc CreateNote (CreateNoteRequest) returns (CreateNoteResponse) {}
+  rpc CreateProject (CreateProjectRequest) returns (CreateProjectResponse) {}
+  rpc TryJoinProject (TryJoinProjectRequest) returns (TryJoinProjectResponse) {}
+}
+
+service Auth {
+  rpc TryAuthenticateUser (AuthRequest) returns (AuthResponse) {}
+  rpc TryRegister1User (AuthRequest) returns (AuthResponse) {}
+}
+
+message GetNoteRequest {
+  User user = 1;
+  int32 id = 2;
+}
+
+message GetNoteResponse {
+  oneof response {
+    Note note = 1;
+    string error_text = 2;
+  }
+}
+
+message GetProjectRequest {
+  string code = 1;
+}
+
+message GetProjectResponse {
+  oneof response {
+    Project project = 1;
+    string error_string = 2;
+  }
+}
+
+message CreateNoteRequest {
+  User user = 1;
+  optional string note_title = 2; // default = "Пустая заметка"
+}
+
+message CreateNoteResponse {
+  oneof response {
+    Note note = 1;
+    string error_text = 2;
+  }
+}
+
+message CreateProjectRequest {
+  User user = 1;
+  string project_title = 2;
+}
+
+message CreateProjectResponse {
+  oneof response {
+    Project project = 1;
+    string error_text = 2;
+  }
+}
+
+message TryJoinProjectRequest {
+  User user = 1;
+  string code = 2;
+}
+
+message TryJoinProjectResponse {
+  oneof response {
+    Project project = 1;
+    string error_text = 2;
+  }
+}
+
+message AuthRequest {
+  User user = 1;
+}
+
+message AuthResponse {
+  oneof Response {
+    User user = 1;
+    string error_text = 2;
+  }
+}
