@@ -30,6 +30,8 @@ git clone git@github.com:toximu/efficio-task-tracker.git
 sudo service postgresql start && sudo -u postgres psql
 ```
 
+> If you use fish shell, replace `service` with `systemctl`
+
 3. Create **efficio** user
 
 ```SQL
