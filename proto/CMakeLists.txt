@@ -13,8 +13,6 @@ set(MODEL_PROTO_FILES
 
 set(EFFICIO_RPC_PROTO_FILES
         efficio-rpc-proto/efficio.proto
-        main.cpp
-        main.cpp
 )
 
 add_library(model-proto STATIC ${MODEL_PROTO_FILES})
@@ -25,6 +23,7 @@ target_link_libraries(model-proto
         gRPC::grpc
         gRPC::grpc++
 )
+target_include_directories(model-proto PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/model-proto/)
 
 target_link_libraries(efficio-rpc
         PUBLIC
@@ -33,7 +32,7 @@ target_link_libraries(efficio-rpc
         gRPC::grpc
         gRPC::grpc++
 )
-target_include_directories(model-proto PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/model-proto/)
+
 target_include_directories(efficio-rpc PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/model-proto/
         ${CMAKE_CURRENT_SOURCE_DIR}/efficio-rpc-proto/
@@ -58,6 +57,7 @@ protobuf_generate(
         TARGET efficio-rpc
         PROTOC_OUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/efficio-rpc-proto/
         LANGUAGE cpp
+        PROTOC_ARGS --proto_path=${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 protobuf_generate(
@@ -66,4 +66,5 @@ protobuf_generate(
         GENERATE_EXTENSIONS .grpc.pb.h .grpc.pb.cc
         PROTOC_OUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/efficio-rpc-proto/
         PLUGIN "protoc-gen-grpc=${grpc_cpp_plugin_location}"
+        PROTOC_ARGS --proto_path=${CMAKE_CURRENT_SOURCE_DIR}
 )

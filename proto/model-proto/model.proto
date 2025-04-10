@@ -40,6 +40,6 @@ message Storage {
 message User { // in different methods we will use different fields
   optional string login = 1;
   optional string hashed_password = 2;
-  optional string user_info = 3;
+  optional string token = 3;
   optional Storage storage = 4;
 }

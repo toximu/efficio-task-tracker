@@ -5,19 +5,17 @@ import "model-proto/model.proto";
 package Efficio_proto;
 
 service Updates {
-  rpc SendUpdateStream (stream ClientUpdate) returns (Empty) {}
-  rpc GetUpdateStream (Empty) returns (stream ServerUpdate) {}
-}
-
-service Requests {
-  // unary methods where we need to get smth back
+  rpc UpdateStream (stream ClientUpdate) returns (stream ServerUpdate) {}
   rpc CreateNote (NoteCreateRequest) returns (NoteCreateResponse) {}
   rpc CreateProject (ProjectCreateRequest) returns (ProjectCreateResponse) {}
   rpc TryJoinProject (ProjectTryJoinRequest) returns (ProjectTryJoinResponse) {}
+}
+
+service Auth {
   rpc TryAuthenticateUser (AuthRequest) returns (AuthResponse) {}
   rpc TryRegister1User (AuthRequest) returns (AuthResponse) {}
-  rpc Logout (LogoutRequest) returns (LogoutResponse) {}
 }
+
 
 message Empty {
 
@@ -86,14 +84,6 @@ message AuthResponse {
     User user = 1;
     string error_text = 2;
   }
-}
-
-message LogoutRequest {
-  User user = 1;
-}
-
-message LogoutResponse {
-  optional string error_text = 1;
 }
 
 // common updates
