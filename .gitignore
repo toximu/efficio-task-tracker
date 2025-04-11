@@ -55,7 +55,8 @@ doc/api/
 *.out
 
 local.properties
-
-main.cpp
+**/main.cpp
+!client/main.cpp
+!server/main.cpp
 
 *pb*
