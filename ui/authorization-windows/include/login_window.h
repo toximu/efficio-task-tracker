@@ -19,7 +19,7 @@ class LoginWindow : public QWidget {
     Q_OBJECT
 
 public:
-    explicit LoginWindow(QWidget *parent = nullptr, int number_of_theme_ = 3);
+    explicit LoginWindow(QWidget *parent = nullptr, int number_of_theme_ = 0);
     ~LoginWindow();
     
     static const std::vector<QString> THEMES;

@@ -20,10 +20,20 @@
 #include "projectlist.h"
 
 namespace Ui {
+
+const std::vector<QString> MainWindow::THEMES = {
+    Ui::main_window_light_autumn_theme,
+    Ui::main_window_dark_autumn_theme,
+    Ui::main_window_dark_purple_theme,
+    Ui::main_window_light_purple_theme,
+    Ui::main_window_nature_flat_theme
+};
+
 MainWindow::MainWindow(
     QWidget *parent,
     std::string username,
-    project_storage_model::Storage *storage
+    project_storage_model::Storage *storage,
+    int number_of_theme_
 )
     : QWidget(parent),
       username(username),
@@ -34,12 +44,13 @@ MainWindow::MainWindow(
       note_list_(new NoteList(this)),
       content_widget_(new QWidget(this)),
       new_project_button_(new QPushButton("Новый проект", this)),
+      switch_theme_button_(new QPushButton(this)),
       new_note_button_(new QPushButton("Новая заметка", this)),
-      storage_(storage) {
+      storage_(storage), 
+      number_of_theme(number_of_theme_) {
     this->setObjectName("main-window");
     this->setAttribute(Qt::WA_StyledBackground);
     this->setMinimumSize(QSize(800, 600));
-    this->setStyleSheet(main_window_style);
 
     main_layout_->addWidget(top_bar_, Qt::AlignTop);
     main_layout_->setAlignment(Qt::AlignCenter);
@@ -57,6 +68,10 @@ MainWindow::MainWindow(
     main_layout_->addWidget(content_widget_);
     this->setLayout(main_layout_);
 
+    switch_theme_button_->setObjectName("switch_theme_button_");
+    right_layout->addWidget(switch_theme_button_, 0, Qt::AlignRight | Qt::AlignBottom);
+    
+    this->setStyleSheet(THEMES[number_of_theme_]);
     this->project_list_->load_projects(storage);
 
     connect(
@@ -65,6 +80,14 @@ MainWindow::MainWindow(
     );
     connect(
         new_note_button_, &QPushButton::clicked, this, &Ui::MainWindow::add_note
+    );
+    connect(
+        switch_theme_button_, &QPushButton::clicked, this, 
+        &Ui::MainWindow::on_switch_theme_clicked
+    );
+    connect(
+        new_project_button_, &QPushButton::clicked, this,
+        &Ui::MainWindow::add_project
     );
     connect(
         new_project_button_, &QPushButton::clicked, this,
@@ -108,6 +131,12 @@ void MainWindow::add_note() {
         msg.setText("Проект не выбран!");
         msg.exec();
     }
+}
+
+
+void MainWindow::on_switch_theme_clicked() {
+        this->number_of_theme = (this->number_of_theme+1)%THEMES.size();
+        setStyleSheet(THEMES[this->number_of_theme]);
 }
 
 }  // namespace Ui

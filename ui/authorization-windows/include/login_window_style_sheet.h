@@ -16,7 +16,7 @@ namespace Ui {
             padding: 1px;
         }
     
-        QPushButton#pushEnter {
+        QPushButton#push_enter {
             font-family: 'Arial';
             border-radius: 10px;
             background-color: #fea36b;
@@ -24,7 +24,7 @@ namespace Ui {
             padding: 5px 10px;
         }
     
-        QPushButton#switchMode {
+        QPushButton#switch_mode {
             font-family: 'Arial';
             border-radius: 10px;
             background-color: white;
@@ -32,11 +32,11 @@ namespace Ui {
             padding: 5px 10px;
         }
     
-        QPushButton#pushEnter:hover {
+        QPushButton#push_enter:hover {
             background-color: #d58745;
         }
     
-        QPushButton#switchMode:hover {
+        QPushButton#switch_mode:hover {
             background-color: #dadada;
         }
     
@@ -53,7 +53,7 @@ namespace Ui {
         }
 
         QPushButton#switch_theme {
-            background-color: rgb(163, 162, 162);
+            background-color: transparent;
             border-radius: 9px;
             border: 2px solid #089083;
             padding: 5px;
@@ -80,7 +80,7 @@ namespace Ui {
             padding: 1px;
         }
     
-        QPushButton#pushEnter {
+        QPushButton#push_enter {
             font-family: 'Arial';
             border-radius: 10px;
             background-color: #fea36b;
@@ -88,11 +88,11 @@ namespace Ui {
             padding: 5px 10px;
         }
 
-        QPushButton#pushEnter:hover {
+        QPushButton#push_enter:hover {
             background-color:rgb(225, 133, 76);
         }
 
-        QPushButton#switchMode {
+        QPushButton#switch_mode {
             font-family: 'Arial';
             border-radius: 10px;
             background-color: #089083;
@@ -100,7 +100,7 @@ namespace Ui {
             padding: 5px 10px;
         }
     
-        QPushButton#switchMode:hover {
+        QPushButton#switch_mode:hover {
             background-color: #01635d;
         }
 
@@ -117,7 +117,7 @@ namespace Ui {
         }
 
         QPushButton#switch_theme {
-            background-color: #202020;
+            background-color: transparent;
             border-radius: 9px;
             border: 2px solid #089083;
             padding: 5px;
@@ -130,11 +130,9 @@ namespace Ui {
         }  
     )";
 
-    
-
     QString login_window_light_purple_theme = R"(
         QWidget {
-            background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
                 stop:0 #9882B9, stop:0.5 rgb(176, 157, 205), stop:1 rgb(103, 88, 126));
             margin: 0;
             padding: 0;
@@ -149,7 +147,7 @@ namespace Ui {
             padding: 1px;
         }
     
-        QPushButton#pushEnter {
+        QPushButton#push_enter {
             font-family: 'Arial';
             border-radius: 10px;
             background-color: #722548;
@@ -157,11 +155,11 @@ namespace Ui {
             padding: 5px 10px;
         }
 
-        QPushButton#pushEnter:hover {
+        QPushButton#push_enter:hover {
             background-color:rgb(98, 27, 59)
         }
 
-        QPushButton#switchMode {
+        QPushButton#switch_mode {
             font-family: 'Arial';
             border-radius: 10px;
             background-color: rgb(42, 10, 25);
@@ -169,7 +167,7 @@ namespace Ui {
             padding: 5px 10px;
         }
     
-        QPushButton#switchMode:hover {
+        QPushButton#switch_mode:hover {
             background-color:rgb(27, 6, 16);
         }
 
@@ -186,7 +184,7 @@ namespace Ui {
         }
 
         QPushButton#switch_theme {
-            background-color: #9882B9;
+            background-color: transparent;
             border-radius: 9px;
             border: 2px solid #060407;
             padding: 5px;
@@ -212,7 +210,7 @@ namespace Ui {
             padding: 1px;
         }
     
-        QPushButton#pushEnter {
+        QPushButton#push_enter {
             font-family: 'Arial';
             border-radius: 10px;
             background-color: #722548;
@@ -220,11 +218,11 @@ namespace Ui {
             padding: 5px 10px;
         }
 
-        QPushButton#pushEnter:hover {
+        QPushButton#push_enter:hover {
             background-color:rgb(98, 27, 59)
         }
 
-        QPushButton#switchMode {
+        QPushButton#switch_mode {
             font-family: 'Arial';
             border-radius: 10px;
             background-color: rgb(42, 10, 25);
@@ -232,7 +230,7 @@ namespace Ui {
             padding: 5px 10px;
         }
     
-        QPushButton#switchMode:hover {
+        QPushButton#switch_mode:hover {
             background-color:rgb(27, 6, 16);
         }
 
@@ -249,7 +247,7 @@ namespace Ui {
         }
     
         QPushButton#switch_theme {
-            background-color: #060407;
+            background-color: transparent;
             border-radius: 9px;
             border: 2px solid #9882B9;
             padding: 5px;
@@ -265,7 +263,7 @@ namespace Ui {
     
     QString login_window_nature_flat_theme = R"(
         QWidget {
-            background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
                 stop:0 #173C4C, stop:0.5 #326D6C, stop:1 #07142B);
             margin: 0;
             padding: 0;
@@ -280,7 +278,7 @@ namespace Ui {
             padding: 1px;
         }
         
-        QPushButton#pushEnter {
+        QPushButton#push_enter {
             font-family: 'Arial';
             border-radius: 10px;
             background-color: #568F7C;
@@ -290,15 +288,15 @@ namespace Ui {
             font-weight: bold;
         }
         
-        QPushButton#pushEnter:hover {
+        QPushButton#push_enter:hover {
             background-color: #326D6C;
         }
         
-        QPushButton#pushEnter:pressed {
+        QPushButton#push_enter:pressed {
             background-color: #07142B;
         }
         
-        QPushButton#switchMode {
+        QPushButton#switch_mode {
             font-family: 'Arial';
             border-radius: 10px;
             background-color: #326D6C;
@@ -307,7 +305,7 @@ namespace Ui {
             border: 1px solid #568F7C;
         }
         
-        QPushButton#switchMode:hover {
+        QPushButton#switch_mode:hover {
             background-color: #568F7C;
             color: #07142B;
         }
@@ -327,7 +325,7 @@ namespace Ui {
         }
         
         QPushButton#switch_theme {
-            background-color: #173C4C;
+            background-color: transparent;
             border-radius: 9px;
             border: 2px solid #85B093;
             padding: 5px;

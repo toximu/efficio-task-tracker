@@ -30,23 +30,24 @@ LoginWindow::LoginWindow(QWidget *parent, int number_of_theme_)
     ui->setupUi(this);
 
     setFixedSize(380, 480);
-    ui->inputLogin->setPlaceholderText("Введите логин:");
-    ui->inputPassword->setPlaceholderText("Введите пароль:");
+    ui->input_login->setPlaceholderText("Введите логин:");
+    ui->input_password->setPlaceholderText("Введите пароль:");
 
+    ui->input_password->setEchoMode(QLineEdit::Password);
     setStyleSheet(THEMES[number_of_theme_]);
-    ui->inputPassword->setEchoMode(QLineEdit::Password);
 
-    connect(
-        ui->switchMode, &QPushButton::clicked, this,
-        &LoginWindow::on_switch_mode_clicked
-    );
-    connect(
-        ui->pushEnter, &QPushButton::clicked, this,
-        &LoginWindow::on_push_enter_clicked
-    );
     connect(
         ui->switch_theme, &QPushButton::clicked, this, 
         &LoginWindow::on_switch_theme_clicked
+    );
+
+    connect(
+        ui->switch_mode, &QPushButton::clicked, this,
+        &LoginWindow::on_switch_mode_clicked
+    );
+    connect(
+        ui->push_enter, &QPushButton::clicked, this,
+        &LoginWindow::on_push_enter_clicked
     );
 }
 
@@ -64,7 +65,7 @@ void LoginWindow::on_switch_mode_clicked() {
     }
     project_storage_model::Storage storage;
     RegistrationWindow *registration_window =
-        new RegistrationWindow(app_window);
+        new RegistrationWindow(app_window, this->number_of_theme);
 
     app_window->setCentralWidget(registration_window);
     QRect screenGeometry = QApplication::primaryScreen()->availableGeometry();
@@ -76,8 +77,8 @@ void LoginWindow::on_switch_mode_clicked() {
 }
 
 void LoginWindow::on_push_enter_clicked() {
-    QString login = ui->inputLogin->text();
-    QString password = ui->inputPassword->text();
+    QString login = ui->input_login->text();
+    QString password = ui->input_password->text();
 
     if (!login.isEmpty() && !password.isEmpty()) {
         if (login.size() > 50) {
@@ -107,7 +108,7 @@ void LoginWindow::on_push_enter_clicked() {
             Serialization::get_storage(*storage, login.toStdString());
 
             Ui::MainWindow *main_window =
-                new Ui::MainWindow(app_window, login.toStdString(), storage);
+                new Ui::MainWindow(app_window, login.toStdString(), storage, this->number_of_theme);
 
             app_window->setCentralWidget(main_window);
             app_window->resize(800, 600);

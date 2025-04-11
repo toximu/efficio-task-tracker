@@ -83,7 +83,7 @@ void NoteEditDialog::setup_connections() {
 
 void NoteEditDialog::setup_ui() {
     setFixedSize(700, 480);
-    setStyleSheet(Ui::light_theme);
+    setStyleSheet(Ui::note_edit_dialog_light_autumn_theme);
     ui_->buttonsLayout->setAlignment(Qt::AlignLeft);
 }
 

@@ -15,26 +15,42 @@
 #include "notelist.h"
 #include "registration_window.h"
 #include "registration_window_style_sheet.h"
+#include <vector>
 
-RegistrationWindow::RegistrationWindow(QWidget *parent)
-    : QWidget(parent), ui(new Ui::RegistrationWindow) {
+const std::vector<QString> RegistrationWindow::THEMES = {
+        Ui::registration_window_light_autumn_theme,
+        Ui::registration_window_dark_autumn_theme,
+        Ui::registration_window_dark_purple_theme,
+        Ui::registration_window_light_purple_theme,
+        Ui::registration_window_nature_flat_theme
+    };
+
+RegistrationWindow::RegistrationWindow(QWidget *parent, int number_of_theme_)
+    : QWidget(parent), ui(new Ui::RegistrationWindow), number_of_theme(number_of_theme_) {
     ui->setupUi(this);
 
     setFixedSize(380, 480);
 
-    ui->createLogin->setPlaceholderText("Введите логин:");
-    ui->createPassword->setPlaceholderText("Введите пароль:");
-    ui->repeatPassword->setPlaceholderText("Повторите пароль:");
-    setStyleSheet(Ui::registration_window_dark_autumm_theme);
-    ui->createPassword->setEchoMode(QLineEdit::Password);
-    ui->repeatPassword->setEchoMode(QLineEdit::Password);
+    ui->create_login->setPlaceholderText("Введите логин:");
+    ui->create_password->setPlaceholderText("Введите пароль:");
+    ui->repeat_password->setPlaceholderText("Повторите пароль:");
+    ui->create_password->setEchoMode(QLineEdit::Password);
+    ui->repeat_password->setEchoMode(QLineEdit::Password);
+
+    setStyleSheet(THEMES[number_of_theme_]);
+    setAttribute(Qt::WA_StyledBackground, true);
 
     connect(
-        ui->pushRegistration, &QPushButton::clicked, this,
+        ui->switch_theme, &QPushButton::clicked, this, 
+        &RegistrationWindow::on_switch_theme_clicked
+    );
+
+    connect(
+        ui->push_registration, &QPushButton::clicked, this,
         &RegistrationWindow::on_push_registration_clicked
     );
     connect(
-        ui->switchMode, &QPushButton::clicked, this,
+        ui->switch_mode, &QPushButton::clicked, this,
         &RegistrationWindow::on_switch_mode_clicked
     );
 }
@@ -52,7 +68,7 @@ void RegistrationWindow::on_switch_mode_clicked() {
         old->deleteLater();
     }
     project_storage_model::Storage storage;
-    LoginWindow *login_window = new LoginWindow(app_window);
+    LoginWindow *login_window = new LoginWindow(app_window, number_of_theme);
 
     app_window->setCentralWidget(login_window);
     QRect screenGeometry = QApplication::primaryScreen()->availableGeometry();
@@ -108,9 +124,9 @@ bool RegistrationWindow::is_strong_and_valid_password(const QString &password) {
 }
 
 void RegistrationWindow::on_push_registration_clicked() {
-    QString created_login = ui->createLogin->text();
-    QString created_password = ui->createPassword->text();
-    QString repeated_password = ui->repeatPassword->text();
+    QString created_login = ui->create_login->text();
+    QString created_password = ui->create_password->text();
+    QString repeated_password = ui->repeat_password->text();
 
     if (!created_login.isEmpty() && !created_password.isEmpty() &&
         !repeated_password.isEmpty()) {
@@ -132,7 +148,7 @@ void RegistrationWindow::on_push_registration_clicked() {
             if (try_register_user == 0) {
                 QMessageBox::warning(
                     this, "Ошибка",
-                    "Извините, разрабы дауны и не подключили толком бд."
+                    "Извините, внутренняя ошибка с базами данных."
                 );
             } else if (try_register_user == -1) {
                 QMessageBox::warning(
@@ -145,10 +161,21 @@ void RegistrationWindow::on_push_registration_clicked() {
                     this, "Регистрация",
                     "Вы успешно зарегистрировались! Пожалуйста, выполните вход."
                 );
-                on_switch_mode_clicked();  // TODO: fix
+                on_switch_mode_clicked();
             }
         }
     } else {
         QMessageBox::warning(this, "Ошибка", "Пожалуйста, заполните все поля.");
+    }
+}
+
+void RegistrationWindow::on_switch_theme_clicked() {
+    // Attention: костыль. 
+    // Почему-то кнопка switch_theme дважды кликается, 
+    // из-за чего темы переключаются не подряд, а через одну.
+    // Поэтому ведем счетчик кликов и только на нечетных переключаем тему.
+    if ((this->counter_on_switch_theme_clicks++)%2){
+        this->number_of_theme = (this->number_of_theme+1)%THEMES.size();
+        setStyleSheet(THEMES[this->number_of_theme]);
     }
 }

@@ -4,7 +4,7 @@
 #include <ui_note_edit_dialog.h>
 
 namespace Ui {
-QString light_theme = R"(
+QString note_edit_dialog_light_autumn_theme = R"(
     QDialog {
         background-color: #f5f5f5;
     }
@@ -166,6 +166,19 @@ QString light_theme = R"(
     QMessageBox QPushButton:pressed {
         background-color: #d58745;
         border-color: #d58745;
+    }
+        
+    QPushButton#switch_theme {
+        background-color: transparent;
+        border-radius: 9px;
+        border: 2px solid #089083;
+        padding: 5px;
+    }
+    QPushButton::hover#switch_theme {
+        background-color: #089083;
+    }
+    QPushButton::pressed#switch_theme {
+        background-color:rgb(7, 110, 100);
     }
 )";
 
