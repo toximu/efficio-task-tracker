@@ -10,21 +10,30 @@
 #include "applicationwindow.h"
 #include "bottombar.h"
 #include "database_manager.hpp"
-#include "login_window_style_sheet.h"
 #include "lr_dao.hpp"
 #include "mainwindow.h"
 #include "notelist.h"
 #include "registration_window.h"
 #include "serialization.hpp"
+#include "login_window_style_sheet.h"
 
-LoginWindow::LoginWindow(QWidget *parent)
-    : QWidget(parent), ui(new Ui::LoginWindow) {
+const std::vector<QString> LoginWindow::THEMES = {
+    Ui::login_window_light_autumn_theme,
+    Ui::login_window_dark_autumn_theme,
+    Ui::login_window_dark_purple_theme,
+    Ui::login_window_light_purple_theme,
+    Ui::login_window_nature_flat_theme
+};
+
+LoginWindow::LoginWindow(QWidget *parent, int number_of_theme_)
+    : QWidget(parent), ui(new Ui::LoginWindow), number_of_theme(number_of_theme_) {
     ui->setupUi(this);
 
     setFixedSize(380, 480);
     ui->inputLogin->setPlaceholderText("Введите логин:");
     ui->inputPassword->setPlaceholderText("Введите пароль:");
-    setStyleSheet(Ui::login_window_light_theme);
+
+    setStyleSheet(THEMES[number_of_theme_]);
     ui->inputPassword->setEchoMode(QLineEdit::Password);
 
     connect(
@@ -34,6 +43,10 @@ LoginWindow::LoginWindow(QWidget *parent)
     connect(
         ui->pushEnter, &QPushButton::clicked, this,
         &LoginWindow::on_push_enter_clicked
+    );
+    connect(
+        ui->switch_theme, &QPushButton::clicked, this, 
+        &LoginWindow::on_switch_theme_clicked
     );
 }
 
@@ -114,5 +127,16 @@ void LoginWindow::on_push_enter_clicked() {
         QMessageBox::warning(
             this, "Ошибка ввода данных", "Пожалуйста, заполните все поля!"
         );
+    }
+}
+
+void LoginWindow::on_switch_theme_clicked() {
+    // Attention: костыль. 
+    // Почему-то кнопка switch_theme дважды кликается, 
+    // из-за чего темы переключаются не подряд, а через одну.
+    // Поэтому ведем счетчик кликов и только на нечетных переключаем тему.
+    if ((this->counter_on_switch_theme_clicks++)%2){
+        this->number_of_theme = (this->number_of_theme+1)%THEMES.size();
+        setStyleSheet(THEMES[this->number_of_theme]);
     }
 }

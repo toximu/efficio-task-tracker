@@ -25,7 +25,7 @@ RegistrationWindow::RegistrationWindow(QWidget *parent)
     ui->createLogin->setPlaceholderText("Введите логин:");
     ui->createPassword->setPlaceholderText("Введите пароль:");
     ui->repeatPassword->setPlaceholderText("Повторите пароль:");
-    setStyleSheet(Ui::registration_window_light_theme);
+    setStyleSheet(Ui::registration_window_dark_autumm_theme);
     ui->createPassword->setEchoMode(QLineEdit::Password);
     ui->repeatPassword->setEchoMode(QLineEdit::Password);
 

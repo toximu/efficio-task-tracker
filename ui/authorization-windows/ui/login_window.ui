@@ -104,6 +104,28 @@ border-radius: 10px;</string>
      <string>Еще нет аккаунта? Зарегистрируйтесь!</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="switch_theme">
+    <property name="geometry">
+     <rect>
+      <x>350</x> 
+      <y>455</y> 
+      <width>20</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>20</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>20</width>
+      <height>20</height>
+     </size>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
