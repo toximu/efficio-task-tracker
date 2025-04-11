@@ -3,6 +3,7 @@
 
 #include <QLabel>
 #include <memory>
+#include <vector>
 #include "note.hpp"
 #include "note_dao.hpp"
 #include "tags_dialog.h"
@@ -22,8 +23,8 @@ class NoteEditDialog final : public QDialog {
 
 public:
     explicit NoteEditDialog(
-        QWidget *parent = nullptr,
-        Note *note = new Note(0, "NULL", "NULL")
+        QWidget* parent = nullptr,
+        Note* note = new Note(0, "NULL", "NULL")
     );
     ~NoteEditDialog() override;
 
@@ -34,13 +35,24 @@ private slots:
     void on_add_tags_button_click();
 
 private:
-    Ui::NoteEditDialog *ui_;
-    std::unique_ptr<QLabel> avatar_label_;
-    std::vector<std::unique_ptr<QLabel>> tag_labels_;
-    QList<TagsDialog::Tag> selected_tags_;
-    Note *note_;
+    void init_basic_fields();
+    void init_additional_fields();
+    void setup_connections();
+    void setup_ui();
+
+    void add_member_avatar(const std::string& member);
+
+    void clear_member_avatars();
+    void update_tags_display();
+    static QString create_tag_style_sheet(const QString& color);
 
     [[nodiscard]] bool try_save_note() const;
+
+    Ui::NoteEditDialog* ui_{};
+    std::vector<std::unique_ptr<QLabel>> member_avatars_;
+    std::vector<std::unique_ptr<QLabel>> tag_labels_;
+    QList<TagsDialog::Tag> selected_tags_;
+    Note* note_;
 };
 
-#endif  // NOTE_EDIT_DIALOG_H
+#endif // NOTE_EDIT_DIALOG_H
