@@ -16,6 +16,7 @@ add_subdirectory(database)
 add_subdirectory(ui/main-window)
 add_subdirectory(ui/authorization-windows)
 add_subdirectory(ui/note-widget)
+add_subdirectory(client)
 add_executable(EfficioTaskTracker main.cpp)
 
 target_link_libraries(EfficioTaskTracker PRIVATE

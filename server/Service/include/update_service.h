@@ -6,25 +6,20 @@
 #include <efficio-rpc-proto/efficio.grpc.pb.h>
 #include <efficio-rpc-proto/efficio.pb.h>
 
-
-using grpc::Server;
-using grpc::ServerAsyncResponseWriter;
-using grpc::ServerBuilder;
-using grpc::ServerCompletionQueue;
 using grpc::ServerContext;
-using grpc::Status;
-
 
 using Efficio_proto::Update;
 
 
 class UpdateService final {
     Update::AsyncService service_;
-
+    ServerContext ctx_;
 public:
-    class GetNoteCall;
-    // ...
-    void Run(uint16_t port);
+    class GetNoteServerCall;
+    class GetProjectServerCall;
+    class TryJoinProjectServerCall;
+    class CreateProjectServerCall;
+    class CreateNoteServerCall;
 };
 
 #endif //UPDATE_SERVICE_H
