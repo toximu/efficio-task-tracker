@@ -18,16 +18,18 @@ using Efficio_proto::CreateNoteRequest;
 class UpdateService final {
     Update::AsyncService service_;
     ServerContext ctx_;
-    std::unique_ptr<ServerCompletionQueue> cq_;
-    std::unique_ptr<grpc::Server> server_;
+    ServerCompletionQueue *cq_;
+
 public:
+
+    explicit UpdateService(ServerCompletionQueue* cq);
     class GetNoteServerCall final : public CommonServerCall {
         GetNoteRequest request_;
         ServerAsyncResponseWriter<GetNoteResponse> responder_;
-        UpdateService &service_;
+        Update::AsyncService *service_;
 
     public:
-        explicit GetNoteServerCall(UpdateService &service, ServerCompletionQueue *cq);
+        explicit GetNoteServerCall(Update::AsyncService *service, ServerCompletionQueue *cq);
         void Proceed(bool ok) override;
     };
 
@@ -52,6 +54,8 @@ public:
     };
 
     Update::AsyncService& get_service();
+
+
 };
 
 #endif //UPDATE_SERVICE_H
