@@ -12,6 +12,8 @@ using grpc::ServerAsyncResponseWriter;
 
 using Efficio_proto::GetNoteRequest;
 using Efficio_proto::GetNoteResponse;
+using Efficio_proto::GetProjectRequest;
+using Efficio_proto::GetProjectResponse;
 using Efficio_proto::Update;
 using Efficio_proto::CreateNoteRequest;
 
@@ -34,11 +36,13 @@ public:
     };
 
     class GetProjectServerCall final : public CommonServerCall {
+        GetProjectRequest request_;
+        GetProjectResponse response_;
+        ServerAsyncResponseWriter<GetProjectResponse> responder_;
+        Update::AsyncService *service_;
     public:
-        explicit GetProjectServerCall(UpdateService& service);
-        void Proceed(bool ok) override;
-
-        // TODO: finish this call
+        explicit GetProjectServerCall(Update::AsyncService* service, ServerCompletionQueue *cq);
+        void Proceed(bool) override;
     };
 
     class TryJoinProjectServerCall;
@@ -54,7 +58,7 @@ public:
     };
 
     Update::AsyncService& get_service();
-
+    void run();
 
 };
 

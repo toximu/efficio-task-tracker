@@ -1,8 +1,10 @@
 #include "client_implementation.h"
+#include "update_requests.h"
 #include <common_client_call.h>
 #include <grpcpp/grpcpp.h>
 #include <iostream>
 #include <cassert>
+#include <thread>
 
 
 using grpc::Channel;
@@ -12,7 +14,12 @@ using grpc::CompletionQueue;
 using grpc::Status;
 
 ClientImplementation::ClientImplementation(std::shared_ptr<Channel> channel) :
-    channel_(channel) { };
+    channel_(channel) {
+    std::thread t(&ClientImplementation::CompleteRpc, this);
+    UpdateRequests update_requests(channel, &cq_);
+    update_requests.get_project(nullptr);
+    t.join();
+};
 
 void ClientImplementation::CompleteRpc() {
 
