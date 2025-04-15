@@ -40,16 +40,14 @@ LoginWindow::LoginWindow(QWidget *parent)
     connect(
         ui->switch_theme, &QPushButton::clicked, this, 
         &LoginWindow::on_switch_theme_clicked
-    );
+        , Qt::UniqueConnection);
 
     connect(
         ui->switch_mode, &QPushButton::clicked, this,
-        &LoginWindow::on_switch_mode_clicked
-    );
+        &LoginWindow::on_switch_mode_clicked);
     connect(
         ui->push_enter, &QPushButton::clicked, this,
-        &LoginWindow::on_push_enter_clicked
-    );
+        &LoginWindow::on_push_enter_clicked);
     connect(ThemeManager::instance(), &ThemeManager::theme_changed,
             this, &LoginWindow::handle_theme_changed);
 }
@@ -92,56 +90,57 @@ void LoginWindow::on_switch_mode_clicked() {
 }
 
 void LoginWindow::on_push_enter_clicked() {
-    QString login = ui->input_login->text();
-    QString password = ui->input_password->text();
+    if ((this->counter_on_switch_theme_clicks++)%2){
+        QString login = ui->input_login->text();
+        QString password = ui->input_password->text();
 
-    if (!login.isEmpty() && !password.isEmpty()) {
-        if (login.size() > 50) {
-            QMessageBox::warning(
-                this, "Ошибка",
-                "Длина логина не должна превышать пятидесяти символов"
-            );
-        } else if (password.size() > 50) {
-            QMessageBox::warning(
-                this, "Ошибка",
-                "Длина пароля не должна превышать пятидесяти символов"
-            );
-        } else if (LRDao::validate_user(login, password)) {
-            QMessageBox::information(
-                this, "Вход", "Вы успешно вошли! Добро пожаловать :)"
-            );
-            QWidget *parent = this->parentWidget();
+        if (!login.isEmpty() && !password.isEmpty()) {
+            if (login.size() > 50) {
+                QMessageBox::warning(
+                    this, "Ошибка",
+                    "Длина логина не должна превышать пятидесяти символов"
+                );
+            } else if (password.size() > 50) {
+                QMessageBox::warning(
+                    this, "Ошибка",
+                    "Длина пароля не должна превышать пятидесяти символов"
+                );
+            } else if (LRDao::validate_user(login, password)) {
+                QMessageBox::information(
+                    this, "Вход", "Вы успешно вошли! Добро пожаловать :)"
+                );
+                QWidget *parent = this->parentWidget();
 
-            QMainWindow *app_window = qobject_cast<QMainWindow *>(parent);
+                QMainWindow *app_window = qobject_cast<QMainWindow *>(parent);
 
-            if (QWidget *old = app_window->centralWidget()) {
-                old->deleteLater();
+                if (QWidget *old = app_window->centralWidget()) {
+                    old->deleteLater();
+                }
+                project_storage_model::Storage *storage =
+                    new project_storage_model::Storage();
+                Serialization::get_storage(*storage, login.toStdString());
+
+                Ui::MainWindow *main_window =
+                    new Ui::MainWindow(app_window, login.toStdString(), storage);
+
+                app_window->setCentralWidget(main_window);
+                app_window->resize(800, 600);
+                QRect screenGeometry =
+                    QApplication::primaryScreen()->availableGeometry();
+                int x = (screenGeometry.width() - main_window->width()) / 2;
+                int y = (screenGeometry.height() - main_window->height()) / 2;
+                app_window->move(x, y);
+
+                this->close();
+            } else {
+                QMessageBox::warning(
+                    this, "Ошибка ввода данных", "Неверный логин или пароль!"
+                );
             }
-            // todo load all projects of user to storage
-            project_storage_model::Storage *storage =
-                new project_storage_model::Storage();
-            Serialization::get_storage(*storage, login.toStdString());
-
-            Ui::MainWindow *main_window =
-                new Ui::MainWindow(app_window, login.toStdString(), storage);
-
-            app_window->setCentralWidget(main_window);
-            app_window->resize(800, 600);
-            QRect screenGeometry =
-                QApplication::primaryScreen()->availableGeometry();
-            int x = (screenGeometry.width() - main_window->width()) / 2;
-            int y = (screenGeometry.height() - main_window->height()) / 2;
-            app_window->move(x, y);
-
-            this->close();
         } else {
             QMessageBox::warning(
-                this, "Ошибка ввода данных", "Неверный логин или пароль!"
+                this, "Ошибка ввода данных", "Пожалуйста, заполните все поля!"
             );
         }
-    } else {
-        QMessageBox::warning(
-            this, "Ошибка ввода данных", "Пожалуйста, заполните все поля!"
-        );
     }
 }

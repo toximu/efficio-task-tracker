@@ -4,6 +4,7 @@ build-*
 */build-*
 release/
 debug/
+protobuf/
 *.exe
 *.dll
 *.so

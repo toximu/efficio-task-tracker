@@ -87,13 +87,6 @@ MainWindow::MainWindow(
         new_project_button_, &QPushButton::clicked, this,
         &Ui::MainWindow::add_project
     );
-    connect(
-        new_project_button_, &QPushButton::clicked, this,
-        &Ui::MainWindow::add_project
-    );
-    connect(switch_theme_button_, &QPushButton::clicked, this,
-        &MainWindow::on_switch_theme_click
-    );
     connect(ThemeManager::instance(), &ThemeManager::theme_changed,
             this, &MainWindow::handle_theme_changed);
 }

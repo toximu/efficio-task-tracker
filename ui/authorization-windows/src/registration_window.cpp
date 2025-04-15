@@ -43,16 +43,16 @@ RegistrationWindow::RegistrationWindow(QWidget *parent)
     connect(
         ui->switch_theme, &QPushButton::clicked, this, 
         &RegistrationWindow::on_switch_theme_clicked
-    );
+        , Qt::UniqueConnection);
 
     connect(
         ui->push_registration, &QPushButton::clicked, this,
         &RegistrationWindow::on_push_registration_clicked
-    );
+        , Qt::UniqueConnection);
     connect(
         ui->switch_mode, &QPushButton::clicked, this,
         &RegistrationWindow::on_switch_mode_clicked
-    );
+        , Qt::UniqueConnection);
     connect(ThemeManager::instance(), &ThemeManager::theme_changed,
             this, &RegistrationWindow::handle_theme_changed);
     handle_theme_changed(ThemeManager::instance()->current_theme());
@@ -140,47 +140,49 @@ bool RegistrationWindow::is_strong_and_valid_password(const QString &password) {
 }
 
 void RegistrationWindow::on_push_registration_clicked() {
-    QString created_login = ui->create_login->text();
-    QString created_password = ui->create_password->text();
-    QString repeated_password = ui->repeat_password->text();
+    if ((this->counter_on_switch_theme_clicks++)%2){
+        QString created_login = ui->create_login->text();
+        QString created_password = ui->create_password->text();
+        QString repeated_password = ui->repeat_password->text();
 
-    if (!created_login.isEmpty() && !created_password.isEmpty() &&
-        !repeated_password.isEmpty()) {
-        if (created_password != repeated_password) {
-            QMessageBox::warning(this, "Ошибка", "Пароли не совпадают!");
-        } else if (created_login.size() > 50) {
-            QMessageBox::warning(
-                this, "Ошибка",
-                "Длина логина не должна превышать пятидесяти символов"
-            );
-        } else if (created_password.size() > 50) {
-            QMessageBox::warning(
-                this, "Ошибка",
-                "Длина пароля не должна превышать пятидесяти символов"
-            );
-        } else if (is_strong_and_valid_password(created_password)) {
-            int try_register_user =
-                LRDao::try_register_user(created_login, created_password);
-            if (try_register_user == 0) {
+        if (!created_login.isEmpty() && !created_password.isEmpty() &&
+            !repeated_password.isEmpty()) {
+            if (created_password != repeated_password) {
+                QMessageBox::warning(this, "Ошибка", "Пароли не совпадают!");
+            } else if (created_login.size() > 50) {
                 QMessageBox::warning(
                     this, "Ошибка",
-                    "Извините, внутренняя ошибка с базами данных."
+                    "Длина логина не должна превышать пятидесяти символов"
                 );
-            } else if (try_register_user == -1) {
+            } else if (created_password.size() > 50) {
                 QMessageBox::warning(
                     this, "Ошибка",
-                    "Пользователь с таким именем уже существует. Пожалуйста, "
-                    "придумайте другое!"
+                    "Длина пароля не должна превышать пятидесяти символов"
                 );
-            } else {
-                QMessageBox::information(
-                    this, "Регистрация",
-                    "Вы успешно зарегистрировались! Пожалуйста, выполните вход."
-                );
-                on_switch_mode_clicked();
+            } else if (is_strong_and_valid_password(created_password)) {
+                int try_register_user =
+                    LRDao::try_register_user(created_login, created_password);
+                if (try_register_user == 0) {
+                    QMessageBox::warning(
+                        this, "Ошибка",
+                        "Извините, внутренняя ошибка с базами данных."
+                    );
+                } else if (try_register_user == -1) {
+                    QMessageBox::warning(
+                        this, "Ошибка",
+                        "Пользователь с таким именем уже существует. Пожалуйста, "
+                        "придумайте другое!"
+                    );
+                } else {
+                    QMessageBox::information(
+                        this, "Регистрация",
+                        "Вы успешно зарегистрировались! Пожалуйста, выполните вход."
+                    );
+                    on_switch_mode_clicked();
+                }
             }
+        } else {
+            QMessageBox::warning(this, "Ошибка", "Пожалуйста, заполните все поля.");
         }
-    } else {
-        QMessageBox::warning(this, "Ошибка", "Пожалуйста, заполните все поля.");
     }
 }
