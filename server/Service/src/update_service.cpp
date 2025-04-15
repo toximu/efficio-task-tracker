@@ -6,7 +6,15 @@ using Efficio_proto::GetNoteResponse;
 
 using grpc::ServerAsyncResponseWriter;
 
-UpdateService::GetNoteServerCall::GetNoteServerCall(UpdateService &service, ServerCompletionQueue *cq)
+UpdateService::UpdateService(ServerCompletionQueue *cq) : cq_(cq) {
+
+}
+
+void UpdateService::run() {
+    new GetNoteServerCall(&service_, cq_);
+}
+
+UpdateService::GetNoteServerCall::GetNoteServerCall(Update::AsyncService *service, ServerCompletionQueue *cq)
     : CommonServerCall(cq),
       responder_(&ctx_),
       service_(service) {
@@ -21,7 +29,7 @@ void UpdateService::GetNoteServerCall::Proceed(const bool ok) {
     switch (status_) {
         case CREATE: {
             new GetNoteServerCall(service_, cq_);
-            service_.service_.RequestGetNote(
+            service_->RequestGetNote(
                 &ctx_, &request_, &responder_, cq_, cq_, this
             );
             status_ = PROCESS;
@@ -42,8 +50,6 @@ void UpdateService::GetNoteServerCall::Proceed(const bool ok) {
         }
     }
 }
-
-class UpdateService::CreateNoteServerCall final : public CommonServerCall {};
 
 Update::AsyncService& UpdateService::get_service() {
     return service_;
