@@ -16,17 +16,18 @@
 #include "registration_window.h"
 #include "registration_window_style_sheet.h"
 #include <vector>
+#include "theme_manager.h"
 
 const std::vector<QString> RegistrationWindow::THEMES = {
         Ui::registration_window_light_autumn_theme,
         Ui::registration_window_dark_autumn_theme,
         Ui::registration_window_dark_purple_theme,
         Ui::registration_window_light_purple_theme,
-        Ui::registration_window_nature_flat_theme
+        Ui::registration_window_blue_theme
     };
 
-RegistrationWindow::RegistrationWindow(QWidget *parent, int number_of_theme_)
-    : QWidget(parent), ui(new Ui::RegistrationWindow), number_of_theme(number_of_theme_) {
+RegistrationWindow::RegistrationWindow(QWidget *parent)
+    : QWidget(parent), ui(new Ui::RegistrationWindow) {
     ui->setupUi(this);
 
     setFixedSize(380, 480);
@@ -37,7 +38,6 @@ RegistrationWindow::RegistrationWindow(QWidget *parent, int number_of_theme_)
     ui->create_password->setEchoMode(QLineEdit::Password);
     ui->repeat_password->setEchoMode(QLineEdit::Password);
 
-    setStyleSheet(THEMES[number_of_theme_]);
     setAttribute(Qt::WA_StyledBackground, true);
 
     connect(
@@ -53,7 +53,23 @@ RegistrationWindow::RegistrationWindow(QWidget *parent, int number_of_theme_)
         ui->switch_mode, &QPushButton::clicked, this,
         &RegistrationWindow::on_switch_mode_clicked
     );
+    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+            this, &RegistrationWindow::handle_theme_changed);
+    handle_theme_changed(ThemeManager::instance()->current_theme());
 }
+
+
+void RegistrationWindow::handle_theme_changed(int theme) {
+    this->setStyleSheet(THEMES[theme]);
+}
+
+void RegistrationWindow::on_switch_theme_clicked() {
+    if ((this->counter_on_switch_theme_clicks++)%2){
+        int next_theme = (ThemeManager::instance()->current_theme() + 1) % 5;
+        ThemeManager::instance()->apply_theme(next_theme);
+    }
+}
+
 
 RegistrationWindow::~RegistrationWindow() {
     delete ui;
@@ -68,7 +84,7 @@ void RegistrationWindow::on_switch_mode_clicked() {
         old->deleteLater();
     }
     project_storage_model::Storage storage;
-    LoginWindow *login_window = new LoginWindow(app_window, number_of_theme);
+    LoginWindow *login_window = new LoginWindow(app_window);
 
     app_window->setCentralWidget(login_window);
     QRect screenGeometry = QApplication::primaryScreen()->availableGeometry();
@@ -166,16 +182,5 @@ void RegistrationWindow::on_push_registration_clicked() {
         }
     } else {
         QMessageBox::warning(this, "Ошибка", "Пожалуйста, заполните все поля.");
-    }
-}
-
-void RegistrationWindow::on_switch_theme_clicked() {
-    // Attention: костыль. 
-    // Почему-то кнопка switch_theme дважды кликается, 
-    // из-за чего темы переключаются не подряд, а через одну.
-    // Поэтому ведем счетчик кликов и только на нечетных переключаем тему.
-    if ((this->counter_on_switch_theme_clicks++)%2){
-        this->number_of_theme = (this->number_of_theme+1)%THEMES.size();
-        setStyleSheet(THEMES[this->number_of_theme]);
     }
 }

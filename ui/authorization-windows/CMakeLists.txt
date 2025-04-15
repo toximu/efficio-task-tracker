@@ -40,4 +40,4 @@ target_include_directories(AuthorizationWindows
         $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(AuthorizationWindows PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Sql Database Scripts MainWindow)
+target_link_libraries(AuthorizationWindows PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Sql Database Scripts MainWindow ThemeManager)

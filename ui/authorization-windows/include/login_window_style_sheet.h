@@ -53,10 +53,17 @@ namespace Ui {
         }
 
         QPushButton#switch_theme {
+            width: 20px;          
+            height: 20px;        
+            min-width: 20px;      
+            min-height: 20px;
+            max-width: 20px;     
+            max-height: 20px;
+            border-radius: 7px; 
+            padding: 0;          
+            margin-bottom: 2px;
             background-color: transparent;
-            border-radius: 9px;
             border: 2px solid #089083;
-            padding: 5px;
         }
         QPushButton::hover#switch_theme {
             background-color: #089083;
@@ -117,10 +124,17 @@ namespace Ui {
         }
 
         QPushButton#switch_theme {
+            width: 20px;          
+            height: 20px;        
+            min-width: 20px;      
+            min-height: 20px;
+            max-width: 20px;     
+            max-height: 20px;
+            border-radius: 7px; 
+            padding: 0;          
+            margin-bottom: 2px;
             background-color: transparent;
-            border-radius: 9px;
             border: 2px solid #089083;
-            padding: 5px;
         }
         QPushButton::hover#switch_theme {
             background-color:  #089083;
@@ -184,10 +198,17 @@ namespace Ui {
         }
 
         QPushButton#switch_theme {
+            width: 20px;          
+            height: 20px;        
+            min-width: 20px;      
+            min-height: 20px;
+            max-width: 20px;     
+            max-height: 20px;
+            border-radius: 7px; 
+            padding: 0;          
+            margin-bottom: 2px;
             background-color: transparent;
-            border-radius: 9px;
             border: 2px solid #060407;
-            padding: 5px;
         }
         QPushButton::hover#switch_theme {
             background-color: #060407;
@@ -247,10 +268,17 @@ namespace Ui {
         }
     
         QPushButton#switch_theme {
+            width: 20px;          
+            height: 20px;        
+            min-width: 20px;      
+            min-height: 20px;
+            max-width: 20px;     
+            max-height: 20px;
+            border-radius: 7px; 
+            padding: 0;          
+            margin-bottom: 2px;
             background-color: transparent;
-            border-radius: 9px;
             border: 2px solid #9882B9;
-            padding: 5px;
         }
         QPushButton::hover#switch_theme {
             background-color: #9882B9;
@@ -261,7 +289,7 @@ namespace Ui {
     
     )";
     
-    QString login_window_nature_flat_theme = R"(
+    QString login_window_blue_theme = R"(
         QWidget {
             background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
                 stop:0 #173C4C, stop:0.5 #326D6C, stop:1 #07142B);
@@ -325,11 +353,17 @@ namespace Ui {
         }
         
         QPushButton#switch_theme {
+            width: 20px;          
+            height: 20px;        
+            min-width: 20px;      
+            min-height: 20px;
+            max-width: 20px;     
+            max-height: 20px;
+            border-radius: 7px; 
+            padding: 0;          
+            margin-bottom: 2px;
             background-color: transparent;
-            border-radius: 9px;
             border: 2px solid #85B093;
-            padding: 5px;
-            color: #BDD1BD;
         }
         
         QPushButton#switch_theme:hover {

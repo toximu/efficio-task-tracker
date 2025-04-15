@@ -14,22 +14,31 @@ QString main_window_light_autumn_theme = R"(
 }
 
 QScrollBar:vertical {
+    width: 7px;
+}
+QScrollBar:horizontal {
+    height: 7px;
+}
+QScrollBar:vertical, QScrollBar:horizontal {
     border: none;
     background: transparent;
-    width: 10px;
     margin: 0;
 }
-QScrollBar::handle:vertical {
+QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
     background: #c0c0c0;
-    border-radius: 5px;
+    border-radius: 3px;
     min-height: 20px;
+    min-width: 20px;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal,
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical,
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+    height: 0;
+    width: 0;
 }
 
-QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,
-    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
-        background: none;
-        height: 0px;
-    }
 QScrollArea {
     border: none;
     background: transparent;
@@ -64,25 +73,32 @@ QScrollArea {
 }
 
 #ProjectList QScrollBar:vertical {
+    width: 7px;
+}
+#ProjectList QScrollBar:horizontal {
+    height: 7px;
+}
+#ProjectList QScrollBar:vertical, 
+#ProjectList QScrollBar:horizontal {
     border: none;
-    background: #FED6BC;
-    width: 10px;
+    background: transparent;
     margin: 0;
 }
-
-#ProjectList QScrollBar::handle:vertical {
+#ProjectList QScrollBar::handle:vertical, 
+#ProjectList QScrollBar::handle:horizontal {
     background: #c0c0c0;
-    border-radius: 5px;
+    border-radius: 3px;
     min-height: 20px;
+    min-width: 20px;
 }
-
 #ProjectList QScrollBar::add-line:vertical,
-#ProjectList QScrollBar::sub-line:vertical {
-    background: none;
-}
-
+#ProjectList QScrollBar::sub-line:vertical,
+#ProjectList QScrollBar::add-line:horizontal,
+#ProjectList QScrollBar::sub-line:horizontal,
 #ProjectList QScrollBar::add-page:vertical,
-#ProjectList QScrollBar::sub-page:vertical {
+#ProjectList QScrollBar::sub-page:vertical,
+#ProjectList QScrollBar::add-page:horizontal,
+#ProjectList QScrollBar::sub-page:horizontal {
     background: none;
 }
 
@@ -119,7 +135,6 @@ QScrollArea {
     padding: 5px 10px;
 }
 
-
 #NoteWidget QPushButton:hover {
     background-color:rgb(213, 167, 88);
 }
@@ -154,181 +169,195 @@ QPushButton#switch_theme_button_ {
     border-radius: 7px; 
     padding: 0;          
     margin-bottom: 2px;
-    
     border: 2px solid #fea36b;
-    
     background-color: transparent;
 }
 QPushButton::hover#switch_theme_button_ {
     background-color: #fea36b;
 }
 QPushButton::pressed#switch_theme_button_ {
-    background-color:#fea36b;
+    background-color: rgb(185, 117, 61);
 }
 )";
 
 QString main_window_dark_autumn_theme = R"(
-#main-window {
-    background-color: black;
-}
-
-#main-window QLabel {
-    font-weight: bold;
-    color: #BDD1BD;
-}
-
-QScrollBar:vertical {
-    border: none;
-    background: #202020;
-    width: 10px;
-    margin: 0;
-}
-QScrollBar::handle:vertical {
-    background: #089083;
-    border-radius: 5px;
-    min-height: 20px;
-}
-
-QScrollArea {
-    border: none;
-    background: transparent;
-}
-
-#ProjectList {
-    background-color: #202020;
-    border-radius: 8px;
-    padding: 8px;
-    outline: 0;
-    font-family: 'Arial';
-    font-weight: bold;
-    font-size: 13px;
-    color: #BDD1BD;
-}
-
-#ProjectList::item {
-    background-color: #1E2A30;
-    border: none;
-    padding: 10px;
-    margin: 2px;
-    border-radius: 6px;
-}
-
-#ProjectList::item:hover {
-    background-color: #2C3E44;
-}
-
-#ProjectList::item:selected {
-    background-color: #089083;
-    color: #263238;
-}
-
-#BottomBar {
-    background-color: #202020;
-    border-radius: 8px;
-    padding: 8px;
-    outline: 0;
-}
-
-#BottomBar QLabel {
-    color: #BDD1BD;
-    font-family: 'Arial';
-    font-size: 13px;
-}
-
-#NoteList {
-    border-radius: 8px;
-    background-color: #202020;
-}
-
-#NoteWidget {
-    background-color: #ffdda2;
-    border-radius: 8px;
-}
-
-#NoteWidget QPushButton {
-    font-family: 'Arial';
-    font-size: 13px;
-    font-weight: bold;
-    border-radius: 10px;
-    background-color:rgb(241, 201, 132);
-    color: rgb(33, 44, 50);
-    padding: 5px 10px;
-}
-
-
-#NoteWidget QPushButton:hover {
-    background-color:rgb(213, 167, 88);
-}
-
-QPushButton {
-    font-family: 'Arial';
-    font-size: 13px;
-    font-weight: bold;
-    border-radius: 10px;
-    background-color: #fea36b;
-    color: white;
-    padding: 5px 10px;
-    min-width: 60px;
-    min-height: 25px;
-}
-
-#NoteWidget QPushButton {
-    font-family: 'Arial';
-    font-size: 13px;
-    font-weight: bold;
-    border-radius: 10px;
-    background-color: #5E3E3E;
-    color: #BDD1BD;
-    padding: 5px 10px;
-}
-
-#NoteWidget QPushButton:hover {
-    background-color:rgb(53, 28, 28);
-}
-
-QPushButton {
-    font-family: 'Arial';
-    font-size: 13px;
-    font-weight: bold;
-    border-radius: 10px;
-    background-color: #fea36b;
-    color: #263238;
-    padding: 5px 10px;
-    min-width: 60px;
-    min-height: 25px;
-}
-
-QPushButton:hover {
-    background-color: #d58745;
-}
-
-QPushButton#switch_theme_button_ {
-    width: 20px;          
-    height: 20px;        
-    min-width: 20px;      
-    min-height: 20px;
-    max-width: 20px;     
-    max-height: 20px;
-    border-radius: 7px; 
-    padding: 0;          
-    margin-bottom: 2px;
+    #main-window {
+        background-color: #202020;
+    }
     
-    border: 2px solid #089083;
+    #main-window QLabel {
+        font-weight: bold;
+        color: #BDD1BD;
+    }
     
-    background-color: transparent;
-}
-QPushButton::hover#switch_theme_button_ {
-    background-color: #089083;
-}
-QPushButton::pressed#switch_theme_button_ {
-    background-color:rgb(13, 93, 85);
-}
-)";
+    QScrollBar:vertical {
+        width: 7px;
+    }
+    QScrollBar:horizontal {
+        height: 7px;
+    }
+    QScrollBar:vertical, QScrollBar:horizontal {
+        border: none;
+        background: transparent;
+        margin: 0;
+    }
+    QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
+        background: #c0c0c0;
+        border-radius: 3px;
+        min-height: 20px;
+        min-width: 20px;
+    }
+    QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,
+    QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal,
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical,
+    QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+        background: none;
+        height: 0;
+        width: 0;
+    }
+    
+    QScrollArea {
+        border: none;
+        background: transparent;
+    }
+    
+    #ProjectList {
+        background-color: black;
+        border-radius: 8px;
+        padding: 8px;
+        outline: 0;
+        font-family: 'Arial';
+        font-weight: bold;
+        font-size: 13px;
+        color: #BDD1BD;
+    } 
+    
+    #ProjectList::item {
+        background-color: rgb(32, 53, 51);
+        color: #ffffff;
+        border: none;
+        padding: 10px;
+        margin: 2px;
+        border-radius: 6px;
+    }
+    
+    #ProjectList::item:hover {
+        background-color: rgb(64, 89, 87);
+    }
+    
+    #ProjectList::item:selected {
+        background-color: #089083;
+        color: rgb(33, 44, 50);
+    }
+    
+    #ProjectList QScrollBar:vertical {
+        width: 7px;
+    }
+    #ProjectList QScrollBar:horizontal {
+        height: 7px;
+    }
+    #ProjectList QScrollBar:vertical, 
+    #ProjectList QScrollBar:horizontal {
+        border: none;
+        background: transparent;
+        margin: 0;
+    }
+    #ProjectList QScrollBar::handle:vertical, 
+    #ProjectList QScrollBar::handle:horizontal {
+        background: #c0c0c0;
+        border-radius: 3px;
+        min-height: 20px;
+        min-width: 20px;
+    }
+    #ProjectList QScrollBar::add-line:vertical,
+    #ProjectList QScrollBar::sub-line:vertical,
+    #ProjectList QScrollBar::add-line:horizontal,
+    #ProjectList QScrollBar::sub-line:horizontal,
+    #ProjectList QScrollBar::add-page:vertical,
+    #ProjectList QScrollBar::sub-page:vertical,
+    #ProjectList QScrollBar::add-page:horizontal,
+    #ProjectList QScrollBar::sub-page:horizontal {
+        background: none;
+    }
+    
+    #BottomBar {
+        background-color:rgb(0, 0, 0);
+        border-radius: 8px;
+        padding: 8px;
+        outline: 0;
+    }
+    
+    #BottomBar QLabel {
+        color: #c0c0c0;
+        font-family: 'Arial';
+        font-size: 13px;
+    }
+    
+    #NoteList {
+        border-radius: 8px;
+        background-color: black;
+    }
+    
+    #NoteWidget {
+        background-color:rgb(179, 156, 116);
+        border-radius: 8px;
+    }
+    
+    #NoteWidget QPushButton {
+        font-family: 'Arial';
+        font-size: 13px;
+        font-weight: bold;
+        border-radius: 10px;
+        background-color: #ffdda2;
+        color: #202020;
+        padding: 5px 10px;
+    }
+    
+    #NoteWidget QPushButton:hover {
+        background-color:rgb(255, 236, 203);
+    }
+    
+    QPushButton {
+        font-family: 'Arial';
+        font-size: 13px;
+        font-weight: bold;
+        border-radius: 10px;
+        background-color:rgb(211, 139, 95);
+        color: #263238;
+        padding: 5px 10px;
+        min-width: 60px;
+        min-height: 25px;
+    }
+    
+    QPushButton:hover {
+        background-color:rgb(181, 114, 59);
+    }
+    
+    QPushButton#switch_theme_button_ {
+        width: 20px;          
+        height: 20px;        
+        min-width: 20px;      
+        min-height: 20px;
+        max-width: 20px;     
+        max-height: 20px;
+        border-radius: 7px; 
+        padding: 0;          
+        margin-bottom: 2px;
+        border: 2px solid rgb(211, 139, 95);
+        background-color: transparent;
+    }
+    QPushButton::hover#switch_theme_button_ {
+        background-color: rgb(211, 139, 95);
+    }
+    QPushButton::pressed#switch_theme_button_ {
+        background-color: rgb(211, 139, 95);
+    }
+    )";
+
 
 QString main_window_light_purple_theme = R"(
 #main-window {
-    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
-        stop:0 #9882B9, stop:0.5 rgb(176, 157, 205), stop:1 rgb(103, 88, 126));
+    background: #9882B9;
 }
 
 #main-window QLabel {
@@ -337,15 +366,29 @@ QString main_window_light_purple_theme = R"(
 }
 
 QScrollBar:vertical {
+    width: 7px;
+}
+QScrollBar:horizontal {
+    height: 7px;
+}
+QScrollBar:vertical, QScrollBar:horizontal {
     border: none;
     background: transparent;
-    width: 10px;
     margin: 0;
 }
-QScrollBar::handle:vertical {
-    background: #722548;
-    border-radius: 5px;
+QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
+    background: white;
+    border-radius: 3px;
     min-height: 20px;
+    min-width: 20px;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal,
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical,
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+    height: 0;
+    width: 0;
 }
 
 QScrollArea {
@@ -373,12 +416,42 @@ QScrollArea {
 }
 
 #ProjectList::item:hover {
-    background-color: rgb(168, 147, 199);
+    background-color: rgb(163, 148, 184);
 }
 
 #ProjectList::item:selected {
-    background-color:rgb(82, 69, 101);
+    background-color:rgb(121, 103, 148);
     color: rgb(221, 210, 238);
+}
+
+#ProjectList QScrollBar:vertical {
+    width: 7px;
+}
+#ProjectList QScrollBar:horizontal {
+    height: 7px;
+}
+#ProjectList QScrollBar:vertical, 
+#ProjectList QScrollBar:horizontal {
+    border: none;
+    background: transparent;
+    margin: 0;
+}
+#ProjectList QScrollBar::handle:vertical, 
+#ProjectList QScrollBar::handle:horizontal {
+    background: white;
+    border-radius: 3px;
+    min-height: 20px;
+    min-width: 20px;
+}
+#ProjectList QScrollBar::add-line:vertical,
+#ProjectList QScrollBar::sub-line:vertical,
+#ProjectList QScrollBar::add-line:horizontal,
+#ProjectList QScrollBar::sub-line:horizontal,
+#ProjectList QScrollBar::add-page:vertical,
+#ProjectList QScrollBar::sub-page:vertical,
+#ProjectList QScrollBar::add-page:horizontal,
+#ProjectList QScrollBar::sub-page:horizontal {
+    background: none;
 }
 
 #BottomBar {
@@ -389,7 +462,7 @@ QScrollArea {
 }
 
 #BottomBar QLabel {
-    color: rgb(218, 207, 235);
+    color: #9882B9;
     font-family: 'Arial';
     font-size: 13px;
 }
@@ -414,7 +487,6 @@ QScrollArea {
     padding: 5px 10px;
 }
 
-
 #NoteWidget QPushButton:hover {
     background-color:rgb(134, 82, 120); 
 }
@@ -432,7 +504,7 @@ QPushButton {
 }
 
 QPushButton:hover {
-    background-color: rgb(98, 27, 59);
+    background-color:rgb(69, 24, 44);
 }
 
 QPushButton#switch_theme_button_ {
@@ -445,9 +517,7 @@ QPushButton#switch_theme_button_ {
     border-radius: 7px; 
     padding: 0;          
     margin-bottom: 2px;
-    
     border: 2px solid #722548;
-    
     background-color: transparent;
 }
     
@@ -455,13 +525,13 @@ QPushButton::hover#switch_theme_button_ {
     background-color: #722548;
 }
 QPushButton::pressed#switch_theme_button_ {
-    background-color: #722548;
+    background-color: rgb(80, 27, 51);
 }
 )";
 
 QString main_window_dark_purple_theme = R"(
 #main-window {
-    background-color:rgb(9, 6, 10);
+    background-color: rgb(9, 6, 10);
 }
 
 #main-window QLabel {
@@ -470,15 +540,29 @@ QString main_window_dark_purple_theme = R"(
 }
 
 QScrollBar:vertical {
+    width: 7px;
+}
+QScrollBar:horizontal {
+    height: 7px;
+}
+QScrollBar:vertical, QScrollBar:horizontal {
     border: none;
-    background: #221932;
-    width: 10px;
+    background: transparent;
     margin: 0;
 }
-QScrollBar::handle:vertical {
-    background: #722548;
-    border-radius: 5px;
+QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
+    background: #775E88;
+    border-radius: 3px;
     min-height: 20px;
+    min-width: 20px;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal,
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical,
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+    height: 0;
+    width: 0;
 }
 
 QScrollArea {
@@ -498,7 +582,7 @@ QScrollArea {
 }
 
 #ProjectList::item {
-    background-color: rgb(34, 25, 48);
+    background-color:rgb(50, 41, 66);
     border: none;
     padding: 10px;
     margin: 2px;
@@ -506,16 +590,46 @@ QScrollArea {
 }
 
 #ProjectList::item:hover {
-    background-color: rgb(42, 31, 59);
+    background-color:rgb(97, 82, 123);
 }
 
 #ProjectList::item:selected {
-    background-color: #722548;
-    color: #9882B9;
+    background-color:rgb(205, 146, 172);
+    color: #221932;
+}
+
+#ProjectList QScrollBar:vertical {
+    width: 7px;
+}
+#ProjectList QScrollBar:horizontal {
+    height: 7px;
+}
+#ProjectList QScrollBar:vertical, 
+#ProjectList QScrollBar:horizontal {
+    border: none;
+    background: transparent;
+    margin: 0;
+}
+#ProjectList QScrollBar::handle:vertical, 
+#ProjectList QScrollBar::handle:horizontal {
+    background: #775E88;
+    border-radius: 3px;
+    min-height: 20px;
+    min-width: 20px;
+}
+#ProjectList QScrollBar::add-line:vertical,
+#ProjectList QScrollBar::sub-line:vertical,
+#ProjectList QScrollBar::add-line:horizontal,
+#ProjectList QScrollBar::sub-line:horizontal,
+#ProjectList QScrollBar::add-page:vertical,
+#ProjectList QScrollBar::sub-page:vertical,
+#ProjectList QScrollBar::add-page:horizontal,
+#ProjectList QScrollBar::sub-page:horizontal {
+    background: none;
 }
 
 #BottomBar {
-    background-color: rgb(42, 10, 25);
+    background-color: #221932;
     border-radius: 8px;
     padding: 8px;
     outline: 0;
@@ -533,7 +647,7 @@ QScrollArea {
 }
 
 #NoteWidget {
-    background-color: #3D2A3D;
+    background-color: #9882B9;
     border-radius: 8px;
 }
 
@@ -542,14 +656,13 @@ QScrollArea {
     font-size: 13px;
     font-weight: bold;
     border-radius: 10px;
-    background-color: #5D3A5D;
-    color: #9882B9;
+    background-color:rgb(113, 97, 137);
+    color: #221932;
     padding: 5px 10px;
 }
 
-
 #NoteWidget QPushButton:hover {
-    background-color:rgb(56, 35, 56);
+    background-color:rgb(69, 58, 87);
 }
 
 QPushButton {
@@ -565,7 +678,7 @@ QPushButton {
 }
 
 QPushButton:hover {
-    background-color: rgb(98, 27, 59);
+    background-color: #722548;
 }
 QPushButton#switch_theme_button_ {
     width: 20px;          
@@ -577,22 +690,20 @@ QPushButton#switch_theme_button_ {
     border-radius: 7px; 
     padding: 0;          
     margin-bottom: 2px;
-    
-    border: 2px solid #9882B9;
-    
+    border: 2px solid #722548;
     background-color: transparent;
 }
 QPushButton::hover#switch_theme_button_ {
-    background-color: #9882B9;
+    background-color: #722548;
 }
 QPushButton::pressed#switch_theme_button_ {
-    background-color:rgb(113, 93, 143);
+    background-color:rgb(80, 27, 51);
 }
 )";
 
-QString main_window_nature_flat_theme = R"(
+QString main_window_blue_theme = R"(
 #main-window {
-    background:  #07142B;
+    background: #173C4C;
 }
 
 #main-window QLabel {
@@ -601,15 +712,29 @@ QString main_window_nature_flat_theme = R"(
 }
 
 QScrollBar:vertical {
+    width: 7px;
+}
+QScrollBar:horizontal {
+    height: 7px;
+}
+QScrollBar:vertical, QScrollBar:horizontal {
     border: none;
-    background: #173C4C;
-    width: 10px;
+    background: transparent;
     margin: 0;
 }
-QScrollBar::handle:vertical {
-    background: #568F7C;
-    border-radius: 5px;
+QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
+    background: rgb(103, 155, 177);
+    border-radius: 3px;
     min-height: 20px;
+    min-width: 20px;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal,
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical,
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+    height: 0;
+    width: 0;
 }
 
 QScrollArea {
@@ -618,7 +743,7 @@ QScrollArea {
 }
 
 #ProjectList {
-    background-color: #173C4C;
+    background-color: #07142B;
     border-radius: 8px;
     padding: 8px;
     outline: 0;
@@ -638,16 +763,46 @@ QScrollArea {
 }
 
 #ProjectList::item:hover {
-    background-color: #326D6C;
+    background-color:rgb(37, 92, 115);
 }
 
 #ProjectList::item:selected {
-    background-color: #568F7C;
-    color: #173C4C;
+    background-color:rgb(73, 159, 158);
+    color: #07142B;
+}
+
+#ProjectList QScrollBar:vertical {
+    width: 7px;
+}
+#ProjectList QScrollBar:horizontal {
+    height: 7px;
+}
+#ProjectList QScrollBar:vertical, 
+#ProjectList QScrollBar:horizontal {
+    border: none;
+    background: transparent;
+    margin: 0;
+}
+#ProjectList QScrollBar::handle:vertical, 
+#ProjectList QScrollBar::handle:horizontal {
+    background: rgb(103, 155, 177);
+    border-radius: 3px;
+    min-height: 20px;
+    min-width: 20px;
+}
+#ProjectList QScrollBar::add-line:vertical,
+#ProjectList QScrollBar::sub-line:vertical,
+#ProjectList QScrollBar::add-line:horizontal,
+#ProjectList QScrollBar::sub-line:horizontal,
+#ProjectList QScrollBar::add-page:vertical,
+#ProjectList QScrollBar::sub-page:vertical,
+#ProjectList QScrollBar::add-page:horizontal,
+#ProjectList QScrollBar::sub-page:horizontal {
+    background: none;
 }
 
 #BottomBar {
-    background-color: #173C4C;
+    background-color: #07142B;
     border-radius: 8px;
     padding: 8px;
     outline: 0;
@@ -662,12 +817,12 @@ QScrollArea {
 
 #NoteList {
     border-radius: 8px;
-    background-color: #173C4C;
+    background-color: #07142B;
     border: 1px solid;
 }
 
 #NoteWidget {
-    background-color: #2D4C3C;
+    background-color:rgb(103, 155, 177);
     border-radius: 8px;
     border: 1px solid;
 }
@@ -677,14 +832,13 @@ QScrollArea {
     font-size: 13px;
     font-weight: bold;
     border-radius: 10px;
-    background-color: #326D6C;
-    color: #07142B;
+    background-color:rgb(61, 104, 122);
+    color: #BDD1BD;
     padding: 5px 10px;
 }
 
-
 #NoteWidget QPushButton:hover {
-    background-color:rgb(36, 82, 81);
+    background-color:rgb(24, 54, 66);
 }
 
 QPushButton {
@@ -718,17 +872,15 @@ QPushButton#switch_theme_button_ {
     border-radius: 7px; 
     padding: 0;          
     margin-bottom: 2px;
-    
-    border: 2px solid #85B093;
-    
+    border: 2px solid #568F7C;
     background-color: transparent;
 }
 
 QPushButton::hover#switch_theme_button_ {
-    background-color: #85B093;
+    background-color: #568F7C;
 }
 QPushButton::pressed#switch_theme_button_ {
-    background-color:rgb(107, 141, 118);
+    background-color:rgb(68, 107, 94);
 }
 )";
 

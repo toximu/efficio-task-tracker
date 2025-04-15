@@ -18,6 +18,7 @@
 #include "project_dao.hpp"
 #include "projectitem.h"
 #include "projectlist.h"
+#include "theme_manager.h"
 
 namespace Ui {
 
@@ -26,14 +27,13 @@ const std::vector<QString> MainWindow::THEMES = {
     Ui::main_window_dark_autumn_theme,
     Ui::main_window_dark_purple_theme,
     Ui::main_window_light_purple_theme,
-    Ui::main_window_nature_flat_theme
+    Ui::main_window_blue_theme
 };
 
 MainWindow::MainWindow(
     QWidget *parent,
     std::string username,
-    project_storage_model::Storage *storage,
-    int number_of_theme_
+    project_storage_model::Storage *storage
 )
     : QWidget(parent),
       username(username),
@@ -46,8 +46,7 @@ MainWindow::MainWindow(
       new_project_button_(new QPushButton("Новый проект", this)),
       switch_theme_button_(new QPushButton(this)),
       new_note_button_(new QPushButton("Новая заметка", this)),
-      storage_(storage), 
-      number_of_theme(number_of_theme_) {
+      storage_(storage) {
     this->setObjectName("main-window");
     this->setAttribute(Qt::WA_StyledBackground);
     this->setMinimumSize(QSize(800, 600));
@@ -70,8 +69,7 @@ MainWindow::MainWindow(
 
     switch_theme_button_->setObjectName("switch_theme_button_");
     right_layout->addWidget(switch_theme_button_, 0, Qt::AlignRight | Qt::AlignBottom);
-    
-    this->setStyleSheet(THEMES[number_of_theme_]);
+    handle_theme_changed(ThemeManager::instance()->current_theme());
     this->project_list_->load_projects(storage);
 
     connect(
@@ -83,7 +81,7 @@ MainWindow::MainWindow(
     );
     connect(
         switch_theme_button_, &QPushButton::clicked, this, 
-        &Ui::MainWindow::on_switch_theme_clicked
+        &Ui::MainWindow::on_switch_theme_click
     );
     connect(
         new_project_button_, &QPushButton::clicked, this,
@@ -93,6 +91,20 @@ MainWindow::MainWindow(
         new_project_button_, &QPushButton::clicked, this,
         &Ui::MainWindow::add_project
     );
+    connect(switch_theme_button_, &QPushButton::clicked, this,
+        &MainWindow::on_switch_theme_click
+    );
+    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+            this, &MainWindow::handle_theme_changed);
+}
+
+void MainWindow::handle_theme_changed(int theme) {
+    this->setStyleSheet(THEMES[theme]);
+}
+
+void MainWindow::on_switch_theme_click() {
+    int next_theme = (ThemeManager::instance()->current_theme() + 1) % 5;
+    ThemeManager::instance()->apply_theme(next_theme);
 }
 
 void MainWindow::add_project() {
@@ -131,12 +143,6 @@ void MainWindow::add_note() {
         msg.setText("Проект не выбран!");
         msg.exec();
     }
-}
-
-
-void MainWindow::on_switch_theme_clicked() {
-        this->number_of_theme = (this->number_of_theme+1)%THEMES.size();
-        setStyleSheet(THEMES[this->number_of_theme]);
 }
 
 }  // namespace Ui

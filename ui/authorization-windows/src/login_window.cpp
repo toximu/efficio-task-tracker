@@ -16,17 +16,18 @@
 #include "registration_window.h"
 #include "serialization.hpp"
 #include "login_window_style_sheet.h"
+#include "theme_manager.h"
 
 const std::vector<QString> LoginWindow::THEMES = {
     Ui::login_window_light_autumn_theme,
     Ui::login_window_dark_autumn_theme,
     Ui::login_window_dark_purple_theme,
     Ui::login_window_light_purple_theme,
-    Ui::login_window_nature_flat_theme
+    Ui::login_window_blue_theme
 };
 
-LoginWindow::LoginWindow(QWidget *parent, int number_of_theme_)
-    : QWidget(parent), ui(new Ui::LoginWindow), number_of_theme(number_of_theme_) {
+LoginWindow::LoginWindow(QWidget *parent)
+    : QWidget(parent), ui(new Ui::LoginWindow) {
     ui->setupUi(this);
 
     setFixedSize(380, 480);
@@ -34,7 +35,7 @@ LoginWindow::LoginWindow(QWidget *parent, int number_of_theme_)
     ui->input_password->setPlaceholderText("Введите пароль:");
 
     ui->input_password->setEchoMode(QLineEdit::Password);
-    setStyleSheet(THEMES[number_of_theme_]);
+    handle_theme_changed(ThemeManager::instance()->current_theme());
 
     connect(
         ui->switch_theme, &QPushButton::clicked, this, 
@@ -49,6 +50,20 @@ LoginWindow::LoginWindow(QWidget *parent, int number_of_theme_)
         ui->push_enter, &QPushButton::clicked, this,
         &LoginWindow::on_push_enter_clicked
     );
+    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+            this, &LoginWindow::handle_theme_changed);
+}
+
+
+void LoginWindow::handle_theme_changed(int theme) {
+    this->setStyleSheet(THEMES[theme]);
+}
+
+void LoginWindow::on_switch_theme_clicked() {
+    if ((this->counter_on_switch_theme_clicks++)%2){
+        int next_theme = (ThemeManager::instance()->current_theme() + 1) % 5;
+        ThemeManager::instance()->apply_theme(next_theme);
+    }
 }
 
 LoginWindow::~LoginWindow() {
@@ -65,7 +80,7 @@ void LoginWindow::on_switch_mode_clicked() {
     }
     project_storage_model::Storage storage;
     RegistrationWindow *registration_window =
-        new RegistrationWindow(app_window, this->number_of_theme);
+        new RegistrationWindow(app_window);
 
     app_window->setCentralWidget(registration_window);
     QRect screenGeometry = QApplication::primaryScreen()->availableGeometry();
@@ -108,7 +123,7 @@ void LoginWindow::on_push_enter_clicked() {
             Serialization::get_storage(*storage, login.toStdString());
 
             Ui::MainWindow *main_window =
-                new Ui::MainWindow(app_window, login.toStdString(), storage, this->number_of_theme);
+                new Ui::MainWindow(app_window, login.toStdString(), storage);
 
             app_window->setCentralWidget(main_window);
             app_window->resize(800, 600);
@@ -128,16 +143,5 @@ void LoginWindow::on_push_enter_clicked() {
         QMessageBox::warning(
             this, "Ошибка ввода данных", "Пожалуйста, заполните все поля!"
         );
-    }
-}
-
-void LoginWindow::on_switch_theme_clicked() {
-    // Attention: костыль. 
-    // Почему-то кнопка switch_theme дважды кликается, 
-    // из-за чего темы переключаются не подряд, а через одну.
-    // Поэтому ведем счетчик кликов и только на нечетных переключаем тему.
-    if ((this->counter_on_switch_theme_clicks++)%2){
-        this->number_of_theme = (this->number_of_theme+1)%THEMES.size();
-        setStyleSheet(THEMES[this->number_of_theme]);
     }
 }

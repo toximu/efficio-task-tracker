@@ -33,17 +33,16 @@ class MainWindow : public QWidget {
 private slots:
     void add_project();
     void add_note();
-    void on_switch_theme_clicked();
+    void on_switch_theme_click();
 
 public:
     explicit MainWindow(
         QWidget *parent = nullptr,
         std::string username = "none",
-        project_storage_model::Storage *storage = nullptr,
-        int number_of_theme_ = 0
+        project_storage_model::Storage *storage = nullptr
     );
     static const std::vector<QString> THEMES;
-    int number_of_theme;  
+    void handle_theme_changed(int theme);
 };
 }  // namespace Ui
 #endif  // MAINWINDOW_H

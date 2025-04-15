@@ -6,9 +6,12 @@
 #include "applicationwindow.h"
 #include "login_window.h"
 #include "mainwindow.h"
+#include "theme_manager.h"
 
 int main(int argc, char *argv[]) {
     QApplication application(argc, argv);
+
+    ThemeManager* themeManager = ThemeManager::instance();
 
     QTranslator translator;
     const QStringList ui_languages = QLocale::system().uiLanguages();

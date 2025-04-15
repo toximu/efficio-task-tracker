@@ -19,10 +19,11 @@ class RegistrationWindow : public QWidget {
     Q_OBJECT
 
 public:
-    explicit RegistrationWindow(QWidget *parent = nullptr, int number_of_theme_ = 0);
+    explicit RegistrationWindow(QWidget *parent = nullptr);
     ~RegistrationWindow();
     bool is_strong_and_valid_password(const QString &password);
     static const std::vector<QString> THEMES;
+    void handle_theme_changed(int theme);
 
 private slots:
     void on_switch_mode_clicked();
@@ -31,6 +32,5 @@ private slots:
 
 private:
     Ui::RegistrationWindow *ui;
-    int number_of_theme;
-    int counter_on_switch_theme_clicks = 0;    
+    int counter_on_switch_theme_clicks = 0;
 };

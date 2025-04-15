@@ -27,12 +27,15 @@ public:
         Note* note = new Note(0, "NULL", "NULL")
     );
     ~NoteEditDialog() override;
+    static const std::vector<QString> THEMES;
+    void handle_theme_changed(int theme);
 
 private slots:
     void on_save_button_click();
     void on_join_button_click();
     void on_add_members_button_click();
     void on_add_tags_button_click();
+    void on_switch_theme_button_click();
 
 private:
     void init_basic_fields();
