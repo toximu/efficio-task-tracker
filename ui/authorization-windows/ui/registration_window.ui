@@ -13,12 +13,34 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QPushButton" name="pushRegistration">
+  <widget class="QPushButton" name="switch_theme">
    <property name="geometry">
     <rect>
-     <x>90</x>
+     <x>350</x>
+     <y>455</y>
+     <width>20</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="push_registration">
+   <property name="geometry">
+    <rect>
+     <x>85</x>
      <y>290</y>
-     <width>201</width>
+     <width>210</width>
      <height>51</height>
     </rect>
    </property>
@@ -30,7 +52,7 @@ border-radius: 10px;</string>
     <string>Зарегистрироваться</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="switchMode">
+  <widget class="QPushButton" name="switch_mode">
    <property name="geometry">
     <rect>
      <x>110</x>
@@ -47,7 +69,7 @@ border-radius: 10px;</string>
     <string>Уже есть аккаунт? Войдите!</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="createLogin">
+  <widget class="QLineEdit" name="create_login">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -57,7 +79,7 @@ border-radius: 10px;</string>
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="createPassword">
+  <widget class="QLineEdit" name="create_password">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -67,7 +89,7 @@ border-radius: 10px;</string>
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="repeatPassword">
+  <widget class="QLineEdit" name="repeat_password">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -77,10 +99,10 @@ border-radius: 10px;</string>
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="registrationLabel">
+  <widget class="QLabel" name="registration_label">
    <property name="geometry">
     <rect>
-     <x>100</x>
+     <x>94</x>
      <y>90</y>
      <width>201</width>
      <height>51</height>

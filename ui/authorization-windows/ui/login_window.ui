@@ -22,7 +22,7 @@
      <height>501</height>
     </rect>
    </property>
-   <widget class="QPushButton" name="pushEnter">
+   <widget class="QPushButton" name="push_enter">
     <property name="geometry">
      <rect>
       <x>120</x>
@@ -39,10 +39,10 @@ border-radius: 10px;</string>
      <string>Войти</string>
     </property>
    </widget>
-   <widget class="QLabel" name="enterLabel">
+   <widget class="QLabel" name="enter_label">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>133</x>
       <y>130</y>
       <width>91</width>
       <height>41</height>
@@ -55,7 +55,7 @@ border-radius: 10px;</string>
      <string>Вход</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="inputLogin">
+   <widget class="QLineEdit" name="input_login">
     <property name="geometry">
      <rect>
       <x>62</x>
@@ -71,7 +71,7 @@ border-radius: 10px;</string>
      <string>Логин</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="inputPassword">
+   <widget class="QLineEdit" name="input_password">
     <property name="geometry">
      <rect>
       <x>62</x>
@@ -87,7 +87,7 @@ border-radius: 10px;</string>
      <string>Пароль</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="switchMode">
+   <widget class="QPushButton" name="switch_mode">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -102,6 +102,28 @@ border-radius: 10px;</string>
     </property>
     <property name="text">
      <string>Еще нет аккаунта? Зарегистрируйтесь!</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="switch_theme">
+    <property name="geometry">
+     <rect>
+      <x>350</x> 
+      <y>455</y> 
+      <width>20</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>20</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>20</width>
+      <height>20</height>
+     </size>
     </property>
    </widget>
   </widget>

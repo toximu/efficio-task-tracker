@@ -10,31 +10,60 @@
 #include "applicationwindow.h"
 #include "bottombar.h"
 #include "database_manager.hpp"
-#include "login_window_style_sheet.h"
 #include "lr_dao.hpp"
 #include "mainwindow.h"
 #include "notelist.h"
 #include "registration_window.h"
 #include "serialization.hpp"
+#include "login_window_style_sheet.h"
+#include "theme_manager.h"
+
+const std::vector<QString> LoginWindow::THEMES = {
+    Ui::login_window_light_autumn_theme,
+    Ui::login_window_dark_autumn_theme,
+    Ui::login_window_dark_purple_theme,
+    Ui::login_window_light_purple_theme,
+    Ui::login_window_blue_theme
+};
 
 LoginWindow::LoginWindow(QWidget *parent)
     : QWidget(parent), ui(new Ui::LoginWindow) {
     ui->setupUi(this);
 
     setFixedSize(380, 480);
-    ui->inputLogin->setPlaceholderText("Введите логин:");
-    ui->inputPassword->setPlaceholderText("Введите пароль:");
-    setStyleSheet(Ui::login_window_light_theme);
-    ui->inputPassword->setEchoMode(QLineEdit::Password);
+    ui->input_login->setPlaceholderText("Введите логин:");
+    ui->input_password->setPlaceholderText("Введите пароль:");
+
+    ui->input_password->setEchoMode(QLineEdit::Password);
+    handle_theme_changed(ThemeManager::instance()->current_theme());
 
     connect(
-        ui->switchMode, &QPushButton::clicked, this,
+        ui->switch_theme, &QPushButton::clicked, this, 
+        &LoginWindow::on_switch_theme_clicked
+    );
+
+    connect(
+        ui->switch_mode, &QPushButton::clicked, this,
         &LoginWindow::on_switch_mode_clicked
     );
     connect(
-        ui->pushEnter, &QPushButton::clicked, this,
+        ui->push_enter, &QPushButton::clicked, this,
         &LoginWindow::on_push_enter_clicked
     );
+    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+            this, &LoginWindow::handle_theme_changed);
+}
+
+
+void LoginWindow::handle_theme_changed(int theme) {
+    this->setStyleSheet(THEMES[theme]);
+}
+
+void LoginWindow::on_switch_theme_clicked() {
+    if ((this->counter_on_switch_theme_clicks++)%2){
+        int next_theme = (ThemeManager::instance()->current_theme() + 1) % 5;
+        ThemeManager::instance()->apply_theme(next_theme);
+    }
 }
 
 LoginWindow::~LoginWindow() {
@@ -63,8 +92,8 @@ void LoginWindow::on_switch_mode_clicked() {
 }
 
 void LoginWindow::on_push_enter_clicked() {
-    QString login = ui->inputLogin->text();
-    QString password = ui->inputPassword->text();
+    QString login = ui->input_login->text();
+    QString password = ui->input_password->text();
 
     if (!login.isEmpty() && !password.isEmpty()) {
         if (login.size() > 50) {

@@ -12,6 +12,7 @@
 #include "notelist.h"
 #include "projectlist.h"
 #include "storage.hpp"
+#include <vector>
 
 namespace Ui {
 class MainWindow : public QWidget {
@@ -25,12 +26,14 @@ class MainWindow : public QWidget {
     QWidget *content_widget_;
     QPushButton *new_project_button_;
     QPushButton *new_note_button_;
+    QPushButton *switch_theme_button_;
     project_storage_model::Storage *storage_;
 
     friend ProjectList;
 private slots:
     void add_project();
     void add_note();
+    void on_switch_theme_click();
 
 public:
     explicit MainWindow(
@@ -38,6 +41,8 @@ public:
         std::string username = "none",
         project_storage_model::Storage *storage = nullptr
     );
+    static const std::vector<QString> THEMES;
+    void handle_theme_changed(int theme);
 };
 }  // namespace Ui
 #endif  // MAINWINDOW_H

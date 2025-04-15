@@ -8,12 +8,14 @@
 namespace Ui {
 NoteWidget::NoteWidget(
     QWidget *parent,
-    const project_storage_model::Note *model_note
+    const project_storage_model::Note *model_note, 
+    int number_of_theme_
 )
     : QWidget(parent),
       model_note_(model_note),
       main_layout_(new QVBoxLayout(this)),
-      open_button_(new QPushButton("Открыть")) {
+      open_button_(new QPushButton("Открыть")),
+      number_of_theme(number_of_theme_) {
     this->setObjectName("NoteWidget");
     this->setMinimumWidth(100);
     this->setFixedHeight(100);

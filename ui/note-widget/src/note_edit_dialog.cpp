@@ -10,11 +10,21 @@
 #include "./ui_note_edit_dialog.h"
 #include "note_edit_dialog_styles.h"
 #include "tags_dialog.h"
+#include "theme_manager.h"
+
+
+const std::vector<QString> NoteEditDialog::THEMES = {
+    Ui::note_edit_dialog_light_autumn_theme,
+    Ui::note_edit_dialog_dark_autumn_theme,
+    Ui::note_edit_dialog_dark_purple_theme,
+    Ui::note_edit_dialog_light_purple_theme,
+    Ui::note_edit_dialog_blue_theme
+};
 
 NoteEditDialog::NoteEditDialog(QWidget* parent, Note* note)
     : QDialog(parent),
       ui_(new Ui::NoteEditDialog),
-      note_(note) {
+      note_(note)  {
     ui_->setupUi(this);
     setWindowTitle("EFFICIO");
 
@@ -22,15 +32,29 @@ NoteEditDialog::NoteEditDialog(QWidget* parent, Note* note)
     init_additional_fields();
     setup_connections();
     setup_ui();
+
+    handle_theme_changed(ThemeManager::instance()->current_theme());
+
 }
 
-NoteEditDialog::~NoteEditDialog() {
-    delete ui_;
+void NoteEditDialog::handle_theme_changed(int theme) {
+    this->setStyleSheet(THEMES[theme]);
 }
 
 void NoteEditDialog::init_basic_fields() {
     ui_->titleLineEdit->setText(QString::fromStdString(note_->get_title()));
     ui_->descriptionTextEdit->setText(QString::fromStdString(note_->get_text()));
+}
+
+
+void NoteEditDialog::on_switch_theme_button_click() {
+    int next_theme = (ThemeManager::instance()->current_theme() + 1) % 5;
+    ThemeManager::instance()->apply_theme(next_theme);
+}
+
+
+NoteEditDialog::~NoteEditDialog() {
+    delete ui_;
 }
 
 void NoteEditDialog::init_additional_fields() {
@@ -78,12 +102,17 @@ void NoteEditDialog::setup_connections() {
         ui_->dateLabel->setVisible(!is_visible);
         ui_->dateEdit->setVisible(!is_visible);
     });
+    connect(ui_->switch_theme, &QPushButton::clicked, this,
+        &NoteEditDialog::on_switch_theme_button_click
+    );
+    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+            this, &NoteEditDialog::handle_theme_changed);
     connect(ui_->addTagsButton, &QPushButton::clicked, this, &NoteEditDialog::on_add_tags_button_click);
 }
 
 void NoteEditDialog::setup_ui() {
     setFixedSize(700, 480);
-    setStyleSheet(Ui::light_theme);
+    setStyleSheet(THEMES[ThemeManager::instance()->current_theme()]);
     ui_->buttonsLayout->setAlignment(Qt::AlignLeft);
 }
 

@@ -20,8 +20,10 @@ class NoteWidget : public QWidget {
 public:
     explicit NoteWidget(
         QWidget *parent = nullptr,
-        const project_storage_model::Note *model_note = nullptr
+        const project_storage_model::Note *model_note = nullptr,
+        int number_of_theme_ = 0
     );
+    int number_of_theme;
 
 private slots:
 

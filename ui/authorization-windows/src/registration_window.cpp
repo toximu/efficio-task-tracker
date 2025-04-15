@@ -15,6 +15,16 @@
 #include "notelist.h"
 #include "registration_window.h"
 #include "registration_window_style_sheet.h"
+#include <vector>
+#include "theme_manager.h"
+
+const std::vector<QString> RegistrationWindow::THEMES = {
+        Ui::registration_window_light_autumn_theme,
+        Ui::registration_window_dark_autumn_theme,
+        Ui::registration_window_dark_purple_theme,
+        Ui::registration_window_light_purple_theme,
+        Ui::registration_window_blue_theme
+    };
 
 RegistrationWindow::RegistrationWindow(QWidget *parent)
     : QWidget(parent), ui(new Ui::RegistrationWindow) {
@@ -22,22 +32,44 @@ RegistrationWindow::RegistrationWindow(QWidget *parent)
 
     setFixedSize(380, 480);
 
-    ui->createLogin->setPlaceholderText("Введите логин:");
-    ui->createPassword->setPlaceholderText("Введите пароль:");
-    ui->repeatPassword->setPlaceholderText("Повторите пароль:");
-    setStyleSheet(Ui::registration_window_light_theme);
-    ui->createPassword->setEchoMode(QLineEdit::Password);
-    ui->repeatPassword->setEchoMode(QLineEdit::Password);
+    ui->create_login->setPlaceholderText("Введите логин:");
+    ui->create_password->setPlaceholderText("Введите пароль:");
+    ui->repeat_password->setPlaceholderText("Повторите пароль:");
+    ui->create_password->setEchoMode(QLineEdit::Password);
+    ui->repeat_password->setEchoMode(QLineEdit::Password);
+
+    setAttribute(Qt::WA_StyledBackground, true);
 
     connect(
-        ui->pushRegistration, &QPushButton::clicked, this,
+        ui->switch_theme, &QPushButton::clicked, this, 
+        &RegistrationWindow::on_switch_theme_clicked
+    );
+
+    connect(
+        ui->push_registration, &QPushButton::clicked, this,
         &RegistrationWindow::on_push_registration_clicked
     );
     connect(
-        ui->switchMode, &QPushButton::clicked, this,
+        ui->switch_mode, &QPushButton::clicked, this,
         &RegistrationWindow::on_switch_mode_clicked
     );
+    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+            this, &RegistrationWindow::handle_theme_changed);
+    handle_theme_changed(ThemeManager::instance()->current_theme());
 }
+
+
+void RegistrationWindow::handle_theme_changed(int theme) {
+    this->setStyleSheet(THEMES[theme]);
+}
+
+void RegistrationWindow::on_switch_theme_clicked() {
+    if ((this->counter_on_switch_theme_clicks++)%2){
+        int next_theme = (ThemeManager::instance()->current_theme() + 1) % 5;
+        ThemeManager::instance()->apply_theme(next_theme);
+    }
+}
+
 
 RegistrationWindow::~RegistrationWindow() {
     delete ui;
@@ -108,9 +140,9 @@ bool RegistrationWindow::is_strong_and_valid_password(const QString &password) {
 }
 
 void RegistrationWindow::on_push_registration_clicked() {
-    QString created_login = ui->createLogin->text();
-    QString created_password = ui->createPassword->text();
-    QString repeated_password = ui->repeatPassword->text();
+    QString created_login = ui->create_login->text();
+    QString created_password = ui->create_password->text();
+    QString repeated_password = ui->repeat_password->text();
 
     if (!created_login.isEmpty() && !created_password.isEmpty() &&
         !repeated_password.isEmpty()) {
@@ -132,7 +164,7 @@ void RegistrationWindow::on_push_registration_clicked() {
             if (try_register_user == 0) {
                 QMessageBox::warning(
                     this, "Ошибка",
-                    "Извините, разрабы дауны и не подключили толком бд."
+                    "Извините, внутренняя ошибка с базами данных."
                 );
             } else if (try_register_user == -1) {
                 QMessageBox::warning(
@@ -145,7 +177,7 @@ void RegistrationWindow::on_push_registration_clicked() {
                     this, "Регистрация",
                     "Вы успешно зарегистрировались! Пожалуйста, выполните вход."
                 );
-                on_switch_mode_clicked();  // TODO: fix
+                on_switch_mode_clicked();
             }
         }
     } else {
