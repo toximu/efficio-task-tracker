@@ -7,6 +7,10 @@ using Efficio_proto::GetNoteResponse;
 using grpc::ServerAsyncResponseWriter;
 
 UpdateService::UpdateService(ServerCompletionQueue *cq) : cq_(cq) {
+
+}
+
+void UpdateService::run() {
     new GetNoteServerCall(&service_, cq_);
 }
 

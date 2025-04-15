@@ -15,6 +15,7 @@ void ServerImplementation::Run(const uint16_t port) {
     builder.RegisterService(&update_service.get_service());
 
     server_ = builder.BuildAndStart();
+    update_service.run();
     HandleRPCs();
 }
 

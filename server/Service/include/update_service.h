@@ -21,7 +21,7 @@ class UpdateService final {
     ServerCompletionQueue *cq_;
 
 public:
-
+    void run();
     explicit UpdateService(ServerCompletionQueue* cq);
     class GetNoteServerCall final : public CommonServerCall {
         GetNoteRequest request_;
