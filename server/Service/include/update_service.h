@@ -14,6 +14,7 @@ using Efficio_proto::GetNoteRequest;
 using Efficio_proto::GetNoteResponse;
 using Efficio_proto::Update;
 using Efficio_proto::CreateNoteRequest;
+using Efficio_proto::CreateNoteResponse;
 
 class UpdateService final {
     Update::AsyncService service_;
@@ -44,11 +45,11 @@ public:
 
     class CreateNoteServerCall final : public CommonServerCall {
         CreateNoteRequest request_;
-        ServerAsyncResponseWriter<CreateNoteRequest> responder_;
+        ServerAsyncResponseWriter<CreateNoteResponse> responder_;
         UpdateService &service_;
     public:
         explicit CreateNoteServerCall(UpdateService& service, ServerCompletionQueue *cq);
-        void Proceed(bool) override;
+        void Proceed(bool ok) override;
     };
 
     Update::AsyncService& get_service();

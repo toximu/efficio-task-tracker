@@ -17,7 +17,7 @@ public:
 
     struct Tag {
         bool is_checked;
-        QString color;
+        int color;
         QString name;
     };
 
@@ -27,6 +27,7 @@ public:
     );
 
     [[nodiscard]] QList<Tag> get_selected_tags() const;
+    static QString get_color_by_code(int code);
 
 private:
     void setup_ui();
