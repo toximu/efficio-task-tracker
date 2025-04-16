@@ -3,6 +3,6 @@ project(server)
 add_subdirectory(Service)
 
 
-add_executable(main main.cpp)
+add_executable(start_server main.cpp)
 
-target_link_libraries(main Service)
+target_link_libraries(start_server Service Database)

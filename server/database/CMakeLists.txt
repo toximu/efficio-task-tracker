@@ -18,4 +18,4 @@ target_include_directories(Database
         $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(Database PRIVATE Qt6::Core Qt6::Sql Qt6::Widgets Scripts)
+target_link_libraries(Database PRIVATE Qt6::Core Qt6::Sql model-proto pqxx)

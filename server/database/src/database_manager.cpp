@@ -1,80 +1,59 @@
 #include "database_manager.hpp"
-#include <QApplication>
-#include <QMessageBox>
-#include <QSqlError>
+#include <pqxx/pqxx>
 
 DatabaseManager::DatabaseManager() {
-    database_ = QSqlDatabase::addDatabase("QPSQL");
-    database_.setHostName("localhost");
-    database_.setPort(5432);
-    database_.setDatabaseName("efficio");
-    database_.setUserName("efficio");
-    database_.setPassword("admin");
-    database_.open();
+    connection_ = std::make_unique<pqxx::connection>(get_connection_string());
+    pqxx::work transaction(*connection_);
 
-    QSqlQuery query(database_);
-    query.exec(
+    transaction.exec(
         "CREATE TABLE IF NOT EXISTS notes ("
         "id SERIAL PRIMARY KEY, "
         "title TEXT NOT NULL, "
         "content TEXT, "
+        "user_id VARCHAR(50) REFERENCES users(login), "
         "members VARCHAR(50)[], "
         "date VARCHAR(50), "
         "tags VARCHAR(50)[]"
         ")"
     );
 
-    query.exec(
+    transaction.exec(
         "CREATE TABLE IF NOT EXISTS users ("
         "login VARCHAR(50) PRIMARY KEY, "
         "password VARCHAR(50) NOT NULL, "
+        "token VARCHAR(100), "
         "projects INT[]"
         ")"
     );
 
-    query.exec(
-        "CREATE TABLE IF NOT EXISTS projects("
+    transaction.exec(
+        "CREATE TABLE IF NOT EXISTS projects ("
         "id SERIAL PRIMARY KEY, "
         "name VARCHAR(50) NOT NULL, "
-        "notes INT[]"
+        "owner VARCHAR(50) REFERENCES users(login), "
+        "notes INT[], "
+        "members VARCHAR(50)[]"
         ")"
     );
-}
 
-DatabaseManager::~DatabaseManager() {
-    if (database_.isOpen()) {
-        database_.close();
-    }
+    transaction.commit();
 }
 
 DatabaseManager &DatabaseManager::get_instance() {
     static DatabaseManager instance;
-    if (!instance.database_.isOpen() && !instance.database_.open()) {
+    if (!instance.connection_->is_open()) {
         throw std::runtime_error("Lost connection with database");
     }
     return instance;
 }
 
-bool DatabaseManager::execute_query(
-    QSqlQuery &query,
-    const QString &query_str,
-    const QVariantList &params
-) const {
-    QSqlQuery temp(database_);
-    query = std::move(temp);
-
-    if (!query.prepare(query_str)) {
-        qDebug() << "Prepare error:" << query.lastError();
-        return false;
+pqxx::connection &DatabaseManager::get_connection() {
+    if (!connection_->is_open()) {
+        connection_ = std::make_unique<pqxx::connection>(get_connection_string());
     }
-
-    for (int i = 0; i < params.size(); i++) {
-        query.bindValue(i, params[i]);
-    }
-
-    return query.exec();
+    return *connection_;
 }
 
-QSqlDatabase DatabaseManager::get_database() const {
-    return database_;
+std::string DatabaseManager::get_connection_string() {
+    return "postgresql://efficio:admin@localhost/efficio";
 }

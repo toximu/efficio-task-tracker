@@ -11,6 +11,7 @@ using Efficio_proto::Update;
 using Efficio_proto::Note;
 using Efficio_proto::Project;
 using Efficio_proto::Storage;
+
 class UpdateRequests {
     public:
     class GetNoteClientCall;
@@ -25,14 +26,10 @@ class UpdateRequests {
     bool create_project(Project *project);
     bool try_join_project(Project *project);
 
-
-
     explicit UpdateRequests(std::shared_ptr<Channel> channel):
         stub_(Update::NewStub(channel)) {};
     private:
     std::unique_ptr<Update::Stub> stub_;
-
-
 };
 
 

@@ -3,7 +3,6 @@
 #include <grpcpp/grpcpp.h>
 #include <iostream>
 
-
 using grpc::Channel;
 using grpc::ClientAsyncResponseReader;
 using grpc::ClientContext;
