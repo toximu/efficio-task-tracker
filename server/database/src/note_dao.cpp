@@ -54,13 +54,12 @@ bool NoteDao::update_note(const Note &note) {
     return true;
 }
 
-Note NoteDao::get_note(const int note_id, const std::string &login) {
+Note NoteDao::get_note(const int note_id) {
     pqxx::connection connection(DatabaseManager::get_connection_string());
     pqxx::work transaction(connection);
 
     const std::string query =
-        "SELECT * FROM notes WHERE id = " + transaction.quote(note_id) +
-        " AND user_id = " + transaction.quote(login);
+        "SELECT * FROM notes WHERE id = " + transaction.quote(note_id);
 
     const pqxx::result result = transaction.exec(query);
 
@@ -74,7 +73,7 @@ Note NoteDao::get_note(const int note_id, const std::string &login) {
 
     note->set_id(row["id"].as<int>());
     note->set_title(row["title"].as<std::string>());
-    note->set_text(row["text"].as<std::string>());
+    note->set_text(row["content"].as<std::string>());
 
     if (!row["date"].is_null()) {
         note->set_date(row["date"].as<std::string>());
@@ -85,16 +84,16 @@ Note NoteDao::get_note(const int note_id, const std::string &login) {
     }
 
     const pqxx::result tags = transaction.exec(
-        "SELECT * FROM notes WHERE note_id = " + transaction.quote(note->id())
+        "SELECT * FROM notes WHERE id = " + transaction.quote(note->id())
     );
 
-    for (const auto &tag_row : tags) {
-        auto *tag = note->add_tags();
-        tag->set_text(tag_row["text"].as<std::string>());
-        tag->set_color(
-            static_cast<Note::tag::colors>(tag_row["color"].as<int>())
-        );
-    }
+    // for (const auto &tag_row : tags) {
+    //     auto *tag = note->add_tags();
+    //     tag->set_text(tag_row["text"].as<std::string>());
+    //     tag->set_color(
+    //         static_cast<Note::tag::colors>(tag_row["color"].as<int>())
+    //     );
+    // }
 
     transaction.commit();
     return *note;

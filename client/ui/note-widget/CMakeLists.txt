@@ -38,5 +38,4 @@ target_include_directories(NoteWidget
         $<INSTALL_INTERFACE:include>
 )
 
-# TODO: remove "Service" and "efficio-rpc" from this list
-target_link_libraries(NoteWidget PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Sql Database model-proto Service efficio-rpc)
+target_link_libraries(NoteWidget PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Sql Database model-proto Client)

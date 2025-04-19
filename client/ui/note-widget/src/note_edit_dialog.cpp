@@ -12,6 +12,7 @@
 #include "tags_dialog.h"
 #include <grpcpp/grpcpp.h>
 #include "efficio-rpc-proto/efficio.grpc.pb.h"
+#include "update_requests.h"
 
 using grpc::Channel;
 using grpc::ClientContext;
@@ -196,31 +197,5 @@ bool NoteEditDialog::try_save_note() const {
     note_->set_text(ui_->descriptionTextEdit->toPlainText().toStdString());
     note_->set_date(ui_->dateEdit->date().toString("yyyy-MM-dd").toStdString());
 
-    // TODO: move to client part
-    const auto channel =
-        CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
-
-    ClientContext context;
-    context.set_deadline(
-        std::chrono::system_clock::now() + std::chrono::seconds(5)
-    );
-
-    Efficio_proto::CreateNoteRequest request;
-    request.mutable_user()->set_login("test");
-
-    try {
-        Update::Stub stub(channel);
-        Efficio_proto::CreateNoteResponse response;
-
-        Status status = stub.CreateNote(&context, request, &response);
-
-        if (!status.ok()) {
-            throw std::runtime_error(status.error_message());
-        }
-        return true;
-    }
-    catch (const std::exception& e) {
-        std::cerr << "Error creating note: " << e.what() << std::endl;
-        return false;
-    }
+    return true;
 }

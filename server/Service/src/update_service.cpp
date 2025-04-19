@@ -36,8 +36,11 @@ void UpdateService::GetNoteServerCall::Proceed(const bool ok) {
 
             GetNoteResponse response;
 
-            const auto note = NoteDao::get_note(request_.id(), request_.user().login());
+            const auto note = NoteDao::get_note(request_.id());
             response.mutable_note()->CopyFrom(note);
+            std::cout << "[SERVER]: FETCH NOTE REQUEST id=" << request_.id()
+                      << ", title=" << response.mutable_note()->title()
+                      << std::endl;
 
             responder_.Finish(response, grpc::Status::OK, this);
             status_ = FINISH;
@@ -77,8 +80,12 @@ void UpdateService::CreateNoteServerCall::Proceed(const bool ok) {
             new CreateNoteServerCall(service_, cq_);
             CreateNoteResponse response;
 
-            const auto new_note = NoteDao::initialize_note_for_user(request_.user().login());
+            const auto new_note =
+                NoteDao::initialize_note_for_user(request_.user().login());
             response.mutable_note()->CopyFrom(new_note);
+
+            std::cout << "[SERVER]: CREATE NOTE REQUEST id=" << new_note.id()
+                      << std::endl;
 
             responder_.Finish(response, grpc::Status::OK, this);
             status_ = FINISH;

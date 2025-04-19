@@ -2,8 +2,7 @@
 
 int main() {
     ServerImplementation server;
-    std::cout << "Preparing...\n";
+    std::cout << "[SERVER]: WAITING FOR REQUESTS...\n";
     server.Run(50051);
-    std::cout << "Server started!\n";
     return 0;
 }

@@ -2,6 +2,8 @@
 #include <QLocale>
 #include <QStyleFactory>
 #include <QTranslator>
+#include <thread>
+#include "client/include/client_implementation.h"
 #include "note_edit_dialog.h"
 
 int main(int argc, char *argv[]) {
@@ -17,6 +19,18 @@ int main(int argc, char *argv[]) {
             break;
         }
     }
+
+    const auto channel = CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
+
+    std::thread requests([&] {
+        try {
+            ClientImplementation client(channel);
+            client.CompleteRpc();
+        } catch (const std::exception &e) {
+            std::cout << "[CLIENT ERROR]: " << e.what() << std::endl;
+        }
+    });
+    requests.detach();
 
     NoteEditDialog dialog(nullptr, new Note);
     dialog.show();

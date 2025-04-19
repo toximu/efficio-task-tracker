@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(EfficioTaskTracker LANGUAGES CXX)
+project(start_client LANGUAGES CXX)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -13,9 +13,9 @@ find_package(Qt6 COMPONENTS Widgets Core Gui Sql REQUIRED)
 
 add_subdirectory(ui/note-widget)
 add_subdirectory(client)
-add_executable(EfficioTaskTracker main.cpp)
+add_executable(start_client main.cpp)
 
-target_link_libraries(EfficioTaskTracker PRIVATE
+target_link_libraries(start_client PRIVATE
         Qt6::Widgets
         Qt6::Core
         Qt6::Gui
