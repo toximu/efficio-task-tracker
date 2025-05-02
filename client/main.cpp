@@ -34,7 +34,11 @@ int main(int argc, char *argv[]) {
     requests.detach();
 
     const auto test_note = new Note();
-    client.create_note(test_note);
+    client.try_create_note(test_note);
+
+    const auto new_note = new Note();
+    new_note->set_id(6);
+    client.try_fetch_note(new_note);
 
     NoteEditDialog dialog(&client, nullptr, test_note);
     dialog.show();

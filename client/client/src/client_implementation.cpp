@@ -34,10 +34,14 @@ void ClientImplementation::CompleteRpc() {
     }
 }
 
-bool ClientImplementation::update_note(Note *note) const {
-    return update_requests_.update_note(note);
+bool ClientImplementation::try_update_note(Note *note) const {
+    return update_requests_.try_update_note(note);
 }
 
-bool ClientImplementation::create_note(Note *note) const {
-    return update_requests_.create_note(note);
+bool ClientImplementation::try_create_note(Note *note) const {
+    return update_requests_.try_create_note(note);
+}
+
+bool ClientImplementation::try_fetch_note(Note *note) const {
+    return update_requests_.try_fetch_note(note);
 }

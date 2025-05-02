@@ -17,7 +17,7 @@ using Efficio_proto::Update;
 
 UpdateRequests::UpdateNoteClientCall::UpdateNoteClientCall(
     const UpdateNoteRequest &request,
-    grpc::CompletionQueue *cq,
+    CompletionQueue *cq,
     const std::unique_ptr<Update::Stub> &stub
 )
     : responder_(stub->AsyncUpdateNote(&context, request, cq)) {
@@ -90,7 +90,7 @@ CreateNoteResponse UpdateRequests::CreateNoteClientCall::get_reply() {
     return reply_;
 }
 
-bool UpdateRequests::update_note(Note *note) const {
+bool UpdateRequests::try_update_note(Note *note) const {
     UpdateNoteRequest request;
     request.mutable_note()->CopyFrom(*note);
 
@@ -113,7 +113,7 @@ bool UpdateRequests::update_note(Note *note) const {
     return true;
 }
 
-bool UpdateRequests::fetch_note(Note *note) const {
+bool UpdateRequests::try_fetch_note(Note *note) const {
     GetNoteRequest request;
     request.set_id(note->id());
 
@@ -136,7 +136,7 @@ bool UpdateRequests::fetch_note(Note *note) const {
     return true;
 }
 
-bool UpdateRequests::create_note(Note *note) const {
+bool UpdateRequests::try_create_note(Note *note) const {
     const CreateNoteRequest request;
 
     const auto call = new CreateNoteClientCall(request, cq_, stub_);

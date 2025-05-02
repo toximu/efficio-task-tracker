@@ -19,8 +19,9 @@ public:
     explicit ClientImplementation(const std::shared_ptr<Channel> &channel);
     void CompleteRpc();
 
-    bool update_note(Note *note) const;
-    bool create_note(Note *note) const;
+    bool try_update_note(Note *note) const;
+    bool try_create_note(Note *note) const;
+    bool try_fetch_note(Note *note) const;
 };
 
 #endif  // CLIENTIMPLEMENTATION_H

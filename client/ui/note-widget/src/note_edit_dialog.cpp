@@ -254,5 +254,5 @@ bool NoteEditDialog::try_save_note() const {
         new_tag->set_color(color_code_to_note_tag_colors(tag.color));
     }
 
-    return client_->update_note(note_);
+    return client_->try_update_note(note_);
 }

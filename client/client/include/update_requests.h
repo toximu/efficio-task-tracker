@@ -33,7 +33,7 @@ public:
             grpc::CompletionQueue *cq,
             const std::unique_ptr<Update::Stub> &stub
         );
-        void Proceed(bool ok = true) override;
+        void Proceed(bool ok) override;
         UpdateNoteResponse get_reply();
     };
 
@@ -48,7 +48,7 @@ public:
             grpc::CompletionQueue *cq,
             const std::unique_ptr<Update::Stub> &stub
         );
-        void Proceed(bool ok = true) override;
+        void Proceed(bool ok) override;
         GetNoteResponse get_reply();
     };
 
@@ -65,18 +65,17 @@ public:
             grpc::CompletionQueue *cq,
             const std::unique_ptr<Update::Stub> &stub
         );
-        void Proceed(bool ok = true) override;
+        void Proceed(bool ok) override;
         CreateNoteResponse get_reply();
     };
 
     class CreateProjectClientCall;
     class TryJoinProjectClientCall;
 
-    bool update_note(Note *note) const;
-    bool fetch_note(Note *note) const;
-    bool get_project(Project *project);
-    bool create_note(Note *note) const;
-    bool create_project(Project *project);
+    bool try_update_note(Note *note) const;
+    bool try_fetch_note(Note *note) const;
+    bool try_create_note(Note *note) const;
+    bool try_create_project(Project *project);
     bool try_join_project(Project *project);
 
     explicit UpdateRequests(

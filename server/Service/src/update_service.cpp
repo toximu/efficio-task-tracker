@@ -30,7 +30,6 @@ void UpdateService::UpdateNoteServerCall::Proceed(const bool ok) {
             new UpdateNoteServerCall(service_, cq_);
 
             UpdateNoteResponse response;
-            std::cout << "[SERVER]: PREPARING UPDATE\n";
 
             NoteDao::update_note(request_.note());
             response.mutable_note()->CopyFrom(request_.note());
@@ -76,7 +75,8 @@ void UpdateService::GetNoteServerCall::Proceed(const bool ok) {
             response.mutable_note()->CopyFrom(note);
             std::cout << "[SERVER]: FETCH NOTE REQUEST id=" << request_.id()
                       << ", title=" << response.mutable_note()->title()
-                      << std::endl;
+                      << ", first tag=" << response.note().tags()[0].text()
+                      << ":" << response.note().tags()[0].color() << std::endl;
 
             responder_.Finish(response, grpc::Status::OK, this);
             status_ = FINISH;
