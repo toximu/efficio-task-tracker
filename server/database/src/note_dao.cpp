@@ -1,9 +1,19 @@
 #include "note_dao.hpp"
-#include "database_manager.hpp"
 #include <pqxx/pqxx>
+#include "database_manager.hpp"
+
+std::string color_code_to_hex(const int code) {
+    static const std::unordered_map<int, std::string> color_map = {
+        {0, "#e7624b"}, {1, "#165d7b"}, {2, "#bd6dab"},
+        {3, "#00b16b"}, {4, "#e69f00"},
+    };
+
+    const auto it = color_map.find(code);
+    return it != color_map.end() ? it->second : "ffffff";
+}
 
 Note NoteDao::initialize_note_for_user(const std::string &login) {
-    auto& connection = DatabaseManager::get_instance().get_connection();
+    auto &connection = DatabaseManager::get_instance().get_connection();
     pqxx::work transaction(connection);
 
     const std::string query =
@@ -28,30 +38,45 @@ Note NoteDao::initialize_note_for_user(const std::string &login) {
 }
 
 bool NoteDao::update_note(const Note &note) {
-    auto& connection = DatabaseManager::get_instance().get_connection();
+    auto &connection = DatabaseManager::get_instance().get_connection();
     pqxx::work transaction(connection);
+
+    std::string members_array = "{";
+    for (int i = 0; i < note.members().size(); ++i) {
+        if (i > 0) {
+            members_array += ",";
+        }
+        members_array += "\"" + note.members(i) + "\"";
+    }
+    members_array += "}";
+
+    std::string tags_array = "{";
+    for (int i = 0; i < note.tags().size(); ++i) {
+        if (i > 0) {
+            tags_array += ",";
+        }
+        const auto &tag = note.tags(i);
+        std::string color_code = color_code_to_hex(tag.color());
+        tags_array += "\"{" + tag.text() + ":" + color_code + "}\"";
+    }
+    tags_array += "}";
 
     const std::string query =
         "UPDATE notes SET "
-        "title = :title, "
-        "content = :content, "
-        "members = :members, "
-        "date = :date, "
-        "tags = :tags "
-        "WHERE id = :id";
+        "title = $1, "
+        "content = $2, "
+        "members = $3::varchar(50)[], "
+        "date = $4, "
+        "tags = $5::varchar(50)[] "
+        "WHERE id = $6";
 
-    // TODO: I'm not sure, it will work correctly because note.members() and note.tags() return strange type
-    // const pqxx::result result = transaction.exec_params(
-    //     query, note.title(), note.text(), note.members(), note.date(),
-    //     note.tags(), note.id()
-    // );
-    //
-    // if (result.empty()) {
-    //     return false;
-    // }
+    const pqxx::result result = transaction.exec_params(
+        query, note.title(), note.text(), members_array, note.date(),
+        tags_array, note.id()
+    );
 
     transaction.commit();
-    return true;
+    return result.affected_rows() > 0;
 }
 
 Note NoteDao::get_note(const int note_id) {

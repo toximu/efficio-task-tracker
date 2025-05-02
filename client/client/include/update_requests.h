@@ -8,18 +8,35 @@
 
 using grpc::Channel;
 
-using Efficio_proto::Update;
 using Efficio_proto::Note;
 using Efficio_proto::Project;
 using Efficio_proto::Storage;
+using Efficio_proto::Update;
 
-using Efficio_proto::GetNoteResponse;
-using Efficio_proto::GetNoteRequest;
-using Efficio_proto::CreateNoteResponse;
 using Efficio_proto::CreateNoteRequest;
+using Efficio_proto::CreateNoteResponse;
+using Efficio_proto::GetNoteRequest;
+using Efficio_proto::GetNoteResponse;
+using Efficio_proto::UpdateNoteRequest;
+using Efficio_proto::UpdateNoteResponse;
 
 class UpdateRequests {
 public:
+    class UpdateNoteClientCall final : public CommonClientCall {
+        UpdateNoteResponse reply_;
+        std::unique_ptr<grpc::ClientAsyncResponseReader<UpdateNoteResponse>>
+            responder_;
+
+    public:
+        UpdateNoteClientCall(
+            const UpdateNoteRequest &request,
+            grpc::CompletionQueue *cq,
+            const std::unique_ptr<Update::Stub> &stub
+        );
+        void Proceed(bool ok = true) override;
+        UpdateNoteResponse get_reply();
+    };
+
     class GetNoteClientCall final : public CommonClientCall {
         GetNoteResponse reply_;
         std::unique_ptr<grpc::ClientAsyncResponseReader<GetNoteResponse>>
@@ -55,6 +72,7 @@ public:
     class CreateProjectClientCall;
     class TryJoinProjectClientCall;
 
+    bool update_note(Note *note) const;
     bool fetch_note(Note *note) const;
     bool get_project(Project *project);
     bool create_note(Note *note) const;
@@ -72,5 +90,4 @@ private:
     std::unique_ptr<Update::Stub> stub_;
 };
 
-
-#endif //UPDATE_REQUESTS_H
+#endif  // UPDATE_REQUESTS_H

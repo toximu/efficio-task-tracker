@@ -3,7 +3,7 @@
 #include <QStyleFactory>
 #include <QTranslator>
 #include <thread>
-#include "client/include/client_implementation.h"
+#include "client_implementation.h"
 #include "note_edit_dialog.h"
 
 int main(int argc, char *argv[]) {
@@ -20,11 +20,12 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    const auto channel = CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
+    const auto channel =
+        CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
+    ClientImplementation client(channel);
 
     std::thread requests([&] {
         try {
-            ClientImplementation client(channel);
             client.CompleteRpc();
         } catch (const std::exception &e) {
             std::cout << "[CLIENT ERROR]: " << e.what() << std::endl;
@@ -32,7 +33,10 @@ int main(int argc, char *argv[]) {
     });
     requests.detach();
 
-    NoteEditDialog dialog(nullptr, new Note);
+    const auto test_note = new Note();
+    client.create_note(test_note);
+
+    NoteEditDialog dialog(&client, nullptr, test_note);
     dialog.show();
     return QApplication::exec();
 }

@@ -49,7 +49,8 @@ DatabaseManager &DatabaseManager::get_instance() {
 
 pqxx::connection &DatabaseManager::get_connection() {
     if (!connection_->is_open()) {
-        connection_ = std::make_unique<pqxx::connection>(get_connection_string());
+        connection_ =
+            std::make_unique<pqxx::connection>(get_connection_string());
     }
     return *connection_;
 }

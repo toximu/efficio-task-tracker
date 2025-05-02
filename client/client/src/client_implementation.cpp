@@ -1,8 +1,9 @@
 #include "client_implementation.h"
-#include "update_requests.h"
 #include <common_client_call.h>
 #include <grpcpp/grpcpp.h>
 #include <iostream>
+#include "update_requests.h"
+#include "update_service.h"
 
 using grpc::Channel;
 using grpc::ClientAsyncResponseReader;
@@ -13,13 +14,7 @@ using grpc::Status;
 ClientImplementation::ClientImplementation(
     const std::shared_ptr<Channel> &channel
 )
-    : channel_(channel) {
-    const UpdateRequests update_requests(channel, &cq_);
-
-    // TODO: in future we should remove id setter [NOW IT'S ONLY FOR TEST]
-    const auto temp_note = new Note();
-    update_requests.create_note(temp_note);
-    update_requests.fetch_note(temp_note);
+    : channel_(channel), update_requests_(channel, &cq_) {
 }
 
 void ClientImplementation::CompleteRpc() {
@@ -37,4 +32,12 @@ void ClientImplementation::CompleteRpc() {
 
         delete call;
     }
+}
+
+bool ClientImplementation::update_note(Note *note) const {
+    return update_requests_.update_note(note);
+}
+
+bool ClientImplementation::create_note(Note *note) const {
+    return update_requests_.create_note(note);
 }

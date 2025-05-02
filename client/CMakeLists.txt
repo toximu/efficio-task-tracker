@@ -23,4 +23,5 @@ target_link_libraries(start_client PRIVATE
         Database
         NoteWidget
         model-proto
+        Client
 )

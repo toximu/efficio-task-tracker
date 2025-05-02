@@ -7,7 +7,7 @@
 class DatabaseManager final {
 public:
     static DatabaseManager &get_instance();
-    pqxx::connection& get_connection();
+    pqxx::connection &get_connection();
     [[nodiscard]] static std::string get_connection_string();
 
 private:

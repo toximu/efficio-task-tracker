@@ -8,18 +8,54 @@ using Efficio_proto::Note;
 
 using grpc::ServerAsyncResponseWriter;
 
-UpdateService::GetNoteServerCall::GetNoteServerCall(UpdateService &service, ServerCompletionQueue *cq)
-    : CommonServerCall(cq),
-      responder_(&ctx_),
-      service_(service) {
+UpdateService::UpdateNoteServerCall::UpdateNoteServerCall(
+    UpdateService &service,
+    ServerCompletionQueue *cq
+)
+    : CommonServerCall(cq), responder_(&ctx_), service_(service) {
+    service_.service_.RequestUpdateNote(
+        &ctx_, &request_, &responder_, cq_, cq_, this
+    );
+    status_ = PROCESS;
+}
 
+void UpdateService::UpdateNoteServerCall::Proceed(const bool ok) {
+    if (!ok) {
+        delete this;
+        return;
+    }
+
+    switch (status_) {
+        case PROCESS: {
+            new UpdateNoteServerCall(service_, cq_);
+
+            UpdateNoteResponse response;
+            std::cout << "[SERVER]: PREPARING UPDATE\n";
+
+            NoteDao::update_note(request_.note());
+            response.mutable_note()->CopyFrom(request_.note());
+            std::cout << "[SERVER]: UPDATE NOTE REQUEST id="
+                      << request_.note().id()
+                      << ", title=" << response.mutable_note()->title()
+                      << std::endl;
+            responder_.Finish(response, grpc::Status::OK, this);
+            status_ = FINISH;
+            break;
+        }
+        case FINISH: {
+            delete this;
+            break;
+        }
+    }
+}
+
+UpdateService::GetNoteServerCall::GetNoteServerCall(
+    UpdateService &service,
+    ServerCompletionQueue *cq
+)
+    : CommonServerCall(cq), responder_(&ctx_), service_(service) {
     service_.service_.RequestGetNote(
-        &ctx_,
-        &request_,
-        &responder_,
-        cq_,
-        cq_,
-        this
+        &ctx_, &request_, &responder_, cq_, cq_, this
     );
     status_ = PROCESS;
 }
@@ -59,12 +95,7 @@ UpdateService::CreateNoteServerCall::CreateNoteServerCall(
 )
     : CommonServerCall(cq), responder_(&ctx_), service_(service) {
     service_.service_.RequestCreateNote(
-        &ctx_,
-        &request_,
-        &responder_,
-        cq_,
-        cq_,
-        this
+        &ctx_, &request_, &responder_, cq_, cq_, this
     );
     status_ = PROCESS;
 }
@@ -98,6 +129,6 @@ void UpdateService::CreateNoteServerCall::Proceed(const bool ok) {
     }
 }
 
-Update::AsyncService& UpdateService::get_service() {
+Update::AsyncService &UpdateService::get_service() {
     return service_;
 }

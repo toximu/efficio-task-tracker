@@ -5,6 +5,7 @@ import "model-proto/model.proto";
 package Efficio_proto;
 
 service Update {
+  rpc UpdateNote(UpdateNoteRequest) returns (UpdateNoteResponse) {}
   rpc GetNote (GetNoteRequest) returns (GetNoteResponse) {}
   rpc GetProject (GetProjectRequest) returns (GetProjectResponse) {}
   rpc CreateNote (CreateNoteRequest) returns (CreateNoteResponse) {}
@@ -15,6 +16,18 @@ service Update {
 service Auth {
   rpc TryAuthenticateUser (AuthRequest) returns (AuthResponse) {}
   rpc TryRegister1User (AuthRequest) returns (AuthResponse) {}
+}
+
+message UpdateNoteRequest {
+  Note note = 1;
+}
+
+message UpdateNoteResponse {
+  oneof response {
+    bool ok = 1;
+    Note note = 2;
+    string error_text = 3;
+  }
 }
 
 message GetNoteRequest {

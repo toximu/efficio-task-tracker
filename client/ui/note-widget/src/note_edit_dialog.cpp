@@ -1,4 +1,6 @@
 #include "note_edit_dialog.h"
+#include <grpcpp/grpcpp.h>
+#include <QDate>
 #include <QDialog>
 #include <QFile>
 #include <QLineEdit>
@@ -6,23 +8,26 @@
 #include <QMessageBox>
 #include <QPainter>
 #include <QPixmap>
-#include <QDate>
 #include "./ui_note_edit_dialog.h"
+#include "efficio-rpc-proto/efficio.grpc.pb.h"
 #include "note_edit_dialog_styles.h"
 #include "tags_dialog.h"
-#include <grpcpp/grpcpp.h>
-#include "efficio-rpc-proto/efficio.grpc.pb.h"
 #include "update_requests.h"
 
+using Efficio_proto::GetNoteRequest;
+using Efficio_proto::GetNoteResponse;
+using Efficio_proto::Update;
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::Status;
-using Efficio_proto::Update;
-using Efficio_proto::GetNoteRequest;
-using Efficio_proto::GetNoteResponse;
 
-NoteEditDialog::NoteEditDialog(QWidget* parent, Note* note)
+NoteEditDialog::NoteEditDialog(
+    ClientImplementation *client,
+    QWidget *parent,
+    Note *note
+)
     : QDialog(parent),
+      client_(client),
       ui_(new Ui::NoteEditDialog),
       note_(note) {
     if (note_ == nullptr) {
@@ -48,7 +53,9 @@ void NoteEditDialog::init_basic_fields() {
 
 void NoteEditDialog::init_additional_fields() {
     if (!note_->date().empty()) {
-        QDate date = QDate::fromString(QString::fromStdString(note_->date()), "yyyy-MM-dd");
+        QDate date = QDate::fromString(
+            QString::fromStdString(note_->date()), "yyyy-MM-dd"
+        );
         if (date.isValid()) {
             ui_->dateEdit->setDate(date);
             ui_->dateLabel->setVisible(true);
@@ -58,7 +65,7 @@ void NoteEditDialog::init_additional_fields() {
 
     if (!note_->members().empty()) {
         ui_->membersLabel->setVisible(true);
-        for (const auto& member : note_->members()) {
+        for (const auto &member : note_->members()) {
             add_member_avatar(member);
         }
         ui_->joinButton->setText("Покинуть");
@@ -66,7 +73,7 @@ void NoteEditDialog::init_additional_fields() {
 
     if (!note_->tags().empty()) {
         ui_->tagsLabel->setVisible(true);
-        for (const auto& tag : note_->tags()) {
+        for (const auto &tag : note_->tags()) {
             TagsDialog::Tag tag_info;
             tag_info.is_checked = true;
             tag_info.color = tag.color();
@@ -82,16 +89,30 @@ void NoteEditDialog::init_additional_fields() {
 }
 
 void NoteEditDialog::setup_connections() {
-    connect(ui_->saveButton, &QPushButton::clicked, this, &NoteEditDialog::on_save_button_click);
-    connect(ui_->cancelButton, &QPushButton::clicked, this, &NoteEditDialog::reject);
-    connect(ui_->joinButton, &QPushButton::clicked, this, &NoteEditDialog::on_join_button_click);
-    connect(ui_->addMembersButton, &QPushButton::clicked, this, &NoteEditDialog::on_add_members_button_click);
+    connect(
+        ui_->saveButton, &QPushButton::clicked, this,
+        &NoteEditDialog::on_save_button_click
+    );
+    connect(
+        ui_->cancelButton, &QPushButton::clicked, this, &NoteEditDialog::reject
+    );
+    connect(
+        ui_->joinButton, &QPushButton::clicked, this,
+        &NoteEditDialog::on_join_button_click
+    );
+    connect(
+        ui_->addMembersButton, &QPushButton::clicked, this,
+        &NoteEditDialog::on_add_members_button_click
+    );
     connect(ui_->addDateButton, &QPushButton::clicked, this, [this]() {
         const bool is_visible = ui_->dateLabel->isVisible();
         ui_->dateLabel->setVisible(!is_visible);
         ui_->dateEdit->setVisible(!is_visible);
     });
-    connect(ui_->addTagsButton, &QPushButton::clicked, this, &NoteEditDialog::on_add_tags_button_click);
+    connect(
+        ui_->addTagsButton, &QPushButton::clicked, this,
+        &NoteEditDialog::on_add_tags_button_click
+    );
 }
 
 void NoteEditDialog::setup_ui() {
@@ -102,11 +123,18 @@ void NoteEditDialog::setup_ui() {
 
 void NoteEditDialog::on_save_button_click() {
     if (try_save_note()) {
-        QMessageBox::information(this, "Заметка сохранена",
+        QMessageBox::information(
+            this, "Заметка сохранена",
             QString("Заголовок: %1\nСодержимое: %2")
-                .arg(ui_->titleLineEdit->text(), ui_->descriptionTextEdit->toPlainText()));
+                .arg(
+                    ui_->titleLineEdit->text(),
+                    ui_->descriptionTextEdit->toPlainText()
+                )
+        );
     } else {
-        QMessageBox::information(this, "Ошибка", "Не удалось сохранить заметку");
+        QMessageBox::information(
+            this, "Ошибка", "Не удалось сохранить заметку"
+        );
     }
 }
 
@@ -126,7 +154,7 @@ void NoteEditDialog::on_join_button_click() {
     }
 }
 
-void NoteEditDialog::add_member_avatar(const std::string& member) {
+void NoteEditDialog::add_member_avatar(const std::string &member) {
     QPixmap pixmap(32, 32);
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);
@@ -142,7 +170,7 @@ void NoteEditDialog::add_member_avatar(const std::string& member) {
 }
 
 void NoteEditDialog::clear_member_avatars() {
-    for (auto& avatar : member_avatars_) {
+    for (auto &avatar : member_avatars_) {
         ui_->avatarsLayout->removeWidget(avatar.get());
     }
     member_avatars_.clear();
@@ -161,7 +189,7 @@ void NoteEditDialog::on_add_tags_button_click() {
 }
 
 void NoteEditDialog::update_tags_display() {
-    for (auto& tag_label : tag_labels_) {
+    for (auto &tag_label : tag_labels_) {
         ui_->tagsLayout->removeWidget(tag_label.get());
     }
     tag_labels_.clear();
@@ -179,23 +207,52 @@ void NoteEditDialog::update_tags_display() {
 
 QString NoteEditDialog::create_tag_style_sheet(const int color_code) {
     return QString(
-        "background-color: %1; "
-        "color: white; "
-        "padding: 9px 10px; "
-        "border-radius: 5px; "
-        "font-family: 'Arial'; "
-        "font-size: 12px; "
-        "font-weight: bold;"
-        "width: 40px;"
-        "height: 25px;"
-    ).arg(TagsDialog::get_color_by_code(color_code));
+               "background-color: %1; "
+               "color: white; "
+               "padding: 9px 10px; "
+               "border-radius: 5px; "
+               "font-family: 'Arial'; "
+               "font-size: 12px; "
+               "font-weight: bold;"
+               "width: 40px;"
+               "height: 25px;"
+    )
+        .arg(TagsDialog::get_color_by_code(color_code));
+}
+
+Efficio_proto::Note_tag_colors color_code_to_note_tag_colors(
+    const int color_code
+) {
+    switch (color_code) {
+        case 0:
+            return Efficio_proto::Note_tag_colors_Red;
+        case 1:
+            return Efficio_proto::Note_tag_colors_Blue;
+        case 2:
+            return Efficio_proto::Note_tag_colors_Pink;
+        case 3:
+            return Efficio_proto::Note_tag_colors_Green;
+        case 4:
+            return Efficio_proto::Note_tag_colors_Yellow;
+    }
 }
 
 bool NoteEditDialog::try_save_note() const {
-    // TODO: add saving members and tags
     note_->set_title(ui_->titleLineEdit->text().toStdString());
     note_->set_text(ui_->descriptionTextEdit->toPlainText().toStdString());
     note_->set_date(ui_->dateEdit->date().toString("yyyy-MM-dd").toStdString());
 
-    return true;
+    note_->clear_members();
+    if (!member_avatars_.empty()) {
+        note_->add_members("TODO");
+    }
+
+    note_->clear_tags();
+    for (const auto &tag : selected_tags_) {
+        auto *new_tag = note_->add_tags();
+        new_tag->set_text(tag.name.toStdString());
+        new_tag->set_color(color_code_to_note_tag_colors(tag.color));
+    }
+
+    return client_->update_note(note_);
 }
