@@ -14,11 +14,23 @@ using grpc::CompletionQueue;
 using grpc::Status;
 
 ClientImplementation::ClientImplementation(std::shared_ptr<Channel> channel) :
-    channel_(channel) {
+    channel_(channel)
+     {
+
+    // update_requests.get_project(pr);
+    auto pr = new Project();
+    UpdateRequests update_requests(channel_, &cq_);
     std::thread t(&ClientImplementation::CompleteRpc, this);
-    UpdateRequests update_requests(channel, &cq_);
-    update_requests.get_project(nullptr);
+    std::string q;
+
+    while (std::cin >> q) {
+
+        update_requests.get_project(pr);
+
+    }
     t.join();
+    delete pr;
+
 };
 
 void ClientImplementation::CompleteRpc() {
@@ -28,20 +40,21 @@ void ClientImplementation::CompleteRpc() {
 
 
     while (cq_.Next(&got_tag, &ok)) {
-
+        std::cout << "got smth" << std::endl;
         CommonClientCall* call = static_cast<CommonClientCall*>(got_tag);
 
-        // Verify that the request was completed successfully. Note that "ok"
-        // corresponds solely to the request for updates introduced by Finish().
         assert(ok);
 
-        if (call->status.ok())
+        if (call->status.ok()) {
+            std::cout << "start procceed" << std::endl;
             call->Proceed();
+        }
         else
             std::cout << "RPC failed" << std::endl;
 
-        // Once we're complete, deallocate the call object.
+
         delete call;
     }
+    std::cout << "complete rpc ended" << std::endl;
 }
 

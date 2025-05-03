@@ -24,17 +24,20 @@ void UpdateRequests::GetProjectClientCall::Proceed(bool ok) {
                 std::cout << response.project().title() << std::endl;
             }
         }
+
     }
 
-UpdateRequests::GetProjectClientCall::GetProjectClientCall(const GetProjectRequest& request,
+UpdateRequests::GetProjectClientCall::GetProjectClientCall(GetProjectRequest& request,
         CompletionQueue* cq_,
         std::unique_ptr<Update::Stub>& stub_) : CommonClientCall()
     {
-        response_reader = stub_->AsyncGetProject(&context, request, cq_);
+        response_reader = stub_->PrepareAsyncGetProject(&context, request, cq_);
+        response_reader->StartCall();
         response_reader->Finish(&response, &status, (void*)this);
     }
 
 bool UpdateRequests::get_project(Project *project) {
-        GetProjectRequest request;
-        new GetProjectClientCall(request, cq_, stub_);
+        auto request = new GetProjectRequest;
+        new GetProjectClientCall(*request, cq_, stub_);
+        return true;
     }

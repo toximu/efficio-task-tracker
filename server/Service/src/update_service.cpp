@@ -10,7 +10,6 @@ using Efficio_proto::Project;
 
 UpdateService::UpdateService(ServerCompletionQueue *cq) : cq_(cq), service_() {
     // new GetNoteServerCall(&service_, cq_);
-
 }
 
 void UpdateService::run() {

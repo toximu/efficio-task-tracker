@@ -30,7 +30,7 @@ class UpdateRequests {
         public:
         void Proceed(bool ok) override;
 
-        GetProjectClientCall(const GetProjectRequest& request,
+        GetProjectClientCall(GetProjectRequest& request,
         CompletionQueue* cq_,
         std::unique_ptr<Update::Stub>& stub_);
     };
@@ -50,7 +50,7 @@ class UpdateRequests {
 
 
     explicit UpdateRequests(std::shared_ptr<Channel> channel, CompletionQueue *cq):
-        stub_(Update::NewStub(channel)), cq_(cq) {};
+        stub_(Update::NewStub(channel)), cq_(cq) {}
     private:
     CompletionQueue* cq_;
     std::unique_ptr<Update::Stub> stub_;
