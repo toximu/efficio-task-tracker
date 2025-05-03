@@ -20,6 +20,7 @@ add_subdirectory(client)
 add_executable(EfficioTaskTracker main.cpp)
 
 target_link_libraries(EfficioTaskTracker PRIVATE
+        model-proto
         Qt6::Widgets
         Qt6::Core
         Qt6::Gui

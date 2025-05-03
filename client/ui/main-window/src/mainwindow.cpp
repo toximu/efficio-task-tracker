@@ -1,30 +1,25 @@
 #include "mainwindow.h"
+#include <model-proto/model.pb.h>
 #include <QDebug>
 #include <QFile>
 #include <QInputDialog>
 #include <QListWidget>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QVBoxLayout>
 #include <QWidget>
-#include <QScrollArea>
 #include <string>
 #include "bottombar.h"
-#include "lr_dao.hpp"
 #include "main_window_style.hpp"
-#include "note_dao.hpp"
 #include "notelist.h"
-#include "project.hpp"
-#include "project_dao.hpp"
 #include "projectitem.h"
 #include "projectlist.h"
 
+using namespace Efficio_proto;
+
 namespace Ui {
-MainWindow::MainWindow(
-    QWidget *parent,
-    std::string username,
-    project_storage_model::Storage *storage
-)
+MainWindow::MainWindow(QWidget *parent, std::string username, Storage *storage)
     : QWidget(parent),
       username(username),
       main_layout_(new QVBoxLayout(this)),
@@ -49,7 +44,7 @@ MainWindow::MainWindow(
     right_layout->addWidget(project_list_);
     right_layout->addWidget(new_project_button_);
     right_layout->addWidget(new_note_button_);
-    QScrollArea* scrollArea = new QScrollArea(content_widget_);
+    QScrollArea *scrollArea = new QScrollArea(content_widget_);
     scrollArea->setWidgetResizable(true);
     scrollArea->setWidget(note_list_);
     content_layout_->addWidget(scrollArea, Qt::AlignRight);
@@ -68,41 +63,34 @@ MainWindow::MainWindow(
     );
     connect(
         new_project_button_, &QPushButton::clicked, this,
-        &Ui::MainWindow::add_project
+        &Ui::MainWindow::create_project
     );
 }
 
-void MainWindow::add_project() {
+void MainWindow::create_project() {
     bool ok;
     QString name_of_project = QInputDialog::getText(
         nullptr, "Название проекта:", "Введите название", QLineEdit::Normal, "",
         &ok
     );
+    // TODO: notificate server
+    // TODO: send request to server, get code
     if (ok) {
-        int id = 0;
-
-        if (DB::ProjectDAO::create_project(name_of_project.toStdString(), id)) {
-            LRDao::add_project_to_user(username, id);
-            auto &project = storage_->add_project(
-                Project(id, name_of_project.toStdString(), "")
-            );
-            project_list_->add_project(&project);
-        }
+        Project *project = storage_->add_projects();
+        project->set_title(name_of_project.toStdString());
+        project_list_->add_project(project);
     }
 }
 
 void MainWindow::add_note() {
     auto project_item =
         dynamic_cast<ProjectItem *>(project_list_->currentItem());
+    // TODO: notificate server
     if (project_item) {
-        if (int id = 0; NoteDao::initialize_note(id)) {
-            DB::ProjectDAO::add_note_to_project(
-                project_item->project_->get_id(), id
-            );
-            auto &note =
-                project_item->project_->add_note({id, "Пустая заметка", ""});
-            note_list_->add_note_widget(&note);
-        }
+        Note *note = project_item->project_->add_notes();
+        note->set_title("Пустая заметка");
+        note->set_allocated_text(new std::string(""));
+        note_list_->add_note_widget(note);
     } else {
         QMessageBox msg;
         msg.setText("Проект не выбран!");
