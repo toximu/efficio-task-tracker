@@ -29,11 +29,12 @@ target_include_directories(MainWindow PUBLIC
 )
 
 target_link_libraries(MainWindow PRIVATE
+        model-proto
         Qt6::Widgets
         Qt6::Core
         Qt6::Gui
         Qt6::Sql
-        Scripts
         Database
         NoteWidget
+
 )
