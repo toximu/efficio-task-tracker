@@ -4,11 +4,10 @@
 #include <QLabel>
 #include <memory>
 #include <vector>
-#include "note.hpp"
-#include "note_dao.hpp"
+#include "model-proto/model.pb.h"
 #include "tags_dialog.h"
 
-using namespace project_storage_model;
+using Efficio_proto::Note;
 
 QT_BEGIN_NAMESPACE
 
@@ -24,7 +23,7 @@ class NoteEditDialog final : public QDialog {
 public:
     explicit NoteEditDialog(
         QWidget* parent = nullptr,
-        Note* note = new Note(0, "NULL", "NULL")
+        Note* note = nullptr
     );
     ~NoteEditDialog() override;
 
@@ -44,7 +43,7 @@ private:
 
     void clear_member_avatars();
     void update_tags_display();
-    static QString create_tag_style_sheet(const QString& color);
+    static QString create_tag_style_sheet(int color_code);
 
     [[nodiscard]] bool try_save_note() const;
 
