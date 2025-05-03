@@ -28,9 +28,8 @@ DatabaseManager::DatabaseManager() {
 
     transaction.exec(
         "CREATE TABLE IF NOT EXISTS projects ("
-        "id SERIAL PRIMARY KEY, "
-        "name VARCHAR(50) NOT NULL, "
-        "owner VARCHAR(50) REFERENCES users(login), "
+        "code VARCHAR(6) PRIMARY KEY, "
+        "title VARCHAR(50) NOT NULL, "
         "notes INT[], "
         "members VARCHAR(50)[]"
         ")"
