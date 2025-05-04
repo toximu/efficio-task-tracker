@@ -14,7 +14,9 @@ find_package(Threads)
 file(GLOB SOURCES "src/*.cpp")
 file(GLOB HEADERS "include/*.h")
 
-add_library(Service STATIC ${SOURCES} ${HEADERS})
+add_library(Service STATIC ${SOURCES} ${HEADERS}
+        include/auth_service.h
+        src/auth_service.cpp)
 
 target_link_libraries(Service
         Database

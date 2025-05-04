@@ -11,7 +11,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 COMPONENTS Widgets Core Gui Sql REQUIRED)
 
+add_subdirectory(ui/main-window)
 add_subdirectory(ui/note-widget)
+add_subdirectory(ui/authorization-windows)
+add_subdirectory(ui/theme-manager)
 add_subdirectory(client)
 add_executable(start_client main.cpp)
 
@@ -22,6 +25,9 @@ target_link_libraries(start_client PRIVATE
         Qt6::Sql
         Database
         NoteWidget
+        MainWindow
+        AuthorizationWindows
+        ThemeManager
         model-proto
         Client
 )
