@@ -65,3 +65,96 @@ bool ProjectDAO::get_project(const std::string &code, Project &project) {
 
 }
 
+
+bool ProjectDAO::insert_project(Project &project) {
+    auto& connection = DatabaseManager::get_instance().get_connection();
+    pqxx::work transaction(connection);
+
+    const std::string query =
+        "INSERT INTO projects (code, title, notes, members) "
+        "VALUES ($1, $2, $3, $4) ";
+
+    std::vector<int> note_ids;
+    for (auto note : project.notes()) {
+        note_ids.push_back(note.id());
+    }
+
+    const pqxx::result result = transaction.exec_params(
+        query,
+        project.code(),
+        project.title(),
+        note_ids,
+        proto_arr_to_vector(project.members())
+        );
+
+    transaction.commit();
+    return true;
+}
+
+bool ProjectDAO::add_member_to_project(
+    const std::string &project_code,
+    const std::string &member
+) {
+    auto& connection = DatabaseManager::get_instance().get_connection();
+    pqxx::work transaction(connection);
+
+    const std::string query =
+        "UPDATE projects "
+        "SET members = array_append(members, $1) "
+        "WHERE code = $2 "
+        "RETURNING 1;";
+
+
+    const pqxx::result result = transaction.exec_params(query, member, project_code);
+    if (result.empty()) {
+        return false;
+    }
+    transaction.commit();
+    return true;
+}
+
+
+bool ProjectDAO::add_note_to_project(
+    const std::string &project_code,
+    int note_id
+) {
+    auto& connection = DatabaseManager::get_instance().get_connection();
+    pqxx::work transaction(connection);
+
+    const std::string query =
+        "UPDATE projects "
+        "SET notes = array_append(notes, $1) "
+        "WHERE code = $2 "
+        "RETURNING 1;";
+
+    const pqxx::result result = transaction.exec_params(query,note_id, project_code);
+    if (result.empty()) {
+        return false;
+    }
+    transaction.commit();
+    return true;
+}
+
+bool ProjectDAO::change_project_title(
+    const std::string &project_code,
+    const std::string &new_title
+) {
+    auto& connection = DatabaseManager::get_instance().get_connection();
+    pqxx::work transaction(connection);
+
+    const std::string query =
+        "UPDATE projects "
+        "SET title = $1 "
+        "WHERE code = $2 "
+        "RETURNING 1;";
+
+    const pqxx::result result = transaction.exec_params(query, new_title, project_code);
+    if (result.empty()) {
+        return false;
+    }
+
+    transaction.commit();
+    return true;
+}
+
+
