@@ -1,64 +1,160 @@
 #include "project_dao.hpp"
-#include <QList>
-#include <QSqlQuery>
-#include <QVector>
+#include "note_dao.hpp"
 #include "database_manager.hpp"
+#include <pqxx/pqxx>
 
-namespace DB {
 
-bool ProjectDAO::create_project(const std::string &name, int &id) {
-    // todo thread-safety
-    QSqlQuery query;
-    const QString query_str =
-        "INSERT INTO projects (name)"
-        " VALUES (:name)"
-        "RETURNING id";
+bool ProjectDAO::get_project(const std::string &code, Project &project) {
+    pqxx::connection &connection = DatabaseManager::get_instance().get_connection();
+    pqxx::work transaction(connection);
 
-    const QVariantList params = {QString::fromStdString(name)};
 
-    bool is_successful =
-        DatabaseManager::get_instance().execute_query(query, query_str, params);
-    if (is_successful && query.next()) {
-        id = query.value(0).toInt();
-        return true;
+    const std::string query =
+        "SELECT * FROM projects WHERE code = " + transaction.quote(code);
+
+    const pqxx::result result = transaction.exec(query);
+
+    if (result.empty()) {
+        return false;
     }
-    return false;
-}
 
-bool ProjectDAO::get_project(
-    const int id,
-    std::string &name,
-    std::vector<int> &notes
-) {
-    QSqlQuery query;
-    const QString query_str =
-        "SELECT name, array_to_string(notes, ',') FROM projects "
-        "WHERE id = ?";
-    const QVariantList params = {id};
-    const bool is_successful =
-        DatabaseManager::get_instance().execute_query(query, query_str, params);
+    const pqxx::row row = result[0];
 
-    if (is_successful && query.next()) {
-        name = query.value("name").toString().toStdString();
+    project.set_title(row["title"].as<std::string>());
+    project.set_code(row["code"].as<std::string>());
 
-        for (const auto& i : query.value(1).toString().split(",")) {
-            notes.push_back(i.toInt());
+
+    if (!row["members"].is_null()) {
+        const auto members_as_string = row["members"].as<std::string>();
+
+        if (members_as_string.size() > 2) {
+            std::stringstream ss(
+                members_as_string.substr(1, members_as_string.size() - 2)
+            );
+            std::string member;
+
+            while (std::getline(ss, member, ',')) {
+                std::erase(member, '"');
+                if (!member.empty()) {
+                    project.add_members(member);
+                }
+            }
         }
-        return true;
     }
-    return false;
+
+    if (!row["notes"].is_null()) {
+        const auto notes_as_string = row["notes"].as<std::string>();
+
+        if (notes_as_string.size() > 2) {
+            std::stringstream ss(
+                notes_as_string.substr(1, notes_as_string.size() - 2)
+            );
+            std::string note_id_string;
+
+            while (std::getline(ss, note_id_string, ',')) {
+                std::erase(note_id_string, '"');
+                if (!note_id_string.empty()) {
+                    Note* note = project.add_notes();
+                    *note = NoteDao::get_note(std::stoi(note_id_string));
+                }
+            }
+        }
+    }
+
+    return true;
+
 }
 
-bool ProjectDAO::add_note_to_project(const int project_id, const int note_id) {
-    QSqlQuery query;
-    const QString query_str =
+
+bool ProjectDAO::insert_project(Project &project) {
+    auto& connection = DatabaseManager::get_instance().get_connection();
+    pqxx::work transaction(connection);
+
+    const std::string query =
+        "INSERT INTO projects (code, title, notes, members) "
+        "VALUES ($1, $2, $3, $4) ";
+
+    std::vector<int> note_ids;
+    for (auto note : project.notes()) {
+        note_ids.push_back(note.id());
+    }
+
+    const pqxx::result result = transaction.exec_params(
+        query,
+        project.code(),
+        project.title(),
+        note_ids,
+        proto_arr_to_vector(project.members())
+        );
+
+    transaction.commit();
+    return true;
+}
+
+bool ProjectDAO::add_member_to_project(
+    const std::string &project_code,
+    const std::string &member
+) {
+    auto& connection = DatabaseManager::get_instance().get_connection();
+    pqxx::work transaction(connection);
+
+    const std::string query =
         "UPDATE projects "
-        "SET notes = array_append(notes, ?)"
-        "WHERE id = ?";
-    const QVariantList params = {note_id, project_id};
-    return DatabaseManager::get_instance().execute_query(
-        query, query_str, params
-    );
+        "SET members = array_append(members, $1) "
+        "WHERE code = $2 "
+        "RETURNING 1;";
+
+
+    const pqxx::result result = transaction.exec_params(query, member, project_code);
+    if (result.empty()) {
+        return false;
+    }
+    transaction.commit();
+    return true;
 }
 
-}  // namespace DB
+
+bool ProjectDAO::add_note_to_project(
+    const std::string &project_code,
+    int note_id
+) {
+    auto& connection = DatabaseManager::get_instance().get_connection();
+    pqxx::work transaction(connection);
+
+    const std::string query =
+        "UPDATE projects "
+        "SET notes = array_append(notes, $1) "
+        "WHERE code = $2 "
+        "RETURNING 1;";
+
+    const pqxx::result result = transaction.exec_params(query,note_id, project_code);
+    if (result.empty()) {
+        return false;
+    }
+    transaction.commit();
+    return true;
+}
+
+bool ProjectDAO::change_project_title(
+    const std::string &project_code,
+    const std::string &new_title
+) {
+    auto& connection = DatabaseManager::get_instance().get_connection();
+    pqxx::work transaction(connection);
+
+    const std::string query =
+        "UPDATE projects "
+        "SET title = $1 "
+        "WHERE code = $2 "
+        "RETURNING 1;";
+
+    const pqxx::result result = transaction.exec_params(query, new_title, project_code);
+    if (result.empty()) {
+        return false;
+    }
+
+    transaction.commit();
+    return true;
+}
+
+
