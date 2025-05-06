@@ -10,7 +10,6 @@ void ServerImplementation::Run(const uint16_t port) {
         "localhost:" + std::to_string(port), grpc::InsecureServerCredentials()
     );
 
-
     UpdateService update_service(cq_.get());
     builder.RegisterService(&update_service.get_service());
     server_ = builder.BuildAndStart();
@@ -22,6 +21,6 @@ void ServerImplementation::HandleRPCs() const {
     void *tag;
     bool ok;
     while (cq_->Next(&tag, &ok)) {
-        static_cast<CommonServerCall*>(tag)->Proceed(ok);
+        static_cast<CommonServerCall *>(tag)->Proceed(ok);
     }
 }

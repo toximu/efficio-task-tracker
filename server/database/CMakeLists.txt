@@ -19,3 +19,7 @@ target_include_directories(Database
 )
 
 target_link_libraries(Database PRIVATE Qt6::Core Qt6::Sql model-proto pqxx)
+
+
+add_executable(test_database main.cpp)
+target_link_libraries(test_database Database model-proto)

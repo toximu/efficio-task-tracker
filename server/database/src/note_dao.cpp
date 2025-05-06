@@ -1,9 +1,9 @@
 #include "note_dao.hpp"
-#include "database_manager.hpp"
 #include <pqxx/pqxx>
+#include "database_manager.hpp"
 
 Note NoteDao::initialize_note_for_user(const std::string &login) {
-    auto& connection = DatabaseManager::get_instance().get_connection();
+    auto &connection = DatabaseManager::get_instance().get_connection();
     pqxx::work transaction(connection);
 
     const std::string query =
@@ -28,7 +28,7 @@ Note NoteDao::initialize_note_for_user(const std::string &login) {
 }
 
 bool NoteDao::update_note(const Note &note) {
-    auto& connection = DatabaseManager::get_instance().get_connection();
+    auto &connection = DatabaseManager::get_instance().get_connection();
     pqxx::work transaction(connection);
 
     const std::string query =
@@ -40,8 +40,9 @@ bool NoteDao::update_note(const Note &note) {
         "tags = :tags "
         "WHERE id = :id";
 
-    // TODO: I'm not sure, it will work correctly because note.members() and note.tags() return strange type
-    // const pqxx::result result = transaction.exec_params(
+    // TODO: I'm not sure, it will work correctly because note.members() and
+    // note.tags() return strange type const pqxx::result result =
+    // transaction.exec_params(
     //     query, note.title(), note.text(), note.members(), note.date(),
     //     note.tags(), note.id()
     // );

@@ -37,7 +37,7 @@ message GetProjectRequest {
 message GetProjectResponse {
   oneof response {
     Project project = 1;
-    string error_string = 2;
+    string error_text = 2;
   }
 }
 
