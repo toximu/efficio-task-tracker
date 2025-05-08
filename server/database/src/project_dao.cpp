@@ -88,44 +88,21 @@ bool ProjectDAO::add_member_to_project(
     const std::string &project_code,
     const std::string &member
 ) {
-    auto &connection = DatabaseManager::get_instance().get_connection();
-    pqxx::work transaction(connection);
+    return change_project_array(project_code, member, "members", "append");
+}
 
-    const std::string query =
-        "UPDATE projects "
-        "SET members = array_append(members, $1) "
-        "WHERE code = $2 "
-        "RETURNING 1;";
-
-    const pqxx::result result =
-        transaction.exec_params(query, member, project_code);
-    if (result.empty()) {
-        return false;
-    }
-    transaction.commit();
-    return true;
+bool ProjectDAO::delete_member_from_project(
+    const std::string &project_code,
+    const std::string &member
+) {
+    return change_project_array(project_code, member, "members", "remove");
 }
 
 bool ProjectDAO::add_note_to_project(
     const std::string &project_code,
     int note_id
 ) {
-    auto &connection = DatabaseManager::get_instance().get_connection();
-    pqxx::work transaction(connection);
-
-    const std::string query =
-        "UPDATE projects "
-        "SET notes = array_append(notes, $1) "
-        "WHERE code = $2 "
-        "RETURNING 1;";
-
-    const pqxx::result result =
-        transaction.exec_params(query, note_id, project_code);
-    if (result.empty()) {
-        return false;
-    }
-    transaction.commit();
-    return true;
+    return change_project_array(project_code, note_id, "notes", "append");
 }
 
 bool ProjectDAO::change_project_title(
@@ -151,6 +128,12 @@ bool ProjectDAO::change_project_title(
     return true;
 }
 
+bool ProjectDAO::delete_note_from_project(
+    const std::string &project_code,
+    int note_id
+) {
+    return change_project_array(project_code, note_id, "notes", "remove");
+}
 
 bool ProjectDAO::code_available(const std::string &project_code) {
     auto &connection = DatabaseManager::get_instance().get_connection();
@@ -166,5 +149,4 @@ bool ProjectDAO::code_available(const std::string &project_code) {
         return true;
     }
     return false;
-
 }

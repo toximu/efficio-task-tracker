@@ -17,8 +17,7 @@ std::string UpdateHandler::generate_project_code() {
     return result;
 }
 
-
-Project UpdateHandler::create_project(const std::string& title) {
+Project UpdateHandler::create_project(const std::string &title) {
     Project project;
     project.set_title(title);
     std::string project_code;
@@ -31,4 +30,45 @@ Project UpdateHandler::create_project(const std::string& title) {
     project.set_code(project_code);
     ProjectDAO::insert_project(project);
     return std::move(project);
+}
+
+bool UpdateHandler::try_join_project(
+    const std::string &project_code,
+    const std::string &login
+) {
+    // todo: check if login exists
+
+    // todo: check if users has not this project already
+
+    if (!ProjectDAO::add_member_to_project(project_code, login)) {
+        return false;
+    }
+
+    // todo: add project to user(UserDAO not exists yet)
+
+    return true;
+}
+
+bool UpdateHandler::try_leave_project(
+    const std::string &project_code,
+    const std::string &login
+) {
+    // todo : check if login exists
+
+    if (!ProjectDAO::delete_member_from_project(project_code, login)) {
+        return false;
+    }
+
+    // todo : delete project from user
+
+    return true;
+}
+
+std::optional<Project> UpdateHandler::get_project(const std::string &project_code) {
+    Project project;
+    bool ok = ProjectDAO::get_project(project_code, project);
+    if (!ok) {
+        return std::nullopt;
+    }
+    return project;
 }
