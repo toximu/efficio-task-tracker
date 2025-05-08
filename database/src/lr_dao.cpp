@@ -29,6 +29,15 @@ int LRDao::try_register_user(const QString &login, const QString &password) {
     );
 }
 
+bool LRDao::try_delete_user(const QString &login) {
+    QSqlQuery query;
+
+    return DatabaseManager::get_instance().execute_query(
+        query, "DELETE FROM users WHERE login = ?",
+        {login}
+    );
+}
+
 bool LRDao::validate_user(const QString &login, const QString &password) {
     QSqlQuery query;
 

@@ -7,6 +7,7 @@ class LRDao {
 public:
     LRDao() = default;
     static int try_register_user(const QString &login, const QString &password);
+    static bool try_delete_user(const QString &login);
     static bool validate_user(const QString &login, const QString &password);
     static bool add_project_to_user(std::string user_login, int project_id);
     static bool

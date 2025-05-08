@@ -4,6 +4,7 @@
 #include <QLocale>
 #include <QMainWindow>
 #include <QScreen>
+#include <QMessageBox>
 #include <QStyle>
 #include <QTimer>
 #include "applicationwindow.h"
@@ -11,10 +12,9 @@
 #include "database_manager.hpp"
 #include "login_window.h"
 #include "lr_dao.hpp"
-#include "mainwindow.h"
 #include "notelist.h"
-#include "registration_window.h"
 #include "registration_window_style_sheet.h"
+#include "ui_registration_window.h"
 #include <vector>
 #include "theme_manager.h"
 
@@ -71,9 +71,7 @@ void RegistrationWindow::on_switch_theme_clicked() {
 }
 
 
-RegistrationWindow::~RegistrationWindow() {
-    delete ui;
-}
+RegistrationWindow::~RegistrationWindow() = default;
 
 void RegistrationWindow::on_switch_mode_clicked() {
     QWidget *parent = this->parentWidget();
@@ -83,7 +81,6 @@ void RegistrationWindow::on_switch_mode_clicked() {
     if (QWidget *old = app_window->centralWidget()) {
         old->deleteLater();
     }
-    project_storage_model::Storage storage;
     LoginWindow *login_window = new LoginWindow(app_window);
 
     app_window->setCentralWidget(login_window);
