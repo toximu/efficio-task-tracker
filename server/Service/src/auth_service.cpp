@@ -1,17 +1,17 @@
 #include "auth_service.h"
 #include "lr_dao.hpp"
 
-AuthService::TryAuthenticateUserCall::TryAuthenticateUserCall(
+AuthService::TryAuthenticateUserServerCall::TryAuthenticateUserServerCall(
     AuthService &service,
     ServerCompletionQueue *cq
-) : AuthOperation(service, cq) {
+) : AuthServerOperation(service, cq) {
     service_.service_.RequestTryAuthenticateUser(
         &ctx_, &request_, &responder_, cq_, cq_, this
     );
     status_ = PROCESS;
 }
 
-void AuthService::TryAuthenticateUserCall::Proceed(const bool ok) {
+void AuthService::TryAuthenticateUserServerCall::Proceed(const bool ok) {
     if (!ok) {
         delete this;
         return;
@@ -19,19 +19,19 @@ void AuthService::TryAuthenticateUserCall::Proceed(const bool ok) {
 
     switch (status_) {
         case PROCESS: {
-            new TryAuthenticateUserCall(service_, cq_);
+            new TryAuthenticateUserServerCall(service_, cq_);
 
             AuthResponse response;
 
             const int query_exit_code = LRDao::validate_user(
-                request_.user().login(), request_.user().token()
+                request_.user().login(), request_.user().hashed_password()
             );
 
             if (query_exit_code == 1) {
                 response.mutable_user()->CopyFrom(request_.user());
             } else {
                 response.set_error_text(
-                    "Не удалось выполнить запрос в базу данных на проверку "
+                    "[SERVER ERROR]: Не удалось выполнить запрос в базу данных на проверку "
                     "корректности логина и пароля"
                 );
             }
@@ -46,17 +46,17 @@ void AuthService::TryAuthenticateUserCall::Proceed(const bool ok) {
     }
 }
 
-AuthService::TryRegisterUserCall::TryRegisterUserCall(
+AuthService::TryRegisterUserServerCall::TryRegisterUserServerCall(
     AuthService &service,
     ServerCompletionQueue *cq
-) : AuthOperation(service, cq) {
-    service_.service_.RequestTryRegister1User(
+) : AuthServerOperation(service, cq) {
+    service_.service_.RequestTryRegisterUser(
         &ctx_, &request_, &responder_, cq_, cq_, this
     );
     status_ = PROCESS;
 }
 
-void AuthService::TryRegisterUserCall::Proceed(const bool ok) {
+void AuthService::TryRegisterUserServerCall::Proceed(const bool ok) {
     if (!ok) {
         delete this;
         return;
@@ -64,17 +64,17 @@ void AuthService::TryRegisterUserCall::Proceed(const bool ok) {
 
     switch (status_) {
         case PROCESS: {
-            new TryRegisterUserCall(service_, cq_);
+            new TryRegisterUserServerCall(service_, cq_);
 
             AuthResponse response;
 
             const int query_exit_code = LRDao::try_register_user(
-                request_.user().login(), request_.user().token()
+                request_.user().login(), request_.user().hashed_password()
             );
 
             if (query_exit_code < 1) {
                 response.set_error_text(
-                    "Не удалось выполнить запрос на запись нового пользователя "
+                    "[SERVER ERROR]: Не удалось выполнить запрос на запись нового пользователя "
                     "в базу данных"
                 );
             } else {

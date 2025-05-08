@@ -5,6 +5,7 @@ project(Database LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(bcrypt REQUIRED)
 find_package(Qt6 COMPONENTS Widgets Core Sql REQUIRED)
 
 file(GLOB SOURCES "src/*.cpp")
@@ -18,4 +19,4 @@ target_include_directories(Database
         $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(Database PRIVATE Qt6::Widgets Qt6::Core Qt6::Sql model-proto pqxx NoteWidget)
+target_link_libraries(Database PRIVATE bcrypt Qt6::Widgets Qt6::Core Qt6::Sql model-proto pqxx NoteWidget)

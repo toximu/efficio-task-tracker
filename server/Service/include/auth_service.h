@@ -20,13 +20,13 @@ class AuthService final {
     std::unique_ptr<ServerCompletionQueue> cq_;
     std::unique_ptr<grpc::Server> server_;
 
-    class AuthOperation : public CommonServerCall {
+    class AuthServerOperation : public CommonServerCall {
     protected:
         AuthRequest request_;
         ServerAsyncResponseWriter<AuthResponse> responder_;
         AuthService& service_;
 
-        explicit AuthOperation(
+        explicit AuthServerOperation(
             AuthService& service,
             ServerCompletionQueue* cq
         ) : CommonServerCall(cq),
@@ -34,29 +34,29 @@ class AuthService final {
             service_(service) {}
 
     public:
-        ~AuthOperation() override = default;
+        ~AuthServerOperation() override = default;
         void Proceed(bool ok) override = 0;
     };
-
-    class TryAuthenticateUserCall final : AuthOperation {
-        explicit TryAuthenticateUserCall(
-            AuthService &service,
-            ServerCompletionQueue *cq
-        );
-    public:
-        void Proceed(bool) override;
-    };
-
-    class TryRegisterUserCall final : AuthOperation {
-        explicit TryRegisterUserCall(
-            AuthService &service,
-            ServerCompletionQueue *cq
-        );
-    public:
-        void Proceed(bool) override;
-    };
-
 public:
+
+    class TryAuthenticateUserServerCall final : public AuthServerOperation {
+    public:
+        explicit TryAuthenticateUserServerCall(
+            AuthService &service,
+            ServerCompletionQueue *cq
+        );
+        void Proceed(bool) override;
+    };
+
+    class TryRegisterUserServerCall final : AuthServerOperation {
+    public:
+        explicit TryRegisterUserServerCall(
+            AuthService &service,
+            ServerCompletionQueue *cq
+        );
+        void Proceed(bool) override;
+    };
+
     Auth::AsyncService &get_service();
 };
 

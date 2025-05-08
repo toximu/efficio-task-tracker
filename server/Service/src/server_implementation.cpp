@@ -5,21 +5,26 @@ using Efficio_proto::GetNoteRequest;
 
 void ServerImplementation::Run(const uint16_t port) {
     grpc::ServerBuilder builder;
-    UpdateService update_service;
 
     builder.AddListeningPort(
         "127.0.0.1:" + std::to_string(port), grpc::InsecureServerCredentials()
     );
-    builder.RegisterService(&update_service.get_service());
+
+    builder.RegisterService(&update_service_.get_service());
+    builder.RegisterService(&auth_service_.get_service());
+
     cq_ = builder.AddCompletionQueue();
     server_ = builder.BuildAndStart();
-    HandleRPCs(update_service);
+    HandleRPCs();
 }
 
-void ServerImplementation::HandleRPCs(UpdateService &update_service) const {
-    new UpdateService::GetNoteServerCall(update_service, cq_.get());
-    new UpdateService::CreateNoteServerCall(update_service, cq_.get());
-    new UpdateService::UpdateNoteServerCall(update_service, cq_.get());
+void ServerImplementation::HandleRPCs() {
+    new UpdateService::GetNoteServerCall(update_service_, cq_.get());
+    new UpdateService::CreateNoteServerCall(update_service_, cq_.get());
+    new UpdateService::UpdateNoteServerCall(update_service_, cq_.get());
+
+    new AuthService::TryAuthenticateUserServerCall(auth_service_, cq_.get());
+    new AuthService::TryRegisterUserServerCall(auth_service_, cq_.get());
 
     void *tag;
     bool ok;

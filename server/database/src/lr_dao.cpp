@@ -1,12 +1,13 @@
 #include "lr_dao.hpp"
 #include <pqxx/pqxx>
 #include "database_manager.hpp"
+#include <bcrypt/BCrypt.hpp>
 
 int LRDao::try_register_user(const std::string &login, const std::string &password) {
     auto &connection = DatabaseManager::get_instance().get_connection();
     pqxx::work transaction(connection);
 
-    const std::string check_query = "SELECT * FROM users WHERE login = ?";
+    const std::string check_query = "SELECT * FROM users WHERE login = $1";
     pqxx::params check_params;
     check_params.append(login);
 
@@ -16,30 +17,39 @@ int LRDao::try_register_user(const std::string &login, const std::string &passwo
         return -1;
     }
 
-    const std::string insert_query = "INSERT INTO users (login, password) VALUES (?, ?)";
+    const std::string hashed_password = hash_password(password);
+
+    const std::string insert_query = "INSERT INTO users (login, password) VALUES ($1, $2)";
     pqxx::params insert_params;
     insert_params.append(login);
-    insert_params.append(password);
+    insert_params.append(hashed_password);
 
     const pqxx::result insert_result = transaction.exec(insert_query, insert_params);
 
     transaction.commit();
-    return insert_result.affected_rows() > 0;
+    return insert_result.affected_rows() > 0 ? 1 : 0;
 }
 
 bool LRDao::validate_user(const std::string &login, const std::string &password) {
     auto &connection = DatabaseManager::get_instance().get_connection();
     pqxx::work transaction(connection);
 
-    const std::string query = "SELECT * FROM users WHERE login = ? AND password = ?";
+    const std::string query = "SELECT password FROM users WHERE login = $1";
     pqxx::params params;
     params.append(login);
-    params.append(password);
 
     const pqxx::result result = transaction.exec(query, params);
 
+    if (result.empty()) {
+        transaction.commit();
+        return false;
+    }
+
+    const std::string stored_hash = result[0]["password"].as<std::string>();
+    const bool is_valid = BCrypt::validatePassword(password, stored_hash);
+
     transaction.commit();
-    return result.affected_rows() > 0;
+    return is_valid;
 }
 
 bool LRDao::add_project_to_user(
@@ -97,4 +107,8 @@ bool LRDao::get_user_projects(
 
     transaction.commit();
     return false;
+}
+
+std::string LRDao::hash_password(const std::string &password) {
+    return BCrypt::generateHash(password);
 }
