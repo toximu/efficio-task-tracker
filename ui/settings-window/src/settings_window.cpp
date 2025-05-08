@@ -1,0 +1,87 @@
+#include "settings_window.h"
+#include "settings_window_style_sheet.h"
+#include "theme_manager.h"
+
+const std::vector<QString> SettingsWindow::THEMES = {
+    Ui::settings_window_light_autumn_theme,
+    Ui::settings_window_dark_autumn_theme,
+    Ui::settings_window_dark_purple_theme,
+    Ui::settings_window_light_purple_theme,
+    Ui::settings_window_blue_theme
+};
+
+SettingsWindow::SettingsWindow(QWidget *parent) : QWidget(parent) {
+    main_layout = new QVBoxLayout(this);
+
+    title_label = new QLabel("Настройки", this);
+    title_label->setObjectName("title_label");
+    title_label->setAlignment(Qt::AlignCenter);
+    main_layout->addWidget(title_label);
+
+    QHBoxLayout *buttons_layout = new QHBoxLayout();
+    
+    language_button = new QPushButton("RU", this);
+    language_button->setObjectName("language_button");
+
+    theme_button = new QPushButton("Тема", this);
+    theme_button->setObjectName("theme_button");
+
+    buttons_layout->addWidget(language_button);
+    buttons_layout->addWidget(theme_button);
+    main_layout->addLayout(buttons_layout);
+
+    font_size_label = new QLabel("Размер шрифта", this);
+    main_layout->addWidget(font_size_label);
+
+    QButtonGroup *font_group = new QButtonGroup(this);
+    small_font_radio = new QRadioButton("Мелкий", this);
+    medium_font_radio = new QRadioButton("Средний", this);
+    large_font_radio = new QRadioButton("Крупный", this);
+
+    font_group->addButton(small_font_radio);
+    font_group->addButton(medium_font_radio);
+    font_group->addButton(large_font_radio);
+    medium_font_radio->setChecked(true);
+
+    QVBoxLayout *font_layout = new QVBoxLayout();
+    font_layout->addWidget(small_font_radio);
+    font_layout->addWidget(medium_font_radio);
+    font_layout->addWidget(large_font_radio);
+    main_layout->addLayout(font_layout);
+
+    connect(language_button, &QPushButton::clicked, this, &SettingsWindow::toggle_language);
+    connect(theme_button, &QPushButton::clicked, this, &SettingsWindow::toggle_theme);
+    connect(small_font_radio, &QRadioButton::clicked, this, &SettingsWindow::set_small_font);
+    connect(medium_font_radio, &QRadioButton::clicked, this, &SettingsWindow::set_medium_font);
+    connect(large_font_radio, &QRadioButton::clicked, this, &SettingsWindow::set_large_font);
+    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+            this, &SettingsWindow::handle_theme_changed);
+
+    title_label->setText("Настройки");
+    font_size_label->setText("Размер шрифта");
+    theme_button->setText("Тема");
+    small_font_radio->setText("Мелкий");
+    medium_font_radio->setText("Средний");
+    large_font_radio->setText("Крупный");
+    
+    setLayout(main_layout);
+    setFixedSize(140, 250);
+    handle_theme_changed(ThemeManager::instance()->current_theme());
+}
+
+void SettingsWindow::handle_theme_changed(int theme) {
+    this->setStyleSheet(THEMES[theme]);
+}
+
+void SettingsWindow::toggle_language() {
+    
+}
+
+void SettingsWindow::toggle_theme() {
+    int next_theme = (ThemeManager::instance()->current_theme() + 1) % 5;
+    ThemeManager::instance()->apply_theme(next_theme);
+}
+
+void SettingsWindow::set_small_font() { qApp->setStyleSheet("QWidget { font-size: 12px; }"); }
+void SettingsWindow::set_medium_font() { qApp->setStyleSheet("QWidget { font-size: 16px; }"); }
+void SettingsWindow::set_large_font() { qApp->setStyleSheet("QWidget { font-size: 20px; }"); }

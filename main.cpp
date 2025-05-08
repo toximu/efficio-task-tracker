@@ -5,13 +5,14 @@
 #include <QTranslator>
 #include "applicationwindow.h"
 #include "login_window.h"
+#include "settings_window.h"
 #include "mainwindow.h"
 #include "theme_manager.h"
 
 int main(int argc, char *argv[]) {
     QApplication application(argc, argv);
-
-    ThemeManager* themeManager = ThemeManager::instance();
+    application.setApplicationName("EFFICIO"); 
+    application.setApplicationDisplayName("EFFICIO");  
 
     QTranslator translator;
     const QStringList ui_languages = QLocale::system().uiLanguages();
@@ -23,7 +24,10 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    auto *app_window = new Ui::ApplicationWindow("EFFICIO");
+    ThemeManager* themeManager = ThemeManager::instance(); 
+    
+    QMainWindow *app_window = new QMainWindow();
+    app_window->setWindowTitle("EFFICIO"); 
     auto *login_window = new LoginWindow(app_window);
 
     app_window->setCentralWidget(login_window);
@@ -33,5 +37,5 @@ int main(int argc, char *argv[]) {
     app_window->move(x, y);
     app_window->show();
 
-    return QApplication::exec();
+    return application.exec();
 }

@@ -37,4 +37,6 @@ target_link_libraries(MainWindow PRIVATE
         Database
         NoteWidget
         ThemeManager
+        ProfileWindow
+        AuthorizationWindows
 )

@@ -3,21 +3,29 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QPushButton>
 #include <QWidget>
 #include <string>
 
 namespace Ui {
 class BottomBar : public QWidget {
-    QHBoxLayout *main_layout_;
-    QLabel *project_name_;
-    QLabel *username_;
+    Q_OBJECT
 
 public:
     BottomBar(
-        QWidget *parent_,
-        std::string username_,
-        std::string project_name_
+        QWidget *parent,
+        std::string username,
+        std::string project_name
     );
+    
+signals:
+    void profile_button_clicked();  
+
+private:
+    QHBoxLayout *main_layout_;
+    QLabel *project_name_;
+    QLabel *username_;
+    QPushButton *profile_button_;  
 };
 }  // namespace Ui
 

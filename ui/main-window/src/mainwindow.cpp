@@ -4,11 +4,15 @@
 #include <QInputDialog>
 #include <QListWidget>
 #include <QMessageBox>
+#include <QApplication>  
+#include <QMainWindow>   
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QScrollArea>
 #include <string>
+#include <QScreen>
+#include "applicationwindow.h"
 #include "bottombar.h"
 #include "lr_dao.hpp"
 #include "main_window_style.hpp"
@@ -19,6 +23,8 @@
 #include "projectitem.h"
 #include "projectlist.h"
 #include "theme_manager.h"
+#include "registration_window.h"
+#include "login_window.h"
 
 namespace Ui {
 
@@ -44,13 +50,10 @@ MainWindow::MainWindow(
       note_list_(new NoteList(this)),
       content_widget_(new QWidget(this)),
       new_project_button_(new QPushButton("Новый проект", this)),
-      switch_theme_button_(new QPushButton(this)),
       new_note_button_(new QPushButton("Новая заметка", this)),
       storage_(storage) {
     this->setObjectName("main-window");
     this->setAttribute(Qt::WA_StyledBackground);
-    this->setMinimumSize(QSize(800, 600));
-
     main_layout_->addWidget(top_bar_, Qt::AlignTop);
     main_layout_->setAlignment(Qt::AlignCenter);
     main_layout_->addWidget(content_widget_);
@@ -66,10 +69,6 @@ MainWindow::MainWindow(
     content_layout_->addLayout(right_layout);
     main_layout_->addWidget(content_widget_);
     this->setLayout(main_layout_);
-
-    switch_theme_button_->setObjectName("switch_theme_button_");
-    right_layout->addWidget(switch_theme_button_, 0, Qt::AlignRight | Qt::AlignBottom);
-    handle_theme_changed(ThemeManager::instance()->current_theme());
     this->project_list_->load_projects(storage);
 
     connect(
@@ -80,24 +79,51 @@ MainWindow::MainWindow(
         new_note_button_, &QPushButton::clicked, this, &Ui::MainWindow::add_note
     );
     connect(
-        switch_theme_button_, &QPushButton::clicked, this, 
-        &Ui::MainWindow::on_switch_theme_click
-    );
-    connect(
         new_project_button_, &QPushButton::clicked, this,
         &Ui::MainWindow::add_project
     );
-    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
-            this, &MainWindow::handle_theme_changed);
+    connect(
+        top_bar_, &Ui::BottomBar::profile_button_clicked, 
+        this, &MainWindow::on_profile_button_click
+    );
+    connect(
+        ThemeManager::instance(), &ThemeManager::theme_changed,
+        this, &MainWindow::handle_theme_changed
+    );
+    handle_theme_changed(ThemeManager::instance()->current_theme());
+}
+
+void MainWindow::on_delete_account_button_click() {
+    this->deleteLater();
+    emit delete_account_requested();
+}
+
+void MainWindow::on_logout_button_click() {
+    this->deleteLater();
+    emit logout_requested();
 }
 
 void MainWindow::handle_theme_changed(int theme) {
     this->setStyleSheet(THEMES[theme]);
 }
 
-void MainWindow::on_switch_theme_click() {
-    int next_theme = (ThemeManager::instance()->current_theme() + 1) % 5;
-    ThemeManager::instance()->apply_theme(next_theme);
+void MainWindow::on_profile_button_click() {
+    this->setEnabled(false);
+    ProfileWindow *new_profile_window = new ProfileWindow(QString::fromStdString(this->username), this->parentWidget());
+    new_profile_window->setAttribute(Qt::WA_DeleteOnClose);
+    connect(
+        new_profile_window, &ProfileWindow::logout_requested,
+        this, &MainWindow::on_logout_button_click
+    );
+    connect(
+        new_profile_window, &ProfileWindow::delete_account_requested,
+        this, &MainWindow::on_delete_account_button_click
+    ); 
+    connect(new_profile_window, &ProfileWindow::destroyed, 
+        this, [this]() { this->setEnabled(true); });   
+    new_profile_window->show();
+    new_profile_window->raise();  
+    new_profile_window->activateWindow();
 }
 
 void MainWindow::add_project() {
