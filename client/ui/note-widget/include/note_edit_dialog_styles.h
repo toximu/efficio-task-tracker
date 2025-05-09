@@ -4,7 +4,7 @@
 #include <ui_note_edit_dialog.h>
 
 namespace Ui {
-QString light_theme = R"(
+inline QString light_theme = R"(
     QDialog {
         background-color: #f5f5f5;
     }

@@ -37,11 +37,11 @@ void TagsDialog::setup_ui() {
         tag_layout->addWidget(check_boxes_[i].get());
 
         color_combo_boxes_[i] = std::make_unique<QComboBox>(this);
-        color_combo_boxes_[i]->addItem("Красный", "#e7624b");
-        color_combo_boxes_[i]->addItem("Синий", "#165d7b");
-        color_combo_boxes_[i]->addItem("Розовый", "#bd6dab");
-        color_combo_boxes_[i]->addItem("Зеленый", "#00b16b");
-        color_combo_boxes_[i]->addItem("Желтый", "#e69f00");
+        color_combo_boxes_[i]->addItem("Красный", get_color_by_code(0));
+        color_combo_boxes_[i]->addItem("Синий", get_color_by_code(1));
+        color_combo_boxes_[i]->addItem("Розовый", get_color_by_code(2));
+        color_combo_boxes_[i]->addItem("Зеленый", get_color_by_code(3));
+        color_combo_boxes_[i]->addItem("Желтый", get_color_by_code(4));
         tag_layout->addWidget(color_combo_boxes_[i].get());
 
         name_line_edits_[i] = std::make_unique<QLineEdit>(this);
@@ -78,10 +78,21 @@ QList<TagsDialog::Tag> TagsDialog::get_selected_tags() const {
             !name_line_edits_[i]->text().isEmpty()) {
             Tag tag;
             tag.is_checked = true;
-            tag.color = color_combo_boxes_[i]->currentData().toString();
+            tag.color = color_combo_boxes_[i]->currentData().toInt();
             tag.name = name_line_edits_[i]->text();
             tags.append(tag);
         }
     }
     return tags;
+}
+
+QString TagsDialog::get_color_by_code(const int code) {
+    switch (code) {
+        case 0: return "#e7624b";
+        case 1: return "#165d7b";
+        case 2: return "#bd6dab";
+        case 3: return "#00b16b";
+        case 4: return "#e69f00";
+        default: return "ffffff";
+    }
 }

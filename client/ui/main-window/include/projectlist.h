@@ -1,17 +1,18 @@
 #ifndef PROJECTLIST_H
 #define PROJECTLIST_H
 
+#include <model-proto/model.pb.h>
 #include <QListWidget>
 #include <QWidget>
-#include "project.hpp"
-#include "storage.hpp"
+
+using namespace Efficio_proto;
 
 namespace Ui {
 class ProjectList : public QListWidget {
     Q_OBJECT
     friend class MainWindow;
-    void add_project(project_storage_model::Project *project);
-    void load_projects(project_storage_model::Storage *storage);
+    void add_project(Project *project);
+    void load_projects(Storage *storage);
 
 public:
     explicit ProjectList(QWidget *parent = nullptr);

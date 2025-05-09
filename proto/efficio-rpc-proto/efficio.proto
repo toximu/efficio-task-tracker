@@ -10,6 +10,8 @@ service Update {
   rpc CreateNote (CreateNoteRequest) returns (CreateNoteResponse) {}
   rpc CreateProject (CreateProjectRequest) returns (CreateProjectResponse) {}
   rpc TryJoinProject (TryJoinProjectRequest) returns (TryJoinProjectResponse) {}
+  rpc TryLeaveProject (TryLeaveProjectRequest) returns (TryLeaveProjectResponse) {}
+  rpc UpdateProject (UpdateProjectRequest) returns (UpdateProjectResponse) {}
 }
 
 service Auth {
@@ -36,7 +38,7 @@ message GetProjectRequest {
 message GetProjectResponse {
   oneof response {
     Project project = 1;
-    string error_string = 2;
+    string error_text = 2;
   }
 }
 
@@ -75,6 +77,24 @@ message TryJoinProjectResponse {
     Project project = 1;
     string error_text = 2;
   }
+}
+
+message TryLeaveProjectRequest {
+  User user = 1;
+  string code = 2;
+}
+
+message TryLeaveProjectResponse {
+  int32 ok = 1;
+}
+
+message UpdateProjectRequest {
+  Project project = 1;
+}
+
+message UpdateProjectResponse {
+  bool ok = 1;
+  optional string error_text = 2;
 }
 
 message AuthRequest {

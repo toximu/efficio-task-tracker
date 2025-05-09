@@ -6,12 +6,8 @@
 using grpc::ClientContext;
 using grpc::Status;
 
-
-class CommonClientCall
-{
+class CommonClientCall {
 public:
-
-
     explicit CommonClientCall() = default;
     virtual ~CommonClientCall() = default;
 
@@ -21,5 +17,4 @@ public:
     virtual void Proceed(bool = true) = 0;
 };
 
-
-#endif //COMMON_CLIENT_CALL_H
+#endif  // COMMON_CLIENT_CALL_H

@@ -1,10 +1,12 @@
 #ifndef NOTELIST_H
 #define NOTELIST_H
+#include <model-proto/model.pb.h>
 #include <QListWidgetItem>
 #include <QVBoxLayout>
 #include <QWidget>
 #include <vector>
-#include "note.hpp"
+
+using namespace Efficio_proto;
 
 namespace Ui {
 class NoteList : public QWidget {
@@ -18,7 +20,7 @@ class NoteList : public QWidget {
     int note_counter_ = 0;
 
 public:
-    void add_note_widget(const project_storage_model::Note *note);
+    void add_note_widget(const Note *note);
     void clear_note_list();
     NoteList(QWidget *parent);
 
