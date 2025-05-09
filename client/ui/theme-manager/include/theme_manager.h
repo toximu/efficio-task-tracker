@@ -7,7 +7,7 @@ class ThemeManager final : public QObject {
     Q_OBJECT
 
 public:
-    static ThemeManager* get_instance();
+    static ThemeManager *get_instance();
     void apply_theme(int theme);
     [[nodiscard]] int get_current_theme() const;
 
@@ -16,8 +16,8 @@ signals:
 
 private:
     explicit ThemeManager(QObject *parent = nullptr);
-    static ThemeManager* instance_;
+    static ThemeManager *instance_;
     int current_theme_;
 };
 
-#endif // THEME_MANAGER_H
+#endif  // THEME_MANAGER_H

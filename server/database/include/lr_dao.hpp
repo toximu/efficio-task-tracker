@@ -7,9 +7,16 @@
 class LRDao {
 public:
     LRDao() = default;
-    static int try_register_user(const std::string &login, const std::string &password);
-    static bool validate_user(const std::string &login, const std::string &password);
-    static bool add_project_to_user(const std::string &user_login, int project_id);
+    static bool validate_password(
+        const std::string &input_password,
+        const std::string &stored_hash
+    );
+    static int
+    try_register_user(const std::string &login, const std::string &password);
+    static bool
+    validate_user(const std::string &login, const std::string &password);
+    static bool
+    add_project_to_user(const std::string &user_login, int project_id);
     static bool
     get_user_projects(const std::string &login, std::vector<int> &projects);
 

@@ -3,7 +3,7 @@
 #include "ui_login_window.h"
 
 namespace Ui {
-    QString login_window_light_autumn_theme = R"(
+QString login_window_light_autumn_theme = R"(
         QWidget {
             background-color: #f5f5f5;
         }
@@ -74,7 +74,7 @@ namespace Ui {
     
     )";
 
-    QString login_window_dark_autumn_theme = R"(
+QString login_window_dark_autumn_theme = R"(
         QWidget {
             background-color: #202020;
         }
@@ -144,7 +144,7 @@ namespace Ui {
         }  
     )";
 
-    QString login_window_light_purple_theme = R"(
+QString login_window_light_purple_theme = R"(
         QWidget {
             background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
                 stop:0 #9882B9, stop:0.5 rgb(176, 157, 205), stop:1 rgb(103, 88, 126));
@@ -216,9 +216,9 @@ namespace Ui {
         QPushButton::pressed#switch_theme {
             background-color:rgb(2, 0, 2);
         }  
-    )";   
+    )";
 
-    QString login_window_dark_purple_theme = R"(
+QString login_window_dark_purple_theme = R"(
         QWidget {
             background-color:rgb(9, 6, 10);
         }
@@ -288,8 +288,8 @@ namespace Ui {
         }  
     
     )";
-    
-    QString login_window_blue_theme = R"(
+
+QString login_window_blue_theme = R"(
         QWidget {
             background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
                 stop:0 #173C4C, stop:0.5 #326D6C, stop:1 #07142B);
@@ -373,5 +373,5 @@ namespace Ui {
         QPushButton#switch_theme:pressed {
             background-color:rgb(107, 141, 118);
         }
-    )";    
+    )";
 }  // namespace Ui

@@ -1,8 +1,9 @@
 #pragma once
 
 #include <QWidget>
-#include "database_manager.hpp"
 #include <vector>
+#include "client_implementation.h"
+#include "database_manager.hpp"
 
 QT_BEGIN_NAMESPACE
 
@@ -18,7 +19,10 @@ class RegistrationWindow final : public QWidget {
 public:
     static const std::vector<QString> THEMES;
 
-    explicit RegistrationWindow(QWidget *parent = nullptr);
+    explicit RegistrationWindow(
+        ClientImplementation *client,
+        QWidget *parent = nullptr
+    );
     ~RegistrationWindow() override;
     bool is_strong_and_valid_password(const QString &password);
     void handle_theme_changed(int theme);
@@ -31,4 +35,5 @@ private slots:
 private:
     Ui::RegistrationWindow *ui;
     int counter_on_switch_theme_clicks = 0;
+    ClientImplementation *client_;
 };

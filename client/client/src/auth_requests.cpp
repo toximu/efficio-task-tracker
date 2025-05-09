@@ -39,9 +39,9 @@ AuthRequests::TryRegisterUserClientCall::TryRegisterUserClientCall(
 }
 
 bool AuthRequests::try_authenticate_user(User *user) const {
-    return try_auth_operation<TryAuthenticateUserClientCall>(user)();
+    return try_auth_operation<TryAuthenticateUserClientCall>(user);
 }
 
 bool AuthRequests::try_register(User *user) const {
-    return try_auth_operation<TryAuthenticateUserClientCall>(user)();
+    return try_auth_operation<TryAuthenticateUserClientCall>(user);
 }

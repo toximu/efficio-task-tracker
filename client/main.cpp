@@ -4,9 +4,9 @@
 #include <QLocale>
 #include <QScreen>
 #include <QTranslator>
+#include "applicationwindow.h"
 #include "client_implementation.h"
 #include "login_window.h"
-#include "applicationwindow.h"
 
 int main(int argc, char *argv[]) {
     QApplication application(argc, argv);
@@ -35,10 +35,11 @@ int main(int argc, char *argv[]) {
     requests.detach();
 
     auto *app_window = new Ui::ApplicationWindow("EFFICIO");
-    auto *login_window = new LoginWindow(app_window);
+    auto *login_window = new LoginWindow(&client, app_window);
 
     app_window->setCentralWidget(login_window);
-    const QRect screen_geometry = QApplication::primaryScreen()->availableGeometry();
+    const QRect screen_geometry =
+        QApplication::primaryScreen()->availableGeometry();
     const int x = (screen_geometry.width() - login_window->width()) / 2;
     const int y = (screen_geometry.height() - login_window->height()) / 2;
     app_window->move(x, y);

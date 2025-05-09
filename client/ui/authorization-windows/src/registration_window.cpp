@@ -6,22 +6,24 @@
 #include <QStyle>
 #include <vector>
 #include "login_window.h"
-#include "lr_dao.hpp"
 #include "registration_window_style_sheet.h"
 #include "theme_manager.h"
 
 using Efficio_proto::Storage;
 
 const std::vector<QString> RegistrationWindow::THEMES = {
-        Ui::registration_window_light_autumn_theme,
-        Ui::registration_window_dark_autumn_theme,
-        Ui::registration_window_dark_purple_theme,
-        Ui::registration_window_light_purple_theme,
-        Ui::registration_window_blue_theme
-    };
+    Ui::registration_window_light_autumn_theme,
+    Ui::registration_window_dark_autumn_theme,
+    Ui::registration_window_dark_purple_theme,
+    Ui::registration_window_light_purple_theme,
+    Ui::registration_window_blue_theme
+};
 
-RegistrationWindow::RegistrationWindow(QWidget *parent)
-    : QWidget(parent), ui(new Ui::RegistrationWindow) {
+RegistrationWindow::RegistrationWindow(
+    ClientImplementation *client,
+    QWidget *parent
+)
+    : QWidget(parent), ui(new Ui::RegistrationWindow), client_(client) {
     ui->setupUi(this);
 
     setFixedSize(380, 480);
@@ -35,35 +37,36 @@ RegistrationWindow::RegistrationWindow(QWidget *parent)
     setAttribute(Qt::WA_StyledBackground, true);
 
     connect(
-        ui->switch_theme, &QPushButton::clicked, this, 
-        &RegistrationWindow::on_switch_theme_clicked
-        , Qt::UniqueConnection);
+        ui->switch_theme, &QPushButton::clicked, this,
+        &RegistrationWindow::on_switch_theme_clicked, Qt::UniqueConnection
+    );
 
     connect(
         ui->push_registration, &QPushButton::clicked, this,
-        &RegistrationWindow::on_push_registration_clicked
-        , Qt::UniqueConnection);
+        &RegistrationWindow::on_push_registration_clicked, Qt::UniqueConnection
+    );
     connect(
         ui->switch_mode, &QPushButton::clicked, this,
-        &RegistrationWindow::on_switch_mode_clicked
-        , Qt::UniqueConnection);
-    connect(ThemeManager::get_instance(), &ThemeManager::on_theme_changed,
-            this, &RegistrationWindow::handle_theme_changed);
+        &RegistrationWindow::on_switch_mode_clicked, Qt::UniqueConnection
+    );
+    connect(
+        ThemeManager::get_instance(), &ThemeManager::on_theme_changed, this,
+        &RegistrationWindow::handle_theme_changed
+    );
     handle_theme_changed(ThemeManager::get_instance()->get_current_theme());
 }
-
 
 void RegistrationWindow::handle_theme_changed(const int theme) {
     this->setStyleSheet(THEMES[theme]);
 }
 
 void RegistrationWindow::on_switch_theme_clicked() {
-    if ((this->counter_on_switch_theme_clicks++)%2){
-        int next_theme = (ThemeManager::get_instance()->get_current_theme() + 1) % 5;
+    if ((this->counter_on_switch_theme_clicks++) % 2) {
+        int next_theme =
+            (ThemeManager::get_instance()->get_current_theme() + 1) % 5;
         ThemeManager::get_instance()->apply_theme(next_theme);
     }
 }
-
 
 RegistrationWindow::~RegistrationWindow() {
     delete ui;
@@ -78,10 +81,11 @@ void RegistrationWindow::on_switch_mode_clicked() {
         old->deleteLater();
     }
     Storage storage;
-    auto *login_window = new LoginWindow(app_window);
+    auto *login_window = new LoginWindow(client_, app_window);
 
     app_window->setCentralWidget(login_window);
-    const QRect screenGeometry = QApplication::primaryScreen()->availableGeometry();
+    const QRect screenGeometry =
+        QApplication::primaryScreen()->availableGeometry();
     const int x = (screenGeometry.width() - login_window->width()) / 2;
     const int y = (screenGeometry.height() - login_window->height()) / 2;
     app_window->move(x, y);
@@ -156,8 +160,11 @@ void RegistrationWindow::on_push_registration_clicked() {
                     "Длина пароля не должна превышать пятидесяти символов"
                 );
             } else if (is_strong_and_valid_password(created_password)) {
-                const int try_register_user =
-                    LRDao::try_register_user(created_login, created_password);
+                auto user = new User();
+                user->set_login(created_login.toStdString());
+                user->set_hashed_password(created_password.toStdString());
+
+                const int try_register_user = client_->try_register_user(user);
                 if (try_register_user == 0) {
                     QMessageBox::warning(
                         this, "Ошибка",

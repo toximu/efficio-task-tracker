@@ -33,8 +33,8 @@ private:
         AuthResponse get_reply();
     };
 
-    template<class Call>
-    bool try_auth_operation(User* user) const {
+    template <class Call>
+    bool try_auth_operation(User *user) const {
         AuthRequest request;
         request.mutable_user()->CopyFrom(*user);
 

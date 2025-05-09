@@ -1,9 +1,8 @@
 #include "applicationwindow.h"
 #include <QPalette>
-#include "mainwindow.h"
 
 namespace Ui {
-ApplicationWindow::ApplicationWindow(std::string window_name_)
+ApplicationWindow::ApplicationWindow(const std::string &window_name_)
     : QMainWindow{nullptr} {
     this->setObjectName("ApplicationWindow");
 

@@ -14,7 +14,9 @@ using grpc::Status;
 ClientImplementation::ClientImplementation(
     const std::shared_ptr<Channel> &channel
 )
-    : channel_(channel), update_requests_(channel, &cq_), auth_requests_(channel, &cq_) {
+    : channel_(channel),
+      update_requests_(channel, &cq_),
+      auth_requests_(channel, &cq_) {
 }
 
 void ClientImplementation::CompleteRpc() {

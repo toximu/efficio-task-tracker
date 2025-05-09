@@ -4,7 +4,8 @@
 AuthService::TryAuthenticateUserServerCall::TryAuthenticateUserServerCall(
     AuthService &service,
     ServerCompletionQueue *cq
-) : AuthServerOperation(service, cq) {
+)
+    : AuthServerOperation(service, cq) {
     service_.service_.RequestTryAuthenticateUser(
         &ctx_, &request_, &responder_, cq_, cq_, this
     );
@@ -31,7 +32,8 @@ void AuthService::TryAuthenticateUserServerCall::Proceed(const bool ok) {
                 response.mutable_user()->CopyFrom(request_.user());
             } else {
                 response.set_error_text(
-                    "[SERVER ERROR]: Не удалось выполнить запрос в базу данных на проверку "
+                    "[SERVER ERROR]: Не удалось выполнить запрос в базу данных "
+                    "на проверку "
                     "корректности логина и пароля"
                 );
             }
@@ -49,7 +51,8 @@ void AuthService::TryAuthenticateUserServerCall::Proceed(const bool ok) {
 AuthService::TryRegisterUserServerCall::TryRegisterUserServerCall(
     AuthService &service,
     ServerCompletionQueue *cq
-) : AuthServerOperation(service, cq) {
+)
+    : AuthServerOperation(service, cq) {
     service_.service_.RequestTryRegisterUser(
         &ctx_, &request_, &responder_, cq_, cq_, this
     );
@@ -74,7 +77,8 @@ void AuthService::TryRegisterUserServerCall::Proceed(const bool ok) {
 
             if (query_exit_code < 1) {
                 response.set_error_text(
-                    "[SERVER ERROR]: Не удалось выполнить запрос на запись нового пользователя "
+                    "[SERVER ERROR]: Не удалось выполнить запрос на запись "
+                    "нового пользователя "
                     "в базу данных"
                 );
             } else {
@@ -89,4 +93,8 @@ void AuthService::TryRegisterUserServerCall::Proceed(const bool ok) {
             break;
         }
     }
+}
+
+Auth::AsyncService &AuthService::get_service() {
+    return service_;
 }

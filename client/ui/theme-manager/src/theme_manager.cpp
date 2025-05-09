@@ -2,15 +2,14 @@
 #include <QApplication>
 #include <QWidget>
 
-ThemeManager* ThemeManager::instance_ = nullptr;
+ThemeManager *ThemeManager::instance_ = nullptr;
 
-ThemeManager::ThemeManager(QObject *parent) 
-    : QObject(parent) {
+ThemeManager::ThemeManager(QObject *parent) : QObject(parent) {
     current_theme_ = 0;
     emit on_theme_changed(this->current_theme_);
 }
 
-ThemeManager* ThemeManager::get_instance() {
+ThemeManager *ThemeManager::get_instance() {
     if (!instance_) {
         instance_ = new ThemeManager();
     }

@@ -8,7 +8,7 @@ class ApplicationWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    explicit ApplicationWindow(std::string window_name);
+    explicit ApplicationWindow(const std::string &window_name);
 
 signals:
 };

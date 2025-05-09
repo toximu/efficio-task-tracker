@@ -2,8 +2,8 @@
 #define CLIENTIMPLEMENTATION_H
 
 #include <grpcpp/grpcpp.h>
-#include "update_requests.h"
 #include "auth_requests.h"
+#include "update_requests.h"
 
 using grpc::Channel;
 using grpc::CompletionQueue;
@@ -20,8 +20,8 @@ public:
     void CompleteRpc();
     std::shared_ptr<Channel> get_channel();
 
-    bool try_authenticate_user(User* user) const;
-    bool try_register_user(User* user) const;
+    bool try_authenticate_user(User *user) const;
+    bool try_register_user(User *user) const;
 
     bool try_update_note(Note *note) const;
     bool try_create_note(Note *note) const;
