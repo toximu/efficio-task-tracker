@@ -21,6 +21,7 @@ target_link_libraries(Client
         protobuf::libprotobuf
         gRPC::grpc
         gRPC::grpc++
+        Service
 )
 
 target_include_directories(Client

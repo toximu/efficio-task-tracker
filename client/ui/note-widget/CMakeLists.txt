@@ -34,7 +34,8 @@ add_library(NoteWidget STATIC ${SOURCES} ${HEADERS} ${UI_FILES})
 target_include_directories(NoteWidget
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(NoteWidget PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Sql Database Scripts)
+target_link_libraries(NoteWidget PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Sql Database model-proto Client)

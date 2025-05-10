@@ -1,20 +1,27 @@
-
 #ifndef CLIENTIMPLEMENTATION_H
 #define CLIENTIMPLEMENTATION_H
 
 #include <grpcpp/grpcpp.h>
+#include "update_requests.h"
 
-using grpc::CompletionQueue;
 using grpc::Channel;
 
 class ClientImplementation {
-    CompletionQueue cq_;
+    grpc::CompletionQueue cq_;
     std::shared_ptr<Channel> channel_;
+    UpdateRequests update_requests_;
+
 public:
-    CompletionQueue *get_cq() { return &cq_; }
-    std::shared_ptr<Channel> get_channel() { return channel_; }
-    explicit ClientImplementation(std::shared_ptr<Channel> channel);
+    std::shared_ptr<Channel> get_channel() {
+        return channel_;
+    }
+
+    explicit ClientImplementation(const std::shared_ptr<Channel> &channel);
     void CompleteRpc();
+
+    bool try_update_note(Note *note) const;
+    bool try_create_note(Note *note) const;
+    bool try_fetch_note(Note *note) const;
 };
 
-#endif //CLIENTIMPLEMENTATION_H
+#endif  // CLIENTIMPLEMENTATION_H
