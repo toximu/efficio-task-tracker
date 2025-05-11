@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <model-proto/model.pb.h>
 #include <QHBoxLayout>
 #include <QListWidget>
 #include <QMainWindow>
@@ -11,7 +12,8 @@
 #include "bottombar.h"
 #include "notelist.h"
 #include "projectlist.h"
-#include "storage.hpp"
+
+using namespace Efficio_proto;
 
 namespace Ui {
 class MainWindow : public QWidget {
@@ -25,18 +27,18 @@ class MainWindow : public QWidget {
     QWidget *content_widget_;
     QPushButton *new_project_button_;
     QPushButton *new_note_button_;
-    project_storage_model::Storage *storage_;
+    Storage *storage_;
 
     friend ProjectList;
 private slots:
-    void add_project();
+    void create_project();
     void add_note();
 
 public:
     explicit MainWindow(
         QWidget *parent = nullptr,
         std::string username = "none",
-        project_storage_model::Storage *storage = nullptr
+        Storage *storage = nullptr
     );
 };
 }  // namespace Ui

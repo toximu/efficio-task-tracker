@@ -1,17 +1,18 @@
 #ifndef NOTEWIDGET_H
 #define NOTEWIDGET_H
 
+#include <model-proto/model.pb.h>
 #include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
-#include <iostream>
-#include "note.hpp"
+
+using namespace Efficio_proto;
 
 namespace Ui {
 class NoteWidget : public QWidget {
     Q_OBJECT
-    const project_storage_model::Note *model_note_;
+    const Note *model_note_;
     QVBoxLayout *main_layout_;
     QPushButton *open_button_;
     QLabel *title_label_;
@@ -20,12 +21,12 @@ class NoteWidget : public QWidget {
 public:
     explicit NoteWidget(
         QWidget *parent = nullptr,
-        const project_storage_model::Note *model_note = nullptr
+        const Note *model_note = nullptr
     );
 
 private slots:
 
-    void open_note_window() const;
+    // void open_note_window() const;
 };
 }  // namespace Ui
 #endif  // NOTEWIDGET_H
