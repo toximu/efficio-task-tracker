@@ -59,7 +59,7 @@ QString profile_window_light_autumn_theme = R"(
     }
 
     QPushButton#stats_button:pressed {
-        background-color: #089083;
+        background-color:rgb(3, 58, 54);
     }
     
     QPushButton#settings_button {
@@ -255,11 +255,11 @@ QString profile_window_dark_purple_theme = R"(
     }
 
     QPushButton#logout_button:hover {
-        background-color: #722548;
+        background-color: rgb(79, 25, 50);
     }
 
     QPushButton#logout_button:pressed {
-        background-color:rgb(79, 24, 49);
+        background-color:rgb(59, 16, 35);
     }
 
     QPushButton#delete_button {
@@ -268,11 +268,11 @@ QString profile_window_dark_purple_theme = R"(
     }
 
     QPushButton#delete_button:hover {
-        background-color: #722548;
+        background-color:rgb(79, 25, 50);
     }
 
     QPushButton#delete_button:pressed {
-        background-color:rgb(79, 24, 49);
+        background-color:rgb(59, 16, 35);
     }
     
     QPushButton#stats_button {

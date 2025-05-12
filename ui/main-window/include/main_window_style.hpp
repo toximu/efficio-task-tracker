@@ -737,11 +737,11 @@ QPushButton {
 }
 
 QPushButton:hover {
-    background-color: #722548;
+    background-color: rgb(79, 25, 50);
 }
 
 QPushButton:pressed {
-    background-color:rgb(79, 24, 49);
+    background-color:rgb(59, 16, 35);
 }
 QPushButton#switch_theme_button_ {
     width: 20px;          

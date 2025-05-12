@@ -4,6 +4,7 @@
 #include "database_manager.hpp"
 #include "lr_dao.hpp"
 #include "settings_window.h"
+#include "analytics_window.h"
 
 namespace Ui {
 
@@ -15,34 +16,30 @@ const std::vector<QString> ProfileWindow::themes = {
     profile_window_blue_theme
 };
 
-void ProfileWindow::setup_ui(QDialog* profile_window) {
-    main_layout = new QVBoxLayout(profile_window);
-    
-    logout_button = new QPushButton("Выйти из аккаунта", profile_window);
+ProfileWindow::ProfileWindow(const QString& username, QWidget* parent)
+    : QDialog(parent), current_username(username) {
+    main_layout = new QVBoxLayout(this);
+
+    logout_button = new QPushButton("Выйти из аккаунта", this);
     logout_button->setObjectName("logout_button");
     main_layout->addWidget(logout_button);
 
-    delete_button = new QPushButton("Удалить аккаунт", profile_window);
+    delete_button = new QPushButton("Удалить аккаунт", this);
     delete_button->setObjectName("delete_button");
     main_layout->addWidget(delete_button);
 
     QHBoxLayout* bottom_layout = new QHBoxLayout();
     
-    stats_button = new QPushButton("Моя статистика", profile_window);
+    stats_button = new QPushButton("Моя статистика", this);
     stats_button->setObjectName("stats_button");
     bottom_layout->addWidget(stats_button);
 
-    settings_button = new QPushButton("⚙", profile_window);
+    settings_button = new QPushButton("⚙", this);
     settings_button->setObjectName("settings_button");
     settings_button->setFixedSize(45, 45);
     bottom_layout->addWidget(settings_button);
 
     main_layout->addLayout(bottom_layout);
-}
-
-ProfileWindow::ProfileWindow(const QString& username, QWidget* parent)
-    : QDialog(parent), current_username(username) {
-    setup_ui(this);
     setFixedSize(250, 160);
     
     connect(
@@ -93,7 +90,14 @@ void ProfileWindow::on_delete_account_clicked() {
 }
 
 void ProfileWindow::on_stats_clicked() {
-    QMessageBox::information(this, "Статистика", "Статистика в разработке 🛠");
+    this->setEnabled(false);
+    AnalyticsWindow *new_analytics_window = new AnalyticsWindow(this->parentWidget());
+    new_analytics_window->setAttribute(Qt::WA_DeleteOnClose);
+    connect(new_analytics_window, &AnalyticsWindow::destroyed, 
+        this, [this]() { this->setEnabled(true); });   
+    new_analytics_window->show();
+    new_analytics_window->raise();  
+    new_analytics_window->activateWindow();
 }
 
 void ProfileWindow::on_settings_clicked() {

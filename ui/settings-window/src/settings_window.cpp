@@ -10,7 +10,7 @@ const std::vector<QString> SettingsWindow::THEMES = {
     Ui::settings_window_blue_theme
 };
 
-SettingsWindow::SettingsWindow(QWidget *parent) : QWidget(parent) {
+SettingsWindow::SettingsWindow(QWidget *parent) : QDialog(parent) {
     main_layout = new QVBoxLayout(this);
 
     title_label = new QLabel("Настройки", this);
@@ -65,7 +65,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QWidget(parent) {
     large_font_radio->setText("Крупный");
     
     setLayout(main_layout);
-    setFixedSize(140, 250);
+    setFixedSize(240, 260);
     handle_theme_changed(ThemeManager::instance()->current_theme());
 }
 

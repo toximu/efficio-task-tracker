@@ -1,7 +1,7 @@
 #ifndef SETTINGS_WINDOW_H
 #define SETTINGS_WINDOW_H
 
-#include <QWidget>
+#include <QDialog>
 #include <QPushButton>
 #include <QLabel>
 #include <QRadioButton>
@@ -10,7 +10,7 @@
 #include <QButtonGroup>
 #include <QApplication>
 
-class SettingsWindow : public QWidget {
+class SettingsWindow : public QDialog {
     Q_OBJECT
 
 public:
