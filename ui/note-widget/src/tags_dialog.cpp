@@ -3,6 +3,16 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include "tags_dialog_styles.h"
+#include "theme_manager.h"
+
+
+const std::vector<QString> TagsDialog::THEMES = {
+    Ui::tags_dialog_light_autumn_theme,
+    Ui::tags_dialog_dark_autumn_theme,
+    Ui::tags_dialog_dark_purple_theme,
+    Ui::tags_dialog_light_purple_theme,
+    Ui::tags_dialog_blue_theme
+};
 
 TagsDialog::TagsDialog(const QList<Tag> &initial_tags, QWidget *parent)
     : QDialog(parent) {
@@ -23,7 +33,7 @@ TagsDialog::TagsDialog(const QList<Tag> &initial_tags, QWidget *parent)
     setWindowTitle("Добавить теги");
     setModal(true);
     setFixedSize(DIALOG_SIZE.first, DIALOG_SIZE.second);
-    setStyleSheet(Ui::tags_dialog_light_theme);
+    handle_theme_changed(ThemeManager::instance()->current_theme());
 }
 
 void TagsDialog::setup_ui() {
@@ -69,6 +79,12 @@ void TagsDialog::setup_ui() {
     connect(
         cancel_button_.get(), &QPushButton::clicked, this, &TagsDialog::reject
     );
+    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+            this, &TagsDialog::handle_theme_changed);
+}
+
+void TagsDialog::handle_theme_changed(int theme) {
+    this->setStyleSheet(THEMES[theme]);
 }
 
 QList<TagsDialog::Tag> TagsDialog::get_selected_tags() const {

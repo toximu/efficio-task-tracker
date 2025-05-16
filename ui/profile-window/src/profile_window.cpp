@@ -20,24 +20,26 @@ ProfileWindow::ProfileWindow(const QString& username, QWidget* parent)
     : QDialog(parent), current_username(username) {
     main_layout = new QVBoxLayout(this);
 
-    logout_button = new QPushButton("Выйти из аккаунта", this);
+    logout_button = new QPushButton(tr("Выйти из аккаунта"), this);
     logout_button->setObjectName("logout_button");
     main_layout->addWidget(logout_button);
 
-    delete_button = new QPushButton("Удалить аккаунт", this);
+    delete_button = new QPushButton(tr("Удалить аккаунт"), this);
     delete_button->setObjectName("delete_button");
     main_layout->addWidget(delete_button);
 
     QHBoxLayout* bottom_layout = new QHBoxLayout();
     
-    stats_button = new QPushButton("Моя статистика", this);
+    stats_button = new QPushButton(tr("Моя статистика"), this);
     stats_button->setObjectName("stats_button");
     bottom_layout->addWidget(stats_button);
 
-    settings_button = new QPushButton("⚙", this);
+    settings_button = new QPushButton(tr("⚙"), this);
     settings_button->setObjectName("settings_button");
     settings_button->setFixedSize(45, 45);
     bottom_layout->addWidget(settings_button);
+
+    setWindowTitle(tr("Профиль"));
 
     main_layout->addLayout(bottom_layout);
     setFixedSize(250, 160);
@@ -75,40 +77,39 @@ void ProfileWindow::on_logout_clicked() {
 void ProfileWindow::on_delete_account_clicked() {
     QMessageBox::StandardButton reply = QMessageBox::question(
         this, 
-        "Удаление аккаунта",
-        "Вы уверены, что хотите удалить аккаунт? Все данные будут потеряны!",
+        tr("Удаление аккаунта"),
+        tr("Вы уверены, что хотите удалить аккаунт? Все данные будут потеряны!"),
         QMessageBox::Yes | QMessageBox::No
     );
     
     if (reply == QMessageBox::Yes && LRDao::try_delete_user(current_username)) {
-        QMessageBox::information(this, "Успех", "Аккаунт успешно удалён");
+        QMessageBox::information(this, tr("Успех"), tr("Аккаунт успешно удалён"));
         emit delete_account_requested();
         this->deleteLater();
     } else if (reply == QMessageBox::Yes) {
-        QMessageBox::critical(this, "Ошибка", "Не удалось удалить аккаунт");
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не удалось удалить аккаунт"));
     }
 }
 
 void ProfileWindow::on_stats_clicked() {
-    this->setEnabled(false);
     AnalyticsWindow *new_analytics_window = new AnalyticsWindow(this->parentWidget());
-    new_analytics_window->setAttribute(Qt::WA_DeleteOnClose);
-    connect(new_analytics_window, &AnalyticsWindow::destroyed, 
-        this, [this]() { this->setEnabled(true); });   
-    new_analytics_window->show();
-    new_analytics_window->raise();  
-    new_analytics_window->activateWindow();
+    this->switch_window(new_analytics_window);
 }
 
 void ProfileWindow::on_settings_clicked() {
-    this->setEnabled(false);
     SettingsWindow *new_settings_window = new SettingsWindow(this->parentWidget());
-    new_settings_window->setAttribute(Qt::WA_DeleteOnClose);
-    connect(new_settings_window, &SettingsWindow::destroyed, 
+    this->switch_window(new_settings_window);
+}
+
+
+void ProfileWindow::switch_window(QWidget *new_window) {
+    this->setEnabled(false);
+    new_window->setAttribute(Qt::WA_DeleteOnClose);
+    connect(new_window, &AnalyticsWindow::destroyed, 
         this, [this]() { this->setEnabled(true); });   
-    new_settings_window->show();
-    new_settings_window->raise();  
-    new_settings_window->activateWindow();
+    new_window->show();
+    new_window->raise();  
+    new_window->activateWindow();
 }
 
 } // namespace Ui

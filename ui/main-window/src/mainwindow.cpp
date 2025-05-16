@@ -12,6 +12,7 @@
 #include <QScrollArea>
 #include <string>
 #include <QScreen>
+#include <QString>
 #include "applicationwindow.h"
 #include "bottombar.h"
 #include "lr_dao.hpp"
@@ -44,13 +45,13 @@ MainWindow::MainWindow(
     : QWidget(parent),
       username(username),
       main_layout_(new QVBoxLayout(this)),
-      top_bar_(new BottomBar(this, username, "EFFICIO :: Таск-Трекер")),
+      top_bar_(new BottomBar(this, username, tr("EFFICIO :: Таск-Трекер"))),
       content_layout_(new QHBoxLayout(this)),
       project_list_(new ProjectList(this)),
       note_list_(new NoteList(this)),
       content_widget_(new QWidget(this)),
-      new_project_button_(new QPushButton("Новый проект", this)),
-      new_note_button_(new QPushButton("Новая заметка", this)),
+      new_project_button_(new QPushButton(tr("Новый проект"), this)),
+      new_note_button_(new QPushButton(tr("Новая заметка"), this)),
       storage_(storage) {
     this->setObjectName("main-window");
     this->setAttribute(Qt::WA_StyledBackground);
@@ -129,7 +130,7 @@ void MainWindow::on_profile_button_click() {
 void MainWindow::add_project() {
     bool ok;
     QString name_of_project = QInputDialog::getText(
-        nullptr, "Название проекта:", "Введите название", QLineEdit::Normal, "",
+        nullptr, tr("Название проекта:"), tr("Введите название"), QLineEdit::Normal, "",
         &ok
     );
     if (ok) {
@@ -154,12 +155,12 @@ void MainWindow::add_note() {
                 project_item->project_->get_id(), id
             );
             auto &note =
-                project_item->project_->add_note({id, "Пустая заметка", ""});
+                project_item->project_->add_note({id, tr("Пустая заметка").toStdString(), ""});
             note_list_->add_note_widget(&note);
         }
     } else {
         QMessageBox msg;
-        msg.setText("Проект не выбран!");
+        msg.setText(tr("Проект не выбран!"));
         msg.exec();
     }
 }

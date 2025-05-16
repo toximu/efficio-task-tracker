@@ -1,11 +1,22 @@
-#include "analytics_dialog.h"
+#include "analytics_window.h"
+#include "theme_manager.h"
+#include "analytics_window_style_sheet.h"
+#include <QString>
+
+const std::vector<QString> AnalyticsWindow::THEMES = {
+    Ui::analytics_window_light_autumn_theme,
+    Ui::analytics_window_dark_autumn_theme,
+    Ui::analytics_window_dark_purple_theme,
+    Ui::analytics_window_light_purple_theme,
+    Ui::analytics_window_blue_theme
+};
 
 AnalyticsWindow::AnalyticsWindow(QWidget *parent)
     : QDialog(parent)
 {
     QVBoxLayout *main_layout = new QVBoxLayout(this);
     
-    tab_widget = new Qtab_widget(this);
+    tab_widget = new QTabWidget(this);
     
     QWidget *tasks_tab = new QWidget();
     tasks_layout = new QVBoxLayout(tasks_tab);
@@ -15,8 +26,8 @@ AnalyticsWindow::AnalyticsWindow(QWidget *parent)
     projects_layout = new QVBoxLayout(projects_tab);
     tab_widget->addTab(projects_tab, "Распределение по проектам");
     
-    button_box = new QDialogbutton_box(QDialogbutton_box::Close, this);
-    connect(button_box, &QDialogbutton_box::rejected, this, &QDialog::reject);
+    button_box = new QDialogButtonBox(QDialogButtonBox::Close, this);
+    connect(button_box, &QDialogButtonBox::rejected, this, &QDialog::reject);
     
     main_layout->addWidget(tab_widget);
     main_layout->addWidget(button_box);
@@ -28,12 +39,22 @@ AnalyticsWindow::AnalyticsWindow(QWidget *parent)
     
     QMap<QString, int> projects;
     setProjectsData(projects);
+
+    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+            this, &AnalyticsWindow::handle_theme_changed);    
+    handle_theme_changed(ThemeManager::instance()->current_theme());
 }
 
-AnalyticsWindow::~AnalyticsWindow()
-{
-    delete this;
+void AnalyticsWindow::handle_theme_changed(int theme) {
+    this->setStyleSheet(THEMES[theme]);
 }
+
+void AnalyticsWindow::on_switch_theme_clicked() {
+    int next_theme = (ThemeManager::instance()->current_theme() + 1) % 5;
+    ThemeManager::instance()->apply_theme(next_theme);
+}
+
+AnalyticsWindow::~AnalyticsWindow(){}
 
 void AnalyticsWindow::setTasksData(int created, int completed, int overdue)
 {

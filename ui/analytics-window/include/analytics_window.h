@@ -6,6 +6,7 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
+#include <vector>
 
 class AnalyticsWindow : public QDialog
 {
@@ -17,6 +18,10 @@ public:
 
     void setTasksData(int created, int completed, int overdue);
     void setProjectsData(const QMap<QString, int>& projects);
+    void handle_theme_changed(int theme);
+    void on_switch_theme_clicked();
+    
+    static const std::vector<QString> THEMES;
 
 private:
     QTabWidget *tab_widget;

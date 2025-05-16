@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QWidget>
 #include <string>
+#include <QString>
 
 namespace Ui {
 class BottomBar : public QWidget {
@@ -14,8 +15,8 @@ class BottomBar : public QWidget {
 public:
     BottomBar(
         QWidget *parent,
-        std::string username,
-        std::string project_name
+        const std::string& username,
+        QString project_name
     );
     
 signals:

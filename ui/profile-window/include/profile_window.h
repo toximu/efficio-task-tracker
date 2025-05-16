@@ -22,6 +22,7 @@ class ProfileWindow : public QDialog {
     QString current_username;
 
     void setup_ui(QDialog* profile_window);
+    void switch_window(QWidget *new_window);
 
 public:
     explicit ProfileWindow(const QString& username, QWidget* parent = nullptr);

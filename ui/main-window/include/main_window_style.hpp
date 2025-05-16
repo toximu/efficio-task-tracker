@@ -116,9 +116,13 @@ QScrollArea {
 }
 
 #BottomBar QPushButton {
+    background-color: transparent;
     color:  white;
     font-family: 'Arial';
     font-size: 13px;
+    padding: 0px 0px;
+    min-width: 0px;
+    min-height: 0px;
 }
 
 #BottomBar QPushButton:hover {
@@ -306,9 +310,13 @@ QString main_window_dark_autumn_theme = R"(
     }
     
     #BottomBar QPushButton {
+    background-color: transparent;
         color: #c0c0c0;
         font-family: 'Arial';
         font-size: 13px;
+        padding: 0px 0px;
+        min-width: 0px;
+        min-height: 0px;
     }
 
     #BottomBar QPushButton:hover {
@@ -497,9 +505,13 @@ QScrollArea {
 }
 
 #BottomBar QPushButton {
+    background-color: transparent;
     color: #9882B9;
     font-family: 'Arial';
     font-size: 13px;
+    padding: 0px 0px;
+    min-width: 0px;
+    min-height: 0px;
 }
 
 #BottomBar QPushButton:hover {
@@ -689,9 +701,13 @@ QScrollArea {
 }
 
 #BottomBar QPushButton {
+    background-color: transparent;
     color: #9882B9;
     font-family: 'Arial';
     font-size: 13px;
+    padding: 0px 0px;
+    min-width: 0px;
+    min-height: 0px;
 }
 
 #BottomBar QPushButton:hover {
@@ -879,9 +895,13 @@ QScrollArea {
 }
 
 #BottomBar QPushButton {
+    background-color: transparent;
     color: #BDD1BD;
     font-family: 'Arial';
     font-size: 13px;
+    padding: 0px 0px;
+    min-width: 0px;
+    min-height: 0px;
 }
 
 #BottomBar QPushButton:hover {

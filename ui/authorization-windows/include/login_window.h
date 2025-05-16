@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include <vector>
+#include <QMainWindow>
 #include <memory>
 
 QT_BEGIN_NAMESPACE
@@ -29,4 +30,7 @@ private slots:
 private:
     std::shared_ptr<Ui::LoginWindow> ui;
     int counter_on_switch_theme_clicks = 0;
+    void switch_window(QMainWindow *app_window, QWidget *new_window, int width, int height);
+    void switch_to_login_window(QMainWindow *app_window);
+    void switch_to_registration_window(QMainWindow *app_window);
 };

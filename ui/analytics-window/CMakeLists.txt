@@ -28,12 +28,14 @@ target_include_directories(AnalyticsWindow
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(AnalyticsWindow PRIVATE 
-    Qt6::Widgets 
-    Qt6::Core 
-    Qt6::Gui 
-    Qt6::Sql
-    Qt6::Charts
-    Database 
-    ThemeManager
+target_link_libraries(AnalyticsWindow
+    PRIVATE 
+        Qt6::Core 
+        Qt6::Gui 
+        Qt6::Sql
+        Database 
+        ThemeManager
+    PUBLIC 
+        Qt6::Widgets 
+        Qt6::Charts   
 )

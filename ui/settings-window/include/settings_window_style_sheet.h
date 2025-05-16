@@ -16,7 +16,7 @@ namespace Ui {
         }
         
         QLabel#title_label {
-            font-size: 20px;
+            font-size: 28px;
         }
 
         QLabel#font_size_label {
@@ -73,11 +73,10 @@ namespace Ui {
             background-color: transparent; 
         }
         QRadioButton::indicator:hover {
-            border: 1px solid #fea36b;
+            background-color: #727272;
         }
         QRadioButton::indicator:checked {
-            background-color: #fea36b;
-            border: 1px solid #fea36b;
+            background-color: rgb(33, 44, 50);
         }        
     )";
 
@@ -94,7 +93,7 @@ namespace Ui {
         }
         
         QLabel#title_label {
-            font-size: 20px;
+            font-size: 28px;
         }
 
         QLabel#font_size_label {
@@ -149,11 +148,10 @@ namespace Ui {
             background-color: transparent; 
         }
         QRadioButton::indicator:hover {
-            border: 1px solid #fea36b;
+            background-color: #727272;
         }
         QRadioButton::indicator:checked {
-            background-color: #fea36b;
-            border: 1px solid #fea36b;
+            background-color:rgb(0, 0, 0);
         }    
     )";
 
@@ -171,7 +169,7 @@ namespace Ui {
         }
         
         QLabel#title_label {
-            font-size: 20px;
+            font-size: 28px;
         }
 
         QLabel#font_size_label {
@@ -214,7 +212,7 @@ namespace Ui {
 
         QRadioButton {
             font-family: 'Arial';
-            color: rgb(218, 207, 235);
+            color: rgb(42, 10, 25);
             spacing: 5px;
             background-color: transparent;
         }
@@ -222,15 +220,14 @@ namespace Ui {
             width: 16px;
             height: 16px;
             border-radius: 3px;
-            border: 1px solid rgb(218, 207, 235);
+            border: 1px solid rgb(42, 10, 25);
             background-color: transparent; 
         }
         QRadioButton::indicator:hover {
-            border: 1px solid #722548;
+            background-color: rgb(42, 10, 25);
         }
         QRadioButton::indicator:checked {
-            background-color: #722548;
-            border: 1px solid #722548;
+            background-color: rgb(218, 207, 235);
         }
     )";
 
@@ -247,7 +244,7 @@ namespace Ui {
         }
         
         QLabel#title_label {
-            font-size: 20px;
+            font-size: 28px;
         }
 
         QLabel#font_size_label {
@@ -302,11 +299,10 @@ namespace Ui {
             background-color: transparent; 
         }
         QRadioButton::indicator:hover {
-            border: 1px solid #722548;
+            background-color: #221932;
         }
         QRadioButton::indicator:checked {
-            background-color: #722548;
-            border: 1px solid #722548;
+            background-color: #9882B9;
         }
     )";
 
@@ -323,7 +319,7 @@ namespace Ui {
         }
         
         QLabel#title_label {
-            font-size: 20px;
+            font-size: 28px;
         }
 
         QLabel#font_size_label {
@@ -379,11 +375,10 @@ namespace Ui {
             background-color: transparent; 
         }
         QRadioButton::indicator:hover {
-            border: 1px solid #568F7C;
+            background-color: #BDD1BD;
         }
         QRadioButton::indicator:checked {
-            background-color: #568F7C;
-            border: 1px solid #568F7C;
+            background-color: #07142B;
         }
     )";
 

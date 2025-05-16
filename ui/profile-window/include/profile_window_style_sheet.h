@@ -208,7 +208,7 @@ QString profile_window_light_purple_theme = R"(
     }
     
     QPushButton#stats_button:hover {
-        background-color: rgb(19, 5, 11);
+        background-color: rgb(42, 10, 25);
     }
 
     QPushButton#stats_button:pressed {

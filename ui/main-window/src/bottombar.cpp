@@ -2,16 +2,17 @@
 #include <QHBoxLayout>
 #include <QSizePolicy>
 #include <QSpacerItem>
+#include <QSpacerItem>
 
 namespace Ui {
 BottomBar::BottomBar(
     QWidget *parent,
-    std::string username,
-    std::string project_name
+    const std::string& username,
+    QString project_name
 )
     : QWidget(parent),
       main_layout_(new QHBoxLayout()),
-      project_name_(new QLabel(project_name.c_str())),
+      project_name_(new QLabel(project_name)),
       profile_button_(new QPushButton(username.c_str()))  
 {
     this->setObjectName("BottomBar");
@@ -19,7 +20,6 @@ BottomBar::BottomBar(
     this->setFixedHeight(40);
 
     profile_button_->setObjectName("profile_button");
-    profile_button_->setStyleSheet("background-color: transparent; text-align: right;");
 
     project_name_->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     
@@ -29,5 +29,8 @@ BottomBar::BottomBar(
 
     connect(profile_button_, &QPushButton::clicked, 
             this, &BottomBar::profile_button_clicked);
+    
+    this->setLayout(main_layout_);
+    this->setAttribute(Qt::WA_StyledBackground);
 }
 }  // namespace Ui

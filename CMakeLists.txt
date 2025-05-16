@@ -9,7 +9,19 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 COMPONENTS Widgets Core Gui Sql REQUIRED)
+find_package(Qt6 COMPONENTS Widgets LinguistTools Core Gui Sql REQUIRED)
+
+set(TS_FILES
+    translations/app_ru.ts
+    translations/app_en.ts
+)
+
+qt_add_translation(QM_FILES ${TS_FILES})
+
+qt_add_resources(PROJECT_RESOURCES
+    PREFIX "/translations"
+    FILES ${QM_FILES}
+)
 
 add_subdirectory(scripts)
 add_subdirectory(database)
