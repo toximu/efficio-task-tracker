@@ -16,6 +16,7 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/ui)
 set(UI_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/ui/login_window.ui
         ${CMAKE_CURRENT_SOURCE_DIR}/ui/registration_window.ui
+        ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 set(SOURCES
@@ -40,4 +41,4 @@ target_include_directories(AuthorizationWindows
         $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(AuthorizationWindows PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Sql Database Scripts MainWindow ThemeManager)
+target_link_libraries(AuthorizationWindows PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Sql Database Scripts MainWindow ThemeManager ProfileWindow)

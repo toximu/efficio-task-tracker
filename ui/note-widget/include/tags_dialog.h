@@ -7,11 +7,16 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <memory>
+#include <vector>
+#include <QString>
+
 
 class TagsDialog final : public QDialog {
     Q_OBJECT
 
 public:
+    const static std::vector<QString> THEMES;
+    void handle_theme_changed(int theme);
     const int MAX_TAGS_COUNT = 5;
     const std::pair<int, int> DIALOG_SIZE = std::make_pair(300, 250);
 

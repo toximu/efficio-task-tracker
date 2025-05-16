@@ -14,13 +14,13 @@ NoteWidget::NoteWidget(
     : QWidget(parent),
       model_note_(model_note),
       main_layout_(new QVBoxLayout(this)),
-      open_button_(new QPushButton("Открыть")),
+      open_button_(new QPushButton(tr("Открыть"))),
       number_of_theme(number_of_theme_) {
     this->setObjectName("NoteWidget");
     this->setMinimumWidth(100);
     this->setFixedHeight(100);
-    title_label_ = new QLabel(model_note_->get_title().c_str(), this);
-    text_label_ = new QLabel(model_note_->get_text().c_str(), this);
+    title_label_ = new QLabel(QString::fromStdString(model_note_->get_title()), this);
+    text_label_ = new QLabel(QString::fromStdString(model_note_->get_text()), this);
     
     title_label_->setStyleSheet("color: rgb(33, 44, 50);");
     text_label_->setStyleSheet("color: rgb(33, 44, 50);");
@@ -48,8 +48,8 @@ void NoteWidget::open_note_window() const {
     );
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->exec();
-    text_label_->setText(model_note_->get_text().c_str());
-    title_label_->setText(model_note_->get_title().c_str());
+    text_label_->setText(QString::fromStdString(model_note_->get_text()));
+    title_label_->setText(QString::fromStdString(model_note_->get_title()));
     main_layout_->update();
 }
 }  // namespace Ui

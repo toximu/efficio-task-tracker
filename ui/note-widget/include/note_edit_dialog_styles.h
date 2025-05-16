@@ -129,6 +129,7 @@ QString note_edit_dialog_light_autumn_theme = R"(
     QDateEdit#dateEdit::drop-down {
         border: none;
         width: 20px;
+        border-radius: 5px;
     }
 
     /* Окно с сообщением */
@@ -455,8 +456,8 @@ QString note_edit_dialog_light_purple_theme = R"(
     QDateEdit#dateEdit {
         font-family: 'Arial';
         border-radius: 5px;
-        background-color: #ffdda2;
-        color: #050505;
+        background-color: #C98BB8;
+        color: rgb(42, 10, 25);
         padding: 5px 5px;
         border: none;
         width: 70px;
@@ -622,8 +623,8 @@ QString note_edit_dialog_dark_purple_theme = R"(
     QDateEdit#dateEdit {
         font-family: 'Arial';
         border-radius: 5px;
-        background-color: #ffdda2;
-        color: #050505;
+        background-color: rgb(113, 97, 137);
+        color: #221932;
         padding: 5px 5px;
         border: none;
         width: 70px;
@@ -799,8 +800,8 @@ QString note_edit_dialog_blue_theme = R"(
     QDateEdit#dateEdit {
         font-family: 'Arial';
         border-radius: 5px;
-        background-color: #ffdda2;
-        color: #050505;
+        background-color: rgb(61, 104, 122);
+        color: #BDD1BD;
         padding: 5px 5px;
         border: none;
         width: 70px;

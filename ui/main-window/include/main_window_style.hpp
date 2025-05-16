@@ -115,6 +115,22 @@ QScrollArea {
     font-size: 13px;
 }
 
+#BottomBar QPushButton {
+    background-color: transparent;
+    color:  white;
+    font-family: 'Arial';
+    font-size: 13px;
+    padding: 0px 0px;
+    min-width: 0px;
+    min-height: 0px;
+}
+
+#BottomBar QPushButton:hover {
+    color:rgb(182, 181, 181);
+    font-family: 'Arial';
+    font-size: 13px;
+}
+
 #NoteList {
     border-radius : 8px;
     background-color: white;
@@ -293,6 +309,23 @@ QString main_window_dark_autumn_theme = R"(
         font-size: 13px;
     }
     
+    #BottomBar QPushButton {
+    background-color: transparent;
+        color: #c0c0c0;
+        font-family: 'Arial';
+        font-size: 13px;
+        padding: 0px 0px;
+        min-width: 0px;
+        min-height: 0px;
+    }
+
+    #BottomBar QPushButton:hover {
+        color:rgb(236, 234, 234);
+        font-family: 'Arial';
+        font-size: 13px;
+    }
+    
+
     #NoteList {
         border-radius: 8px;
         background-color: black;
@@ -331,6 +364,10 @@ QString main_window_dark_autumn_theme = R"(
     
     QPushButton:hover {
         background-color:rgb(181, 114, 59);
+    }
+    
+    QPushButton:pressed {
+        background-color:rgb(143, 88, 44);
     }
     
     QPushButton#switch_theme_button_ {
@@ -467,6 +504,24 @@ QScrollArea {
     font-size: 13px;
 }
 
+#BottomBar QPushButton {
+    background-color: transparent;
+    color: #9882B9;
+    font-family: 'Arial';
+    font-size: 13px;
+    padding: 0px 0px;
+    min-width: 0px;
+    min-height: 0px;
+}
+
+#BottomBar QPushButton:hover {
+    color:rgb(208, 193, 231);
+    font-family: 'Arial';
+    font-size: 13px;
+}
+
+ 
+
 #NoteList {
     border-radius: 8px;
     background-color: rgb(221, 210, 238);
@@ -507,6 +562,10 @@ QPushButton:hover {
     background-color:rgb(69, 24, 44);
 }
 
+QPushButton:pressed {
+    background-color:rgb(47, 16, 30);
+}
+
 QPushButton#switch_theme_button_ {
     width: 20px;          
     height: 20px;        
@@ -522,7 +581,7 @@ QPushButton#switch_theme_button_ {
 }
     
 QPushButton::hover#switch_theme_button_ {
-    background-color: #722548;
+    background-color:rgb(86, 26, 53);
 }
 QPushButton::pressed#switch_theme_button_ {
     background-color: rgb(80, 27, 51);
@@ -641,6 +700,22 @@ QScrollArea {
     font-size: 13px;
 }
 
+#BottomBar QPushButton {
+    background-color: transparent;
+    color: #9882B9;
+    font-family: 'Arial';
+    font-size: 13px;
+    padding: 0px 0px;
+    min-width: 0px;
+    min-height: 0px;
+}
+
+#BottomBar QPushButton:hover {
+    color:rgb(198, 183, 221);
+    font-family: 'Arial';
+    font-size: 13px;
+}
+
 #NoteList {
     border-radius: 8px;
     background-color: #221932;
@@ -678,7 +753,11 @@ QPushButton {
 }
 
 QPushButton:hover {
-    background-color: #722548;
+    background-color: rgb(79, 25, 50);
+}
+
+QPushButton:pressed {
+    background-color:rgb(59, 16, 35);
 }
 QPushButton#switch_theme_button_ {
     width: 20px;          
@@ -811,6 +890,22 @@ QScrollArea {
 
 #BottomBar QLabel {
     color: #BDD1BD;
+    font-family: 'Arial';
+    font-size: 13px;
+}
+
+#BottomBar QPushButton {
+    background-color: transparent;
+    color: #BDD1BD;
+    font-family: 'Arial';
+    font-size: 13px;
+    padding: 0px 0px;
+    min-width: 0px;
+    min-height: 0px;
+}
+
+#BottomBar QPushButton:hover {
+    color:rgb(238, 242, 238);
     font-family: 'Arial';
     font-size: 13px;
 }
