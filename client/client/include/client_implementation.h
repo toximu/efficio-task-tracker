@@ -5,6 +5,7 @@
 #include "auth_requests.h"
 #include "update_requests.h"
 
+using Efficio_proto::User;
 using grpc::Channel;
 using grpc::CompletionQueue;
 

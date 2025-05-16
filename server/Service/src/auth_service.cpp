@@ -20,6 +20,7 @@ void AuthService::TryAuthenticateUserServerCall::Proceed(const bool ok) {
 
     switch (status_) {
         case PROCESS: {
+            std::cout << "[SERVER]: GOT AUTH REQUEST\n";
             new TryAuthenticateUserServerCall(service_, cq_);
 
             AuthResponse response;
@@ -39,6 +40,7 @@ void AuthService::TryAuthenticateUserServerCall::Proceed(const bool ok) {
             }
 
             status_ = FINISH;
+            responder_.Finish(response, grpc::Status::OK, this);
             break;
         }
         case FINISH: {
@@ -67,6 +69,7 @@ void AuthService::TryRegisterUserServerCall::Proceed(const bool ok) {
 
     switch (status_) {
         case PROCESS: {
+            std::cout << "[SERVER]: GOT REGISTER REQUEST\n";
             new TryRegisterUserServerCall(service_, cq_);
 
             AuthResponse response;
@@ -86,6 +89,7 @@ void AuthService::TryRegisterUserServerCall::Proceed(const bool ok) {
             }
 
             status_ = FINISH;
+            responder_.Finish(response, grpc::Status::OK, this);
             break;
         }
         case FINISH: {

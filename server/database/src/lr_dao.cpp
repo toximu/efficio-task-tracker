@@ -8,6 +8,10 @@
 #include "database_manager.hpp"
 
 std::string LRDao::hash_password(const std::string &password) {
+    if (password.empty()) {
+        throw std::runtime_error("Password cannot be empty");
+    }
+
     EVP_MD_CTX *mdctx = EVP_MD_CTX_new();
     if (!mdctx) {
         throw std::runtime_error("Failed to create EVP_MD_CTX");
@@ -38,7 +42,13 @@ std::string LRDao::hash_password(const std::string &password) {
            << static_cast<int>(byte);
     }
 
-    return ss.str();
+    std::string full_hash = ss.str();
+
+    if (full_hash.length() > 49) {
+        return full_hash.substr(0, 49);
+    }
+
+    return full_hash;
 }
 
 bool LRDao::validate_password(

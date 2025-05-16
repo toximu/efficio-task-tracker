@@ -45,7 +45,7 @@ bool ClientImplementation::try_authenticate_user(User *user) const {
 }
 
 bool ClientImplementation::try_register_user(User *user) const {
-    return auth_requests_.try_register(user);
+    return auth_requests_.try_register_user(user);
 }
 
 bool ClientImplementation::try_update_note(Note *note) const {
