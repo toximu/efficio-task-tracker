@@ -3,7 +3,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include "tags_dialog_styles.h"
-#include "theme_manager.h"
+#include "style_manager.h"
 
 
 const std::vector<QString> TagsDialog::THEMES = {
@@ -33,7 +33,8 @@ TagsDialog::TagsDialog(const QList<Tag> &initial_tags, QWidget *parent)
     setWindowTitle("Добавить теги");
     setModal(true);
     setFixedSize(DIALOG_SIZE.first, DIALOG_SIZE.second);
-    handle_theme_changed(ThemeManager::instance()->current_theme());
+    handle_theme_changed(StyleManager::instance()->current_theme());
+    
 }
 
 void TagsDialog::setup_ui() {
@@ -79,7 +80,7 @@ void TagsDialog::setup_ui() {
     connect(
         cancel_button_.get(), &QPushButton::clicked, this, &TagsDialog::reject
     );
-    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+    connect(StyleManager::instance(), &StyleManager::theme_changed,
             this, &TagsDialog::handle_theme_changed);
 }
 

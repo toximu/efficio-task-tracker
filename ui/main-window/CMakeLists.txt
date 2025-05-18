@@ -36,7 +36,7 @@ target_link_libraries(MainWindow PRIVATE
         Scripts
         Database
         NoteWidget
-        ThemeManager
+        StyleManager
         ProfileWindow
         AuthorizationWindows
 )

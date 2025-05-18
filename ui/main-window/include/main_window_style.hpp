@@ -162,9 +162,8 @@ QPushButton {
     border-radius: 10px;
     background-color: #fea36b;
     color: white;
-    padding: 5px 10px;
-    min-width: 60px;
-    min-height: 25px;
+    padding: 10px 10px;
+    min-width: 40px;
 }
 
 QPushButton::hover {
@@ -357,9 +356,9 @@ QString main_window_dark_autumn_theme = R"(
         border-radius: 10px;
         background-color:rgb(211, 139, 95);
         color: #263238;
-        padding: 5px 10px;
-        min-width: 60px;
-        min-height: 25px;
+        padding: 10px 10px;
+        min-width: 40px;
+        
     }
     
     QPushButton:hover {
@@ -553,9 +552,9 @@ QPushButton {
     border-radius: 10px;
     background-color: #722548;
     color: #9882B9;
-    padding: 5px 10px;
-    min-width: 60px;
-    min-height: 25px;
+    padding: 10px 10px;
+    min-width: 40px;
+    
 }
 
 QPushButton:hover {
@@ -747,9 +746,9 @@ QPushButton {
     border-radius: 10px;
     background-color: #722548;
     color: #060407;
-    padding: 5px 10px;
-    min-width: 60px;
-    min-height: 25px;
+    padding: 10px 10px;
+    min-width: 40px;
+    
 }
 
 QPushButton:hover {
@@ -943,9 +942,9 @@ QPushButton {
     border-radius: 10px;
     background-color: #568F7C;
     color: #07142B;
-    padding: 5px 10px;
-    min-width: 60px;
-    min-height: 25px;
+    padding: 10px 10px;
+    min-width: 40px;
+    
     border: none;
 }
 

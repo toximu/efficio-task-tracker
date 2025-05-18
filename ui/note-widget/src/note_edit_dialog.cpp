@@ -10,7 +10,7 @@
 #include "./ui_note_edit_dialog.h"
 #include "note_edit_dialog_styles.h"
 #include "tags_dialog.h"
-#include "theme_manager.h"
+#include "style_manager.h"
 
 
 const std::vector<QString> NoteEditDialog::THEMES = {
@@ -33,7 +33,8 @@ NoteEditDialog::NoteEditDialog(QWidget* parent, Note* note)
     setup_connections();
     setup_ui();
 
-    handle_theme_changed(ThemeManager::instance()->current_theme());
+    handle_theme_changed(StyleManager::instance()->current_theme());
+    handle_font_size_changed(StyleManager::instance()->current_font_size());
 
 }
 
@@ -48,8 +49,8 @@ void NoteEditDialog::init_basic_fields() {
 
 
 void NoteEditDialog::on_switch_theme_button_click() {
-    int next_theme = (ThemeManager::instance()->current_theme() + 1) % 5;
-    ThemeManager::instance()->apply_theme(next_theme);
+    int next_theme = (StyleManager::instance()->current_theme() + 1) % 5;
+    StyleManager::instance()->apply_theme(next_theme);
 }
 
 
@@ -105,14 +106,43 @@ void NoteEditDialog::setup_connections() {
     connect(ui_->switch_theme, &QPushButton::clicked, this,
         &NoteEditDialog::on_switch_theme_button_click
     );
-    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+    connect(StyleManager::instance(), &StyleManager::theme_changed,
             this, &NoteEditDialog::handle_theme_changed);
     connect(ui_->addTagsButton, &QPushButton::clicked, this, &NoteEditDialog::on_add_tags_button_click);
+    connect(StyleManager::instance(), &StyleManager::font_size_changed,
+            this, &NoteEditDialog::handle_font_size_changed
+    );
+}
+
+void NoteEditDialog::handle_font_size_changed(std::string font_size_) {
+    QString current_style = this->styleSheet();
+   
+    QString font_rules;
+    if(font_size_ == "small") {
+        font_rules = 
+            "QLineEdit#titleLineEdit { font-size: 20px; }"
+            "QLabel#projectNameLabel { font-size: 11px; }"
+            "QLabel#descriptionLabel { font-size: 14px; }"
+            "QLabel#sidePanelLabel, QLabel#sidePanelLabel_2 { font-size: 12px; }"
+            "QMessageBox QLabel { font-size: 12px; }"
+            "QMessageBox QPushButton { font-size: 11px; }";
+    }
+    else if(font_size_ == "big") {
+        font_rules = 
+            "QLineEdit#titleLineEdit { font-size: 30px; }"
+            "QLabel#projectNameLabel { font-size: 16px; }"
+            "QLabel#descriptionLabel { font-size: 21px; }"
+            "QLabel#sidePanelLabel, QLabel#sidePanelLabel_2 { font-size: 17px; }"
+            "QMessageBox QLabel { font-size: 17px; }"
+            "QMessageBox QPushButton { font-size: 16px; }";
+    }
+
+    this->setStyleSheet(THEMES[StyleManager::instance()->current_theme()] + font_rules);
 }
 
 void NoteEditDialog::setup_ui() {
     setFixedSize(700, 480);
-    setStyleSheet(THEMES[ThemeManager::instance()->current_theme()]);
+    setStyleSheet(THEMES[StyleManager::instance()->current_theme()]);
     ui_->buttonsLayout->setAlignment(Qt::AlignLeft);
 }
 

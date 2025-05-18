@@ -23,6 +23,7 @@ namespace Ui {
 class MainWindow : public QWidget {
     Q_OBJECT
     std::string username;
+    std::string font_size_ = "medium";
     QVBoxLayout *main_layout_;
     BottomBar *top_bar_;
     QHBoxLayout *content_layout_;
@@ -52,6 +53,7 @@ public:
     void on_logout_button_click();
     void on_delete_account_button_click();
     void handle_theme_changed(int theme);
+    void handle_font_size_changed(std::string font_size_);
 };
 }  // namespace Ui
 #endif  // MAINWINDOW_H

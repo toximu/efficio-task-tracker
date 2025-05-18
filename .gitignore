@@ -13,6 +13,7 @@ protobuf/
 *.o
 *.obj
 *.app
+translations/*.qm
 
 moc_*.cpp
 ui_*.h

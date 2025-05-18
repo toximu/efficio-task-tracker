@@ -29,6 +29,7 @@ public:
     ~NoteEditDialog() override;
     static const std::vector<QString> THEMES;
     void handle_theme_changed(int theme);
+    void handle_font_size_changed(std::string font_size);
 
 private slots:
     void on_save_button_click();

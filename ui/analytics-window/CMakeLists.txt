@@ -34,7 +34,7 @@ target_link_libraries(AnalyticsWindow
         Qt6::Gui 
         Qt6::Sql
         Database 
-        ThemeManager
+        StyleManager
     PUBLIC 
         Qt6::Widgets 
         Qt6::Charts   

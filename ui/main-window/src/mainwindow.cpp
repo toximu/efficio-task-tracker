@@ -23,9 +23,11 @@
 #include "project_dao.hpp"
 #include "projectitem.h"
 #include "projectlist.h"
-#include "theme_manager.h"
+#include "style_manager.h"
 #include "registration_window.h"
 #include "login_window.h"
+#include <string>
+#include <vector>
 
 namespace Ui {
 
@@ -88,10 +90,18 @@ MainWindow::MainWindow(
         this, &MainWindow::on_profile_button_click
     );
     connect(
-        ThemeManager::instance(), &ThemeManager::theme_changed,
+        StyleManager::instance(), &StyleManager::theme_changed,
         this, &MainWindow::handle_theme_changed
     );
-    handle_theme_changed(ThemeManager::instance()->current_theme());
+    connect(
+        StyleManager::instance(), &StyleManager::font_size_changed,
+        this, &MainWindow::handle_font_size_changed
+    );
+    handle_theme_changed(StyleManager::instance()->current_theme());
+    connect(StyleManager::instance(), &StyleManager::font_size_changed,
+            this, &Ui::MainWindow::handle_font_size_changed
+    );
+    handle_font_size_changed(StyleManager::instance()->current_font_size());
 }
 
 void MainWindow::on_delete_account_button_click() {
@@ -106,6 +116,22 @@ void MainWindow::on_logout_button_click() {
 
 void MainWindow::handle_theme_changed(int theme) {
     this->setStyleSheet(THEMES[theme]);
+}
+
+void MainWindow::handle_font_size_changed(std::string font_size_) {
+
+    QString font_rule;
+    if (font_size_ == "small") {
+        font_rule = "#ProjectList, #BottomBar QLabel, #BottomBar QPushButton, #NoteWidget QPushButton, QPushButton { font-size: 11px; }";
+    }
+    else if (font_size_ == "medium") {
+        font_rule = "#ProjectList, #BottomBar QLabel, #BottomBar QPushButton, #NoteWidget QPushButton, QPushButton { font-size: 13px; }";
+    }
+    else if (font_size_ == "big") {
+        font_rule = "#ProjectList, #BottomBar QLabel, #BottomBar QPushButton, #NoteWidget QPushButton, QPushButton { font-size: 15px; }";
+    }
+
+    this->setStyleSheet(THEMES[StyleManager::instance()->current_theme()] + font_rule);
 }
 
 void MainWindow::on_profile_button_click() {

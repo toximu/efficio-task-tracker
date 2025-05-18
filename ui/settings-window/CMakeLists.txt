@@ -34,6 +34,6 @@ target_link_libraries(SettingsWindow PRIVATE
     Qt6::Gui 
     Qt6::Sql
     Database 
-    ThemeManager
+    StyleManager
     AuthorizationWindows
 )

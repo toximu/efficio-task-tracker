@@ -1,5 +1,5 @@
 #include "analytics_window.h"
-#include "theme_manager.h"
+#include "style_manager.h"
 #include "analytics_window_style_sheet.h"
 #include <QString>
 
@@ -40,9 +40,29 @@ AnalyticsWindow::AnalyticsWindow(QWidget *parent)
     QMap<QString, int> projects;
     setProjectsData(projects);
 
-    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+    connect(StyleManager::instance(), &StyleManager::theme_changed,
             this, &AnalyticsWindow::handle_theme_changed);    
-    handle_theme_changed(ThemeManager::instance()->current_theme());
+    handle_theme_changed(StyleManager::instance()->current_theme());
+    connect(StyleManager::instance(), &StyleManager::font_size_changed,
+            this, &AnalyticsWindow::handle_font_size_changed
+    );
+    handle_font_size_changed(StyleManager::instance()->current_font_size());
+}
+
+void AnalyticsWindow::handle_font_size_changed(std::string font_size) {
+    
+    QString font_size_rule;
+    if(font_size == "small") {
+        font_size_rule = "QPushButton { font-size: 11px; }";
+    } 
+    else if(font_size == "medium") {
+        font_size_rule = "QPushButton { font-size: 13px; }";
+    } 
+    else if(font_size == "big") {
+        font_size_rule = "QPushButton { font-size: 15px; }";
+    }
+    
+    this->setStyleSheet(THEMES[StyleManager::instance()->current_theme()] + font_size_rule);
 }
 
 void AnalyticsWindow::handle_theme_changed(int theme) {
@@ -50,8 +70,8 @@ void AnalyticsWindow::handle_theme_changed(int theme) {
 }
 
 void AnalyticsWindow::on_switch_theme_clicked() {
-    int next_theme = (ThemeManager::instance()->current_theme() + 1) % 5;
-    ThemeManager::instance()->apply_theme(next_theme);
+    int next_theme = (StyleManager::instance()->current_theme() + 1) % 5;
+    StyleManager::instance()->apply_theme(next_theme);
 }
 
 AnalyticsWindow::~AnalyticsWindow(){}

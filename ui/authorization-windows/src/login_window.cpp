@@ -5,7 +5,7 @@
 #include "registration_window.h"
 #include "login_window_style_sheet.h"
 #include "serialization.hpp"
-#include "theme_manager.h"
+#include "style_manager.h"
 #include <QMessageBox>
 #include <QScreen>
 
@@ -32,10 +32,10 @@ LoginWindow::LoginWindow(QWidget *parent)
         &LoginWindow::on_switch_mode_clicked);
     connect(ui->push_enter, &QPushButton::clicked, this,
         &LoginWindow::on_push_enter_clicked);
-    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+    connect(StyleManager::instance(), &StyleManager::theme_changed,
             this, &LoginWindow::handle_theme_changed);
 
-    handle_theme_changed(ThemeManager::instance()->current_theme());
+    handle_theme_changed(StyleManager::instance()->current_theme());
 }
 
 void LoginWindow::handle_theme_changed(int theme) {
@@ -44,8 +44,8 @@ void LoginWindow::handle_theme_changed(int theme) {
 
 void LoginWindow::on_switch_theme_clicked() {
     if ((this->counter_on_switch_theme_clicks++) % 2) {
-        int next_theme = (ThemeManager::instance()->current_theme() + 1) % 5;
-        ThemeManager::instance()->apply_theme(next_theme);
+        int next_theme = (StyleManager::instance()->current_theme() + 1) % 5;
+        StyleManager::instance()->apply_theme(next_theme);
     }
 }
 

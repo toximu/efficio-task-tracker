@@ -1,6 +1,7 @@
 #include "settings_window.h"
 #include "settings_window_style_sheet.h"
-#include "theme_manager.h"
+#include "style_manager.h"
+#include <QRegularExpression>
 
 const std::vector<QString> SettingsWindow::THEMES = {
     Ui::settings_window_light_autumn_theme,
@@ -53,10 +54,12 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QDialog(parent) {
     connect(theme_button, &QPushButton::clicked, this, &SettingsWindow::toggle_theme);
     connect(small_font_radio, &QRadioButton::clicked, this, &SettingsWindow::set_small_font);
     connect(medium_font_radio, &QRadioButton::clicked, this, &SettingsWindow::set_medium_font);
-    connect(large_font_radio, &QRadioButton::clicked, this, &SettingsWindow::set_large_font);
-    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+    connect(large_font_radio, &QRadioButton::clicked, this, &SettingsWindow::set_big_font);
+    connect(StyleManager::instance(), &StyleManager::theme_changed,
             this, &SettingsWindow::handle_theme_changed);
-    
+    connect(StyleManager::instance(), &StyleManager::font_size_changed,
+            this, &SettingsWindow::handle_font_size_changed
+    );
     title_label->setText(tr("Настройки"));
     font_size_label->setText(tr("Размер шрифта"));
     theme_button->setText(tr("Тема"));
@@ -68,12 +71,40 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QDialog(parent) {
     setWindowTitle(tr("Настройки"));
 
     setLayout(main_layout);
-    setFixedSize(240, 240);
-    handle_theme_changed(ThemeManager::instance()->current_theme());
+    setFixedSize(250, 250);
+    handle_theme_changed(StyleManager::instance()->current_theme());
+    
+    handle_font_size_changed(StyleManager::instance()->current_font_size());
 }
 
-void SettingsWindow::handle_theme_changed(int theme) {
-    this->setStyleSheet(THEMES[theme]);
+void SettingsWindow::handle_font_size_changed(std::string font_size) {
+    QString font_rule;
+    if(font_size == "small") {
+        font_rule = 
+            "QPushButton#language_button, QPushButton#theme_button { font-size: 12px; }"
+            "QWidget { font-size: 12px; }"
+            "QLabel#title_label { font-size: 23px; }"
+            "QLabel#font_size_label { font-size: 30px; }";
+    }
+    else if(font_size == "medium") {
+        font_rule = 
+            "QPushButton#language_button, QPushButton#theme_button  { font-size: 15px; }"
+            "QWidget { font-size: 15px; }"
+            "QLabel#title_label { font-size: 28px; }"
+            "QLabel#font_size_label { font-size: 35px; }";
+    }
+    else if(font_size == "big") {
+        font_rule = 
+            "QPushButton#language_button, QPushButton#theme_button  { font-size: 18px; }"
+            "QWidget { font-size: 18px; }"
+            "QLabel#title_label { font-size: 32px; }"
+            "QLabel#font_size_label { font-size: 40px; }";
+    }
+    this->setStyleSheet(THEMES[StyleManager::instance()->current_theme()] + font_rule);
+}
+
+void SettingsWindow::handle_theme_changed(int theme_) {
+    this->setStyleSheet(THEMES[theme_]);
 }
 
 void SettingsWindow::toggle_language() {
@@ -85,10 +116,16 @@ void SettingsWindow::toggle_language() {
 }
 
 void SettingsWindow::toggle_theme() {
-    int next_theme = (ThemeManager::instance()->current_theme() + 1) % 5;
-    ThemeManager::instance()->apply_theme(next_theme);
+    int next_theme = (StyleManager::instance()->current_theme() + 1) % 5;
+    StyleManager::instance()->apply_theme(next_theme);
 }
 
-void SettingsWindow::set_small_font() { qApp->setStyleSheet("QWidget { font-size: 12px; }"); }
-void SettingsWindow::set_medium_font() { qApp->setStyleSheet("QWidget { font-size: 16px; }"); }
-void SettingsWindow::set_large_font() { qApp->setStyleSheet("QWidget { font-size: 20px; }"); }
+void SettingsWindow::set_small_font() { 
+    StyleManager::instance()->apply_font_size("small");
+    }
+void SettingsWindow::set_medium_font() { 
+    StyleManager::instance()->apply_font_size("medium");
+    }
+void SettingsWindow::set_big_font() { 
+    StyleManager::instance()->apply_font_size("big");
+    }

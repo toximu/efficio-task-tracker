@@ -3,7 +3,7 @@
 #include <QScreen>
 #include "lr_dao.hpp"
 #include "login_window.h"
-#include "theme_manager.h"
+#include "style_manager.h"
 #include "registration_window_style_sheet.h"
 
 const std::vector<QString> RegistrationWindow::THEMES = {
@@ -33,10 +33,10 @@ RegistrationWindow::RegistrationWindow(QWidget *parent)
         &RegistrationWindow::on_push_registration_clicked, Qt::UniqueConnection);
     connect(ui->switch_mode, &QPushButton::clicked, this,
         &RegistrationWindow::on_switch_mode_clicked, Qt::UniqueConnection);
-    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+    connect(StyleManager::instance(), &StyleManager::theme_changed,
             this, &RegistrationWindow::handle_theme_changed);
     
-    handle_theme_changed(ThemeManager::instance()->current_theme());
+    handle_theme_changed(StyleManager::instance()->current_theme());
 }
 
 void RegistrationWindow::handle_theme_changed(int theme) {
@@ -45,8 +45,8 @@ void RegistrationWindow::handle_theme_changed(int theme) {
 
 void RegistrationWindow::on_switch_theme_clicked() {
     if ((this->counter_on_switch_theme_clicks++)%2) {
-        int next_theme = (ThemeManager::instance()->current_theme() + 1) % 5;
-        ThemeManager::instance()->apply_theme(next_theme);
+        int next_theme = (StyleManager::instance()->current_theme() + 1) % 5;
+        StyleManager::instance()->apply_theme(next_theme);
     }
 }
 

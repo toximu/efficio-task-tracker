@@ -5,7 +5,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QMessageBox>
-#include "theme_manager.h"
+#include "style_manager.h"
 #include <vector>
 
 QT_BEGIN_NAMESPACE
@@ -28,8 +28,9 @@ public:
     explicit ProfileWindow(const QString& username, QWidget* parent = nullptr);
     ~ProfileWindow() = default;
 
-    static const std::vector<QString> themes;
+    static const std::vector<QString> THEMES;
     void handle_theme_changed(int theme);
+    void handle_font_size_changed(std::string font_size);
     friend class MainWindow;
 
 signals:

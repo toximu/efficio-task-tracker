@@ -29,7 +29,7 @@ add_subdirectory(ui/profile-window)
 add_subdirectory(ui/main-window)
 add_subdirectory(ui/authorization-windows)
 add_subdirectory(ui/note-widget)
-add_subdirectory(ui/theme-manager)
+add_subdirectory(ui/style-manager)
 add_subdirectory(ui/settings-window)
 add_subdirectory(ui/analytics-window)
 add_subdirectory(proto)
@@ -44,7 +44,7 @@ target_link_libraries(EfficioTaskTracker PRIVATE
         efficio-rpc
         Database
         Scripts
-        ThemeManager
+        StyleManager
         AuthorizationWindows
         ProfileWindow
         MainWindow

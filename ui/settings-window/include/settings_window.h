@@ -15,7 +15,8 @@ class SettingsWindow : public QDialog {
 
 public:
     explicit SettingsWindow(QWidget *parent = nullptr);
-    void handle_theme_changed(int theme);
+    void handle_theme_changed(int theme_);
+    void handle_font_size_changed(std::string font_size_);
     static const std::vector<QString> THEMES;
 
 private slots:
@@ -23,7 +24,7 @@ private slots:
     void toggle_theme();
     void set_small_font();
     void set_medium_font();
-    void set_large_font();
+    void set_big_font();
 
 private:
     void update_ui_text();

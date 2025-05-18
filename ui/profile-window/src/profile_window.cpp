@@ -8,7 +8,7 @@
 
 namespace Ui {
 
-const std::vector<QString> ProfileWindow::themes = {
+const std::vector<QString> ProfileWindow::THEMES = {
     profile_window_light_autumn_theme,
     profile_window_dark_autumn_theme,
     profile_window_dark_purple_theme,
@@ -34,7 +34,7 @@ ProfileWindow::ProfileWindow(const QString& username, QWidget* parent)
     stats_button->setObjectName("stats_button");
     bottom_layout->addWidget(stats_button);
 
-    settings_button = new QPushButton(tr("⚙"), this);
+    settings_button = new QPushButton("⚙", this);
     settings_button->setObjectName("settings_button");
     settings_button->setFixedSize(45, 45);
     bottom_layout->addWidget(settings_button);
@@ -59,14 +59,35 @@ ProfileWindow::ProfileWindow(const QString& username, QWidget* parent)
     connect(settings_button, &QPushButton::clicked, 
         this, &Ui::ProfileWindow::on_settings_clicked
     );
-    connect(ThemeManager::instance(), &ThemeManager::theme_changed,
+    connect(StyleManager::instance(), &StyleManager::theme_changed,
             this, &Ui::ProfileWindow::handle_theme_changed
     );
-    handle_theme_changed(ThemeManager::instance()->current_theme());
+    handle_theme_changed(StyleManager::instance()->current_theme());
+    connect(StyleManager::instance(), &StyleManager::font_size_changed,
+            this, &Ui::ProfileWindow::handle_font_size_changed
+    );
+    handle_font_size_changed(StyleManager::instance()->current_font_size());
 }
 
+void ProfileWindow::handle_font_size_changed(std::string font_size) {
+    
+    QString font_rule;
+    if(font_size == "small") {
+        font_rule = "QPushButton { font-size: 11px; }";
+    }
+    else if(font_size == "medium") {
+        font_rule = "QPushButton { font-size: 13px; }";
+    }
+    else if(font_size == "big") {
+        font_rule = "QPushButton { font-size: 15px; }";
+    }
+
+    this->setStyleSheet(THEMES[StyleManager::instance()->current_theme()] + font_rule);
+}
+
+
 void ProfileWindow::handle_theme_changed(int theme) {
-    setStyleSheet(themes[theme]);
+    setStyleSheet(THEMES[theme]);
 }
 
 void ProfileWindow::on_logout_clicked() {

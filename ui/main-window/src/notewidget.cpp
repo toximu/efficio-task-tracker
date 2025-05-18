@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "note.hpp"
 #include "note_edit_dialog.h"
+#include "style_manager.h"
 
 namespace Ui {
 NoteWidget::NoteWidget(
@@ -22,8 +23,8 @@ NoteWidget::NoteWidget(
     title_label_ = new QLabel(QString::fromStdString(model_note_->get_title()), this);
     text_label_ = new QLabel(QString::fromStdString(model_note_->get_text()), this);
     
-    title_label_->setStyleSheet("color: rgb(33, 44, 50);");
-    text_label_->setStyleSheet("color: rgb(33, 44, 50);");
+    title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 15px;");
+    text_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 15px;");
     
     main_layout_->addWidget(title_label_);
     main_layout_->addWidget(text_label_);
@@ -37,8 +38,28 @@ NoteWidget::NoteWidget(
     connect(
         open_button_, &QPushButton::clicked, this, &NoteWidget::open_note_window
     );
+    connect(
+        StyleManager::instance(), &StyleManager::font_size_changed,
+        this, &NoteWidget::handle_font_size_changed
+    );
     this->setLayout(main_layout_);
     this->setAttribute(Qt::WA_StyledBackground);
+}
+
+void NoteWidget::handle_font_size_changed(std::string font_size_){
+    QString font_rule;
+    if (font_size_ == "small") {
+        title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 13px;");
+        text_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 11px;");
+    }
+    else if (font_size_ == "medium") {
+        title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 15px;");
+        text_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 13px;");
+    }
+    else if (font_size_ == "big") {
+        title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 17px;");
+        text_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 15px;");
+    }
 }
 
 void NoteWidget::open_note_window() const {

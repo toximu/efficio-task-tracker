@@ -9,7 +9,7 @@ const QString analytics_window_light_autumn_theme = R"(
 #AnalyticsWindow {
     background-color: #f5f5f5;
     color: #444444;
-    font-family: "Segoe UI";
+    font-family: 'Arial';
 }
 
 QTabWidget::pane {
@@ -83,7 +83,7 @@ const QString analytics_window_dark_autumn_theme = R"(
 #AnalyticsWindow {
     background-color: #202020;
     color: #BDD1BD;
-    font-family: "Segoe UI";
+    font-family: 'Arial';
 }
 
 QTabWidget::pane {
@@ -157,7 +157,7 @@ const QString analytics_window_light_purple_theme = R"(
 #AnalyticsWindow {
     background-color: #9882B9;
     color: rgb(42, 10, 25);
-    font-family: "Segoe UI";
+    font-family: 'Arial';
 }
 
 QTabWidget::pane {
@@ -231,7 +231,7 @@ const QString analytics_window_dark_purple_theme = R"(
 #AnalyticsWindow {
     background-color: #221932;
     color: #9882B9;
-    font-family: "Segoe UI";
+    font-family: 'Arial';
 }
 
 QTabWidget::pane {
@@ -305,7 +305,7 @@ const QString analytics_window_blue_theme = R"(
 #AnalyticsWindow {
     background-color: #07142B;
     color: #BDD1BD;
-    font-family: "Segoe UI";
+    font-family: 'Arial';
 }
 
 QTabWidget::pane {
