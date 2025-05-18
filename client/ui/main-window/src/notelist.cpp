@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QWidget>
 #include <vector>
-#include "note.hpp"
 #include "notewidget.h"
 #include "projectitem.h"
 
@@ -12,8 +11,7 @@ namespace Ui {
 NoteList::NoteList(QWidget *parent)
     : QWidget(parent),
       main_layout_(new QHBoxLayout(this)),
-      vertical_layouts_(std::vector<QVBoxLayout *>()){
-
+      vertical_layouts_(std::vector<QVBoxLayout *>()) {
     this->setAttribute(Qt::WA_StyledBackground);
     this->setObjectName("NoteList");
     this->setLayout(main_layout_);
@@ -25,7 +23,7 @@ NoteList::NoteList(QWidget *parent)
     }
 }
 
-void NoteList::add_note_widget(const project_storage_model::Note *note) {
+void NoteList::add_note_widget(const Note *note) {
     auto current_layout = vertical_layouts_[note_counter_ % 4];
     if (current_layout->count() > 1) {
         current_layout->removeItem(
@@ -42,12 +40,11 @@ void NoteList::add_note_widget(const project_storage_model::Note *note) {
 void NoteList::load_project_notes(QListWidgetItem *project) {
     ProjectItem *p = dynamic_cast<ProjectItem *>(project);
     assert(p != nullptr);
-    qDebug() << "Адрес проекта"
-             << QString::fromStdString(p->project_->get_name()) << ":"
-             << p->project_;
+    qDebug() << "Адрес проекта" << QString::fromStdString(p->project_->title())
+             << ":" << p->project_;
     this->clear_note_list();
     note_counter_ = 0;
-    for (const auto &note : p->project_->get_notes()) {
+    for (const Note &note : p->project_->notes()) {
         this->add_note_widget(&note);
     }
 }
