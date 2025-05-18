@@ -133,7 +133,6 @@ QPushButton {
 
 )";
 
-
 }  // namespace Ui
 
 #endif  // MAIN_WINDOW_STYLE_HPP

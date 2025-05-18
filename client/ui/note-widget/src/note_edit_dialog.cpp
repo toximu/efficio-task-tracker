@@ -10,11 +10,24 @@
 #include "./ui_note_edit_dialog.h"
 #include "note_edit_dialog_styles.h"
 #include "tags_dialog.h"
+#include <grpcpp/grpcpp.h>
+#include "efficio-rpc-proto/efficio.grpc.pb.h"
+#include "update_requests.h"
+
+using grpc::Channel;
+using grpc::ClientContext;
+using grpc::Status;
+using Efficio_proto::Update;
+using Efficio_proto::GetNoteRequest;
+using Efficio_proto::GetNoteResponse;
 
 NoteEditDialog::NoteEditDialog(QWidget* parent, Note* note)
     : QDialog(parent),
       ui_(new Ui::NoteEditDialog),
       note_(note) {
+    if (note_ == nullptr) {
+        std::cerr << "Not a valid note!\n";
+    }
     ui_->setupUi(this);
     setWindowTitle("EFFICIO");
 
@@ -29,13 +42,13 @@ NoteEditDialog::~NoteEditDialog() {
 }
 
 void NoteEditDialog::init_basic_fields() {
-    ui_->titleLineEdit->setText(QString::fromStdString(note_->get_title()));
-    ui_->descriptionTextEdit->setText(QString::fromStdString(note_->get_text()));
+    ui_->titleLineEdit->setText(QString::fromStdString(note_->title()));
+    ui_->descriptionTextEdit->setText(QString::fromStdString(note_->text()));
 }
 
 void NoteEditDialog::init_additional_fields() {
-    if (!note_->get_date().empty()) {
-        QDate date = QDate::fromString(QString::fromStdString(note_->get_date()), "yyyy-MM-dd");
+    if (!note_->date().empty()) {
+        QDate date = QDate::fromString(QString::fromStdString(note_->date()), "yyyy-MM-dd");
         if (date.isValid()) {
             ui_->dateEdit->setDate(date);
             ui_->dateLabel->setVisible(true);
@@ -43,21 +56,21 @@ void NoteEditDialog::init_additional_fields() {
         }
     }
 
-    if (!note_->get_members().empty()) {
+    if (!note_->members().empty()) {
         ui_->membersLabel->setVisible(true);
-        for (const auto& member : note_->get_members()) {
+        for (const auto& member : note_->members()) {
             add_member_avatar(member);
         }
         ui_->joinButton->setText("Покинуть");
     }
 
-    if (!note_->get_tags().empty()) {
+    if (!note_->tags().empty()) {
         ui_->tagsLabel->setVisible(true);
-        for (const auto& tag : note_->get_tags()) {
+        for (const auto& tag : note_->tags()) {
             TagsDialog::Tag tag_info;
             tag_info.is_checked = true;
-            tag_info.color = QString::fromStdString(tag.color);
-            tag_info.name = QString::fromStdString(tag.name);
+            tag_info.color = tag.color();
+            tag_info.name = QString::fromStdString(tag.text());
             selected_tags_.append(tag_info);
 
             auto tag_label = std::make_unique<QLabel>(tag_info.name, this);
@@ -95,7 +108,6 @@ void NoteEditDialog::on_save_button_click() {
     } else {
         QMessageBox::information(this, "Ошибка", "Не удалось сохранить заметку");
     }
-    close();
 }
 
 void NoteEditDialog::on_join_button_click() {
@@ -105,7 +117,7 @@ void NoteEditDialog::on_join_button_click() {
     if (!is_joined) {
         const std::string current_user = "TODO";
         add_member_avatar(current_user);
-        note_->add_member(current_user);
+        note_->add_members(current_user);
         ui_->joinButton->setText("Покинуть");
     } else {
         std::string current_user = "TODO";
@@ -155,17 +167,17 @@ void NoteEditDialog::update_tags_display() {
     tag_labels_.clear();
 
     ui_->tagsLabel->setVisible(!selected_tags_.empty());
-    for (const auto &[is_checked, color, name] : selected_tags_) {
+    for (const auto &[is_checked, color_code, name] : selected_tags_) {
         if (is_checked) {
             auto tag_label = std::make_unique<QLabel>(name, this);
-            tag_label->setStyleSheet(create_tag_style_sheet(color));
+            tag_label->setStyleSheet(create_tag_style_sheet(color_code));
             ui_->tagsLayout->addWidget(tag_label.get());
             tag_labels_.push_back(std::move(tag_label));
         }
     }
 }
 
-QString NoteEditDialog::create_tag_style_sheet(const QString& color) {
+QString NoteEditDialog::create_tag_style_sheet(const int color_code) {
     return QString(
         "background-color: %1; "
         "color: white; "
@@ -176,20 +188,14 @@ QString NoteEditDialog::create_tag_style_sheet(const QString& color) {
         "font-weight: bold;"
         "width: 40px;"
         "height: 25px;"
-    ).arg(color);
+    ).arg(TagsDialog::get_color_by_code(color_code));
 }
 
 bool NoteEditDialog::try_save_note() const {
+    // TODO: add saving members and tags
     note_->set_title(ui_->titleLineEdit->text().toStdString());
     note_->set_text(ui_->descriptionTextEdit->toPlainText().toStdString());
     note_->set_date(ui_->dateEdit->date().toString("yyyy-MM-dd").toStdString());
 
-    note_->clear_tags();
-    for (const auto &[is_checked, color, name] : selected_tags_) {
-        if (is_checked) {
-            note_->add_tag(name.toStdString(), color.toStdString());
-        }
-    }
-
-    return NoteDao::update_note(*note_);
+    return true;
 }

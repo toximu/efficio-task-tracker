@@ -2,14 +2,11 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QWidget>
-#include "note.hpp"
-#include "note_edit_dialog.h"
+
+// #include "note_edit_dialog.h"
 
 namespace Ui {
-NoteWidget::NoteWidget(
-    QWidget *parent,
-    const project_storage_model::Note *model_note
-)
+NoteWidget::NoteWidget(QWidget *parent, const Note *model_note)
     : QWidget(parent),
       model_note_(model_note),
       main_layout_(new QVBoxLayout(this)),
@@ -17,12 +14,12 @@ NoteWidget::NoteWidget(
     this->setObjectName("NoteWidget");
     this->setMinimumWidth(100);
     this->setFixedHeight(100);
-    title_label_ = new QLabel(model_note_->get_title().c_str(), this);
-    text_label_ = new QLabel(model_note_->get_text().c_str(), this);
-    
+    title_label_ = new QLabel(model_note_->title().c_str(), this);
+    text_label_ = new QLabel(model_note_->text().c_str(), this);
+
     title_label_->setStyleSheet("color: rgb(33, 44, 50);");
     text_label_->setStyleSheet("color: rgb(33, 44, 50);");
-    
+
     main_layout_->addWidget(title_label_);
     main_layout_->addWidget(text_label_);
 
@@ -46,8 +43,8 @@ void NoteWidget::open_note_window() const {
     );
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->exec();
-    text_label_->setText(model_note_->get_text().c_str());
-    title_label_->setText(model_note_->get_title().c_str());
+    text_label_->setText(model_note_->text().c_str());
+    title_label_->setText(model_note_->title().c_str());
     main_layout_->update();
 }
 }  // namespace Ui

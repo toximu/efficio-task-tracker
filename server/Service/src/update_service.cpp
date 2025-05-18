@@ -1,15 +1,28 @@
 #include "update_service.h"
 #include "common_server_call.h"
-
-using Efficio_proto::GetNoteRequest;
-using Efficio_proto::GetNoteResponse;
+#include "project_dao.hpp"
+#include "update_handler.hpp"
 
 using grpc::ServerAsyncResponseWriter;
 
-UpdateService::GetNoteServerCall::GetNoteServerCall(UpdateService &service, ServerCompletionQueue *cq)
-    : CommonServerCall(cq),
-      responder_(&ctx_),
-      service_(service) {
+using Efficio_proto::GetNoteRequest;
+using Efficio_proto::GetNoteResponse;
+using Efficio_proto::Project;
+
+UpdateService::UpdateService(ServerCompletionQueue *cq) : cq_(cq), service_() {
+    // new GetNoteServerCall(&service_, cq_);
+}
+
+void UpdateService::run() {
+    new GetProjectServerCall(&service_, cq_);
+    new CreateProjectServerCall(&service_, cq_);
+}
+
+UpdateService::GetNoteServerCall::GetNoteServerCall(
+    Update::AsyncService *service,
+    ServerCompletionQueue *cq
+)
+    : CommonServerCall(cq), responder_(&ctx_), service_(service) {
 }
 
 void UpdateService::GetNoteServerCall::Proceed(const bool ok) {
@@ -21,7 +34,7 @@ void UpdateService::GetNoteServerCall::Proceed(const bool ok) {
     switch (status_) {
         case CREATE: {
             new GetNoteServerCall(service_, cq_);
-            service_.service_.RequestGetNote(
+            service_->RequestGetNote(
                 &ctx_, &request_, &responder_, cq_, cq_, this
             );
             status_ = PROCESS;
@@ -43,8 +56,194 @@ void UpdateService::GetNoteServerCall::Proceed(const bool ok) {
     }
 }
 
-class UpdateService::CreateNoteServerCall final : public CommonServerCall {};
+UpdateService::GetProjectServerCall::GetProjectServerCall(
+    Update::AsyncService *service,
+    ServerCompletionQueue *cq
+)
+    : CommonServerCall(cq), responder_(&ctx_), service_(service) {
+    this->Proceed(true);
+}
 
-Update::AsyncService& UpdateService::get_service() {
+void UpdateService::GetProjectServerCall::Proceed(const bool ok = true) {
+    switch (status_) {
+        case CREATE: {
+            status_ = PROCESS;
+            service_->RequestGetProject(
+                &ctx_, &request_, &responder_, cq_, cq_, this
+            );
+            std::cout << "[SERVER] : {get project} : start listening"
+                      << std::endl;
+            break;
+        }
+        case PROCESS: {
+            status_ = FINISH;
+
+            // todo: validate user token
+            // todo: check if user has this project
+            std::cout << "[SERVER] : {get project} : get request, code="
+                      << request_.code() << std::endl;
+            new GetProjectServerCall(service_, cq_);
+            auto project = UpdateHandler::get_project(request_.code());
+
+            if (project.has_value()) {
+                response_.set_allocated_project(&project.value());
+            } else {
+                response_.set_error_text("can't get project");
+            }
+            responder_.Finish(response_, grpc::Status::OK, this);
+            break;
+        }
+        case FINISH: {
+            std::cout << "[SERVER] : {get project} : deleting call"
+                      << std::endl;
+            delete this;
+        }
+    }
+}
+
+UpdateService::CreateProjectServerCall::CreateProjectServerCall(
+    Update::AsyncService *service,
+    ServerCompletionQueue *cq
+)
+    : CommonServerCall(cq), responder_(&ctx_), service_(service) {
+    this->Proceed(true);
+}
+
+void UpdateService::CreateProjectServerCall::Proceed(const bool ok) {
+    if (!ok) {
+        delete this;
+        return;
+    }
+    switch (status_) {
+        case CREATE: {
+            status_ = PROCESS;
+            service_->RequestCreateProject(
+                &ctx_, &request_, &responder_, cq_, cq_, this
+            );
+            std::cout << "[SERVER] : {create project} : start listening"
+                      << std::endl;
+            break;
+        }
+        case PROCESS: {
+            // todo: validate user token
+            status_ = FINISH;
+            new GetProjectServerCall(service_, cq_);
+
+            std::cout << "[SERVER] : {create project} : get request, title="
+                      << request_.project_title() << std::endl;
+
+            Project *res_project = new Project(
+                UpdateHandler::create_project(request_.project_title())
+            );
+            response_.set_allocated_project(res_project);
+            responder_.Finish(response_, grpc::Status::OK, this);
+            break;
+        }
+        case FINISH: {
+            std::cout << "[SERVER] : {create project} : deleting call"
+                      << std::endl;
+            delete this;
+        }
+    }
+}
+
+UpdateService::TryJoinProjectServerCall::TryJoinProjectServerCall(
+    Update::AsyncService *service,
+    ServerCompletionQueue *cq
+)
+    : CommonServerCall(cq), responder_(&ctx_), service_(service) {
+    this->Proceed(true);
+}
+
+void UpdateService::TryJoinProjectServerCall::Proceed(const bool ok = true) {
+    if (!ok) {
+        delete this;
+        return;
+    }
+    switch (status_) {
+        case CREATE: {
+            status_ = PROCESS;
+            service_->RequestTryJoinProject(
+                &ctx_, &request_, &responder_, cq_, cq_, this
+            );
+            std::cout << "[SERVER] : {try join project} : start listening"
+                      << std::endl;
+            break;
+        }
+        case PROCESS: {
+            // todo: validate user token
+
+            status_ = FINISH;
+            new TryJoinProjectServerCall(service_, cq_);
+            std::cout << "[SERVER] : {try join project} : get request, code="
+                      << request_.code() << std::endl;
+
+            if (!UpdateHandler::try_join_project(
+                    request_.code(), request_.user().login()
+                )) {
+                response_.set_error_text("can't join project");
+                responder_.Finish(response_, grpc::Status::OK, this);
+                break;
+            }
+
+            auto project = UpdateHandler::get_project(request_.code());
+            response_.set_allocated_project(&project.value());
+            responder_.Finish(response_, grpc::Status::OK, this);
+            break;
+        }
+        case FINISH: {
+            std::cout << "[SERVER] : {try join project} : deleting call"
+                      << std::endl;
+            delete this;
+        }
+    }
+}
+
+
+UpdateService::TryLeaveProjectServerCall::TryLeaveProjectServerCall(
+    Update::AsyncService *service,
+    ServerCompletionQueue *cq
+)
+    : CommonServerCall(cq), responder_(&ctx_), service_(service) {
+    this->Proceed(true);
+}
+
+void UpdateService::TryLeaveProjectServerCall::Proceed(const bool ok) {
+    if (!ok) {
+        delete this;
+        return;
+    }
+    switch (status_) {
+        case CREATE: {
+            status_ = PROCESS;
+            service_->RequestTryLeaveProject(
+                &ctx_, &request_, &responder_, cq_, cq_, this
+            );
+            std::cout << "[SERVER] : {try leave project} : start listening"
+                      << std::endl;
+            break;
+        }
+        case PROCESS: {
+            status_ = FINISH;
+            new TryLeaveProjectServerCall(service_, cq_);
+            std::cout << "[SERVER] : {try leave project} : get request, code="
+            << request_.code() << std::endl;
+
+            // todo: check if user exists, if project exists etc.
+            UpdateHandler::try_leave_project(request_.code(), request_.user().login());
+
+            response_.set_ok(1);
+            responder_.Finish(response_, grpc::Status::OK, this);
+        }
+        case FINISH: {
+            std::cout << "[SERVER] : {try leave project} : deleting call"
+            << std::endl;
+            delete this;
+        }
+    }
+}
+
+
+Update::AsyncService &UpdateService::get_service() {
     return service_;
 }
