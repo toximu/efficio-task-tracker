@@ -1,5 +1,5 @@
-#ifndef style_manager_H
-#define style_manager_H
+#ifndef STYLE_MANAGER_H
+#define STYLE_MANAGER_H
 
 #include <QObject>
 #include <QString>
@@ -18,7 +18,6 @@ public:
     void apply_font_size(std::string font_size_);
     int current_theme() const;
     std::string current_font_size() const;
-
 signals:
     void theme_changed(int new_theme);
     void font_size_changed(std::string new_font_size_);

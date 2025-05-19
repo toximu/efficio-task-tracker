@@ -35,5 +35,6 @@ target_link_libraries(SettingsWindow PRIVATE
     Qt6::Sql
     Database 
     StyleManager
+    LanguageManager
     AuthorizationWindows
 )

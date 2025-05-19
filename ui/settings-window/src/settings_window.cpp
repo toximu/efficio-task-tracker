@@ -1,6 +1,7 @@
 #include "settings_window.h"
 #include "settings_window_style_sheet.h"
 #include "style_manager.h"
+#include "language_manager.h"
 #include <QRegularExpression>
 
 const std::vector<QString> SettingsWindow::THEMES = {
@@ -75,7 +76,35 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QDialog(parent) {
     handle_theme_changed(StyleManager::instance()->current_theme());
     
     handle_font_size_changed(StyleManager::instance()->current_font_size());
+    connect(LanguageManager::instance(), &LanguageManager::language_changed,
+            this, &SettingsWindow::handle_language_changed
+    );
+    handle_language_changed(LanguageManager::instance()->current_language());
 }
+
+void SettingsWindow::handle_language_changed(std::string new_language) {
+    if (new_language == "RU") {
+        setWindowTitle(tr("Настройки"));
+        title_label->setText(tr("Настройки"));
+        font_size_label->setText(tr("Размер шрифта"));
+        theme_button->setText(tr("Тема"));
+        small_font_radio->setText(tr("Мелкий"));
+        medium_font_radio->setText(tr("Средний"));
+        large_font_radio->setText(tr("Крупный"));
+        language_button->setText("RU");
+    } 
+    else if (new_language == "EN") {
+        setWindowTitle(tr("Settings"));
+        title_label->setText(tr("Settings"));
+        font_size_label->setText(tr("Font size"));
+        theme_button->setText(tr("Theme"));
+        small_font_radio->setText(tr("Small"));
+        medium_font_radio->setText(tr("Medium"));
+        large_font_radio->setText(tr("Large"));
+        language_button->setText("EN");
+    }
+}
+
 
 void SettingsWindow::handle_font_size_changed(std::string font_size) {
     QString font_rule;
@@ -110,8 +139,10 @@ void SettingsWindow::handle_theme_changed(int theme_) {
 void SettingsWindow::toggle_language() {
     if (language_button->text() == tr("RU")) {
         language_button->setText(tr("EN"));
+        LanguageManager::instance()->apply_language("EN");
     } else {
         language_button->setText(tr("RU"));
+        LanguageManager::instance()->apply_language("RU");
     }
 }
 

@@ -30,6 +30,7 @@ public:
     static const std::vector<QString> THEMES;
     void handle_theme_changed(int theme);
     void handle_font_size_changed(std::string font_size);
+    void handle_language_changed(std::string new_language);
 
 private slots:
     void on_save_button_click();

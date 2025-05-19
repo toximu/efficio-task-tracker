@@ -5,6 +5,7 @@
 #include "note.hpp"
 #include "note_edit_dialog.h"
 #include "style_manager.h"
+#include "language_manager.h"
 
 namespace Ui {
 NoteWidget::NoteWidget(
@@ -44,21 +45,46 @@ NoteWidget::NoteWidget(
     );
     this->setLayout(main_layout_);
     this->setAttribute(Qt::WA_StyledBackground);
+    connect(LanguageManager::instance(), &LanguageManager::language_changed,
+            this, &NoteWidget::handle_language_changed
+    );
+    handle_language_changed(LanguageManager::instance()->current_language());
+}
+
+void NoteWidget::handle_language_changed(std::string new_language) {
+    if (new_language == "RU") {
+        open_button_->setText(tr("Открыть"));
+        if (title_label_->text() == "Empty note") {
+            title_label_->setText("Пустая заметка");
+        }
+        // if (text_label_->text() == "Add a detailed description of your note") {
+        //     title_label_->setText("Добавьте подробное описание вашей заметки");
+        // }
+    } 
+    else if (new_language == "EN") {
+        open_button_->setText(tr("Open"));
+        if (title_label_->text() == "Пустая заметка") {
+            title_label_->setText("Empty note");
+        }
+        // if (text_label_->text() == "Добавьте подробное описание вашей заметки") {
+        //     title_label_->setText("Add a detailed description of your note");
+        // }
+    }
 }
 
 void NoteWidget::handle_font_size_changed(std::string font_size_){
     QString font_rule;
     if (font_size_ == "small") {
         title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 13px;");
-        text_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 11px;");
+        // text_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 11px;");
     }
     else if (font_size_ == "medium") {
         title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 15px;");
-        text_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 13px;");
+        // text_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 13px;");
     }
     else if (font_size_ == "big") {
         title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 17px;");
-        text_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 15px;");
+        // text_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 15px;");
     }
 }
 
@@ -69,7 +95,7 @@ void NoteWidget::open_note_window() const {
     );
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->exec();
-    text_label_->setText(QString::fromStdString(model_note_->get_text()));
+//    text_label_->setText(QString::fromStdString(model_note_->get_text()));
     title_label_->setText(QString::fromStdString(model_note_->get_title()));
     main_layout_->update();
 }

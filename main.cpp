@@ -6,6 +6,7 @@
 #include "applicationwindow.h"
 #include "login_window.h"
 #include "style_manager.h"
+#include "language_manager.h"
 #include <QLibraryInfo>
 
 int main(int argc, char *argv[]) {
@@ -30,7 +31,8 @@ int main(int argc, char *argv[]) {
         app.installTranslator(&qtTranslator);
     }
 
-    StyleManager* StyleManager = StyleManager::instance();
+    StyleManager* style_manager = StyleManager::instance();
+    LanguageManager* language_manager = LanguageManager::instance();
     
     QMainWindow *app_window = new QMainWindow();
     app_window->setWindowTitle("EFFICIO"); 

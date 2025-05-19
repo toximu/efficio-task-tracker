@@ -39,4 +39,5 @@ target_link_libraries(MainWindow PRIVATE
         StyleManager
         ProfileWindow
         AuthorizationWindows
+        LanguageManager
 )

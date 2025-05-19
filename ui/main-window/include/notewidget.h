@@ -25,6 +25,7 @@ public:
     );
     int number_of_theme;
     void handle_font_size_changed(std::string font_size_);
+    void handle_language_changed(std::string new_language);
 
 private slots:
 

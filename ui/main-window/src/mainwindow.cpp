@@ -24,6 +24,7 @@
 #include "projectitem.h"
 #include "projectlist.h"
 #include "style_manager.h"
+#include "language_manager.h"
 #include "registration_window.h"
 #include "login_window.h"
 #include <string>
@@ -47,7 +48,7 @@ MainWindow::MainWindow(
     : QWidget(parent),
       username(username),
       main_layout_(new QVBoxLayout(this)),
-      top_bar_(new BottomBar(this, username, tr("EFFICIO :: Таск-Трекер"))),
+      top_bar_(new BottomBar(this, username, tr("EFFICIO :: Task-Tracker"))),
       content_layout_(new QHBoxLayout(this)),
       project_list_(new ProjectList(this)),
       note_list_(new NoteList(this)),
@@ -102,6 +103,22 @@ MainWindow::MainWindow(
             this, &Ui::MainWindow::handle_font_size_changed
     );
     handle_font_size_changed(StyleManager::instance()->current_font_size());
+    connect(LanguageManager::instance(), &LanguageManager::language_changed,
+            this, &MainWindow::handle_language_changed
+    );
+    handle_language_changed(LanguageManager::instance()->current_language());
+}
+
+
+void MainWindow::handle_language_changed(std::string new_language) {
+    if (new_language == "RU") {
+        new_project_button_->setText(tr("Новый проект"));
+        new_note_button_->setText(tr("Новая заметка"));
+    } 
+    else if(new_language == "EN") {
+        new_project_button_->setText(tr("New project"));
+        new_note_button_->setText(tr("New note"));
+    }
 }
 
 void MainWindow::on_delete_account_button_click() {

@@ -11,6 +11,7 @@
 #include "note_edit_dialog_styles.h"
 #include "tags_dialog.h"
 #include "style_manager.h"
+#include "language_manager.h"
 
 
 const std::vector<QString> NoteEditDialog::THEMES = {
@@ -46,7 +47,6 @@ void NoteEditDialog::init_basic_fields() {
     ui_->titleLineEdit->setText(QString::fromStdString(note_->get_title()));
     ui_->descriptionTextEdit->setText(QString::fromStdString(note_->get_text()));
 }
-
 
 void NoteEditDialog::on_switch_theme_button_click() {
     int next_theme = (StyleManager::instance()->current_theme() + 1) % 5;
@@ -112,6 +112,41 @@ void NoteEditDialog::setup_connections() {
     connect(StyleManager::instance(), &StyleManager::font_size_changed,
             this, &NoteEditDialog::handle_font_size_changed
     );
+    connect(LanguageManager::instance(), &LanguageManager::language_changed,
+            this, &NoteEditDialog::handle_language_changed
+    );
+    handle_language_changed(LanguageManager::instance()->current_language());
+}
+
+void NoteEditDialog::handle_language_changed(std::string new_language) {
+    if (new_language == "RU") {
+        setWindowTitle("EFFICIO");
+        ui_->saveButton->setText(tr("Сохранить"));
+        ui_->cancelButton->setText(tr("Отмена"));
+        ui_->joinButton->setText(ui_->membersLabel->isVisible() ? tr("Покинуть") : tr("Присоединиться"));
+        ui_->addMembersButton->setText(tr("Добавить участников"));
+        ui_->addDateButton->setText(tr("Добавить дату"));
+        ui_->addTagsButton->setText(tr("Добавить теги"));
+        ui_->projectNameLabel->setText(tr("Проект:"));
+        ui_->descriptionLabel->setText(tr("Описание:"));
+        ui_->descriptionTextEdit->setText(tr("Добавьте подробное описание вашей заметки"));
+        ui_->sidePanelLabel->setText(tr("Участники:"));
+        ui_->sidePanelLabel_2->setText(tr("Теги:"));
+    } 
+    else if(new_language == "EN") {
+        setWindowTitle("EFFICIO");
+        ui_->saveButton->setText(tr("Save"));
+        ui_->cancelButton->setText(tr("Cancel"));
+        ui_->joinButton->setText(ui_->membersLabel->isVisible() ? tr("Leave") : tr("Join"));
+        ui_->addMembersButton->setText(tr("Add members"));
+        ui_->addDateButton->setText(tr("Add date"));
+        ui_->descriptionTextEdit->setText(tr("Add a detailed description of your note"));
+        ui_->addTagsButton->setText(tr("Add tags"));
+        ui_->projectNameLabel->setText(tr("Project:"));
+        ui_->descriptionLabel->setText(tr("Description:"));
+        ui_->sidePanelLabel->setText(tr("Members:"));
+        ui_->sidePanelLabel_2->setText(tr("Tags:"));
+    }
 }
 
 void NoteEditDialog::handle_font_size_changed(std::string font_size_) {
@@ -148,11 +183,21 @@ void NoteEditDialog::setup_ui() {
 
 void NoteEditDialog::on_save_button_click() {
     if (try_save_note()) {
-        QMessageBox::information(this, "Заметка сохранена",
-            QString("Заголовок: %1\nСодержимое: %2")
-                .arg(ui_->titleLineEdit->text(), ui_->descriptionTextEdit->toPlainText()));
+        if(LanguageManager::instance()->current_language() == "RU"){
+            QMessageBox::information(this, "Заметка сохранена",
+                QString("Заголовок: %1\nСодержимое: %2")
+                    .arg(ui_->titleLineEdit->text(), ui_->descriptionTextEdit->toPlainText()));
+        } else {
+            QMessageBox::information(this, "Note Saved",
+                QString("Title: %1\nDescription: %2")
+                    .arg(ui_->titleLineEdit->text(), ui_->descriptionTextEdit->toPlainText()));
+        }
     } else {
-        QMessageBox::information(this, "Ошибка", "Не удалось сохранить заметку");
+        if(LanguageManager::instance()->current_language() == "RU"){
+            QMessageBox::information(this, "Ошибка", "Не удалось сохранить заметку");
+        } else {
+            QMessageBox::information(this, "Error", "Failed to save the note");
+        }
     }
     close();
 }
@@ -196,7 +241,11 @@ void NoteEditDialog::clear_member_avatars() {
 }
 
 void NoteEditDialog::on_add_members_button_click() {
-    QMessageBox::information(this, "Ошибка", "Другие участники не найдены :(");
+    if(LanguageManager::instance()->current_language() == "RU"){
+        QMessageBox::information(this, "Ошибка", "Другие участники не найдены.");
+    } else {
+        QMessageBox::information(this, "Error", "No other participants were found.");
+    }
 }
 
 void NoteEditDialog::on_add_tags_button_click() {

@@ -6,6 +6,7 @@
 #include "login_window_style_sheet.h"
 #include "serialization.hpp"
 #include "style_manager.h"
+#include "language_manager.h"
 #include <QMessageBox>
 #include <QScreen>
 
@@ -36,7 +37,29 @@ LoginWindow::LoginWindow(QWidget *parent)
             this, &LoginWindow::handle_theme_changed);
 
     handle_theme_changed(StyleManager::instance()->current_theme());
+    connect(LanguageManager::instance(), &LanguageManager::language_changed,
+            this, &LoginWindow::handle_language_changed
+    );
+    handle_language_changed(LanguageManager::instance()->current_language());
 }
+
+void LoginWindow::handle_language_changed(std::string new_language) {
+    if (new_language == "RU") {
+        ui->input_login->setPlaceholderText(tr("Введите логин:"));
+        ui->input_password->setPlaceholderText(tr("Введите пароль:"));
+        ui->switch_mode->setText(tr("Еще нет аккаунта? Зарегестрируйтесь!"));
+        ui->switch_theme->setText(tr("Тема"));
+        ui->push_enter->setText(tr("Войти"));
+    } 
+    else if (new_language == "EN") {
+        ui->input_login->setPlaceholderText(tr("Enter login:"));
+        ui->input_password->setPlaceholderText(tr("Enter password:"));
+        ui->switch_mode->setText(tr("Don't have an account yet? Register!"));
+        ui->switch_theme->setText(tr("Theme"));
+        ui->push_enter->setText(tr("Login"));
+    }
+}
+
 
 void LoginWindow::handle_theme_changed(int theme) {
     this->setStyleSheet(THEMES[theme]);
@@ -58,44 +81,54 @@ void LoginWindow::on_switch_mode_clicked() {
         this->close();
     }
 }
-
 void LoginWindow::on_push_enter_clicked() {
     if ((this->counter_on_switch_theme_clicks++) % 2) {
-        // QString login = ui->input_login->text().trimmed();
-        // QString password = ui->input_password->text();
+        QString login = ui->input_login->text().trimmed();
+        QString password = ui->input_password->text();
+        std::string lang = LanguageManager::instance()->current_language();
 
         // if (login.isEmpty() || password.isEmpty()) {
-        //     QMessageBox::warning(this, 
-        //         tr("Ошибка ввода данных"), 
-        //         tr("Пожалуйста, заполните все поля!"));
+        //     if (lang == "RU") {
+        //         QMessageBox::warning(this, "Ошибка ввода данных", "Пожалуйста, заполните все поля!");
+        //     } else {
+        //         QMessageBox::warning(this, "Input Error", "Please fill in all the fields!");
+        //     }
         //     return;
         // }
 
         // if (login.size() > 50) {
-        //     QMessageBox::warning(this, 
-        //         tr("Ошибка"), 
-        //         tr("Длина логина не должна превышать пятидесяти символов"));
+        //     if (lang == "RU") {
+        //         QMessageBox::warning(this, "Ошибка", "Длина логина не должна превышать пятидесяти символов");
+        //     } else {
+        //         QMessageBox::warning(this, "Error", "Login must not exceed fifty characters");
+        //     }
         //     return;
         // }
 
         // if (password.size() > 50) {
-        //     QMessageBox::warning(this, 
-        //         tr("Ошибка"), 
-        //         tr("Длина пароля не должна превышать пятидесяти символов"));
+        //     if (lang == "RU") {
+        //         QMessageBox::warning(this, "Ошибка", "Длина пароля не должна превышать пятидесяти символов");
+        //     } else {
+        //         QMessageBox::warning(this, "Error", "Password must not exceed fifty characters");
+        //     }
         //     return;
         // }
 
         // if (!LRDao::validate_user(login, password)) {
-        //     QMessageBox::warning(this, 
-        //         tr("Ошибка ввода данных"), 
-        //         tr("Неверный логин или пароль!"));
+        //     if (lang == "RU") {
+        //         QMessageBox::warning(this, "Ошибка ввода данных", "Неверный логин или пароль!");
+        //     } else {
+        //         QMessageBox::warning(this, "Login Error", "Incorrect login or password!");
+        //     }
         //     return;
         // }
 
-        // QMessageBox::information(this, 
-        //     tr("Вход"), 
-        //     tr("Вы успешно вошли! Добро пожаловать :)"));
-        QString login = "user";
+        if (lang == "RU") {
+            QMessageBox::information(this, "Вход", "Вы успешно вошли. Добро пожаловать!");
+        } else {
+            QMessageBox::information(this, "Login", "You have successfully logged in. Welcome!");
+        }
+
         if (QMainWindow *app_window = qobject_cast<QMainWindow*>(this->parentWidget())) {
             this->deleteLater();
             project_storage_model::Storage *storage = new project_storage_model::Storage();
@@ -115,6 +148,7 @@ void LoginWindow::on_push_enter_clicked() {
         }
     }
 }
+
 
 void LoginWindow::switch_window(QMainWindow *app_window, QWidget *new_window, int width, int height) {
     if (QWidget *old = app_window->centralWidget()) {

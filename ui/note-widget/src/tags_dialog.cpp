@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include "tags_dialog_styles.h"
 #include "style_manager.h"
+#include "language_manager.h"
 
 
 const std::vector<QString> TagsDialog::THEMES = {
@@ -34,8 +35,53 @@ TagsDialog::TagsDialog(const QList<Tag> &initial_tags, QWidget *parent)
     setModal(true);
     setFixedSize(DIALOG_SIZE.first, DIALOG_SIZE.second);
     handle_theme_changed(StyleManager::instance()->current_theme());
-    
+    connect(LanguageManager::instance(), &LanguageManager::language_changed,
+            this, &TagsDialog::handle_language_changed
+    );
+    handle_language_changed(LanguageManager::instance()->current_language());
 }
+
+
+void TagsDialog::handle_language_changed(std::string new_language) {
+    if (new_language == "RU") {
+        setWindowTitle("Добавить теги");
+        ok_button_->setText(tr("OK"));
+        cancel_button_->setText(tr("Отмена"));
+
+        const QStringList colors = {"Красный", "Синий", "Розовый", "Зеленый", "Желтый"};
+        for (int i = 0; i < MAX_TAGS_COUNT; ++i) {
+            if (color_combo_boxes_[i]) {
+                color_combo_boxes_[i]->setItemText(0, colors[0]);
+                color_combo_boxes_[i]->setItemText(1, colors[1]);
+                color_combo_boxes_[i]->setItemText(2, colors[2]);
+                color_combo_boxes_[i]->setItemText(3, colors[3]);
+                color_combo_boxes_[i]->setItemText(4, colors[4]);
+            }
+            if (name_line_edits_[i]) {
+                name_line_edits_[i]->setPlaceholderText("Имя тега " + QString::number(i + 1));
+            }
+        }
+    } else if (new_language == "EN") {
+        setWindowTitle("Add tags");
+        ok_button_->setText(tr("OK"));
+        cancel_button_->setText(tr("Cancel"));
+
+        const QStringList colors = {"Red", "Blue", "Pink", "Green", "Yellow"};
+        for (int i = 0; i < MAX_TAGS_COUNT; ++i) {
+            if (color_combo_boxes_[i]) {
+                color_combo_boxes_[i]->setItemText(0, colors[0]);
+                color_combo_boxes_[i]->setItemText(1, colors[1]);
+                color_combo_boxes_[i]->setItemText(2, colors[2]);
+                color_combo_boxes_[i]->setItemText(3, colors[3]);
+                color_combo_boxes_[i]->setItemText(4, colors[4]);
+            }
+            if (name_line_edits_[i]) {
+                name_line_edits_[i]->setPlaceholderText("Tag name " + QString::number(i + 1));
+            }
+        }
+    }
+}
+
 
 void TagsDialog::setup_ui() {
     auto *main_layout = new QVBoxLayout(this);

@@ -1,5 +1,6 @@
 #include "analytics_window.h"
 #include "style_manager.h"
+#include "language_manager.h"
 #include "analytics_window_style_sheet.h"
 #include <QString>
 
@@ -47,6 +48,47 @@ AnalyticsWindow::AnalyticsWindow(QWidget *parent)
             this, &AnalyticsWindow::handle_font_size_changed
     );
     handle_font_size_changed(StyleManager::instance()->current_font_size());
+
+    connect(LanguageManager::instance(), &LanguageManager::language_changed,
+            this, &AnalyticsWindow::handle_language_changed
+    );
+    handle_language_changed(LanguageManager::instance()->current_language());
+}
+
+
+void AnalyticsWindow::handle_language_changed(std::string new_language) {
+    if (new_language == "RU") {
+        tab_widget->setTabText(0, tr("Статистика задач"));
+        tab_widget->setTabText(1, tr("Распределение по проектам"));
+        setWindowTitle(tr("Аналитическая панель"));
+        
+        QChart *tasks_chart = static_cast<QChartView*>(tasks_layout->itemAt(0)->widget())->chart();
+        tasks_chart->setTitle(tr("Статистика задач за период"));
+        static_cast<QValueAxis*>(tasks_chart->axes(Qt::Vertical)[0])->setTitleText(tr("Количество"));
+        
+        QBarSeries *tasks_series = static_cast<QBarSeries*>(tasks_chart->series()[0]);
+        static_cast<QBarSet*>(tasks_series->barSets()[0])->setLabel(tr("Создано"));
+        static_cast<QBarSet*>(tasks_series->barSets()[1])->setLabel(tr("Завершено"));
+        static_cast<QBarSet*>(tasks_series->barSets()[2])->setLabel(tr("Просрочено"));
+        
+        button_box->button(QDialogButtonBox::Close)->setText(tr("Закрыть"));
+    } 
+    else if(new_language == "EN") {
+        tab_widget->setTabText(0, tr("Tasks Statistics"));
+        tab_widget->setTabText(1, tr("Projects Distribution"));
+        setWindowTitle(tr("Analytics Panel"));
+        
+        QChart *tasks_chart = static_cast<QChartView*>(tasks_layout->itemAt(0)->widget())->chart();
+        tasks_chart->setTitle(tr("Tasks Statistics for Period"));
+        static_cast<QValueAxis*>(tasks_chart->axes(Qt::Vertical)[0])->setTitleText(tr("Count"));
+        
+        QBarSeries *tasks_series = static_cast<QBarSeries*>(tasks_chart->series()[0]);
+        static_cast<QBarSet*>(tasks_series->barSets()[0])->setLabel(tr("Created"));
+        static_cast<QBarSet*>(tasks_series->barSets()[1])->setLabel(tr("Completed"));
+        static_cast<QBarSet*>(tasks_series->barSets()[2])->setLabel(tr("Overdue"));
+        
+        button_box->button(QDialogButtonBox::Close)->setText(tr("Close"));
+    } 
 }
 
 void AnalyticsWindow::handle_font_size_changed(std::string font_size) {

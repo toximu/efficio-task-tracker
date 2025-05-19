@@ -35,6 +35,7 @@ target_link_libraries(ProfileWindow PRIVATE
     Qt6::Sql
     Database 
     StyleManager
+    LanguageManager
     AuthorizationWindows
     SettingsWindow
     AnalyticsWindow

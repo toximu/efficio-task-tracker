@@ -5,6 +5,7 @@
 #include "lr_dao.hpp"
 #include "settings_window.h"
 #include "analytics_window.h"
+#include "language_manager.h"
 
 namespace Ui {
 
@@ -83,7 +84,28 @@ void ProfileWindow::handle_font_size_changed(std::string font_size) {
     }
 
     this->setStyleSheet(THEMES[StyleManager::instance()->current_theme()] + font_rule);
+    connect(LanguageManager::instance(), &LanguageManager::language_changed,
+            this, &ProfileWindow::handle_language_changed
+    );
+    handle_language_changed(LanguageManager::instance()->current_language());
 }
+
+
+void ProfileWindow::handle_language_changed(std::string new_language) {
+    if (new_language == "RU") {
+        setWindowTitle(tr("Профиль"));
+        logout_button->setText(tr("Выйти из аккаунта"));
+        delete_button->setText(tr("Удалить аккаунт"));
+        stats_button->setText(tr("Моя статистика"));
+    } 
+    else if (new_language == "EN") {
+        setWindowTitle(tr("Profile"));
+        logout_button->setText(tr("Log out"));
+        delete_button->setText(tr("Delete account"));
+        stats_button->setText(tr("My statistics"));
+    }
+}
+
 
 
 void ProfileWindow::handle_theme_changed(int theme) {

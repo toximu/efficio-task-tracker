@@ -53,6 +53,7 @@ public:
     void on_logout_button_click();
     void on_delete_account_button_click();
     void handle_theme_changed(int theme);
+    void handle_language_changed(std::string new_language);
     void handle_font_size_changed(std::string font_size_);
 };
 }  // namespace Ui
