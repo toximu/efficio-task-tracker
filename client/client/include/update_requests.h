@@ -7,6 +7,15 @@
 #include "common_client_call.h"
 
 using grpc::Channel;
+using grpc::ClientAsyncResponseReader;
+using grpc::CompletionQueue;
+
+using Efficio_proto::CreateProjectRequest;
+using Efficio_proto::CreateProjectResponse;
+using Efficio_proto::GetNoteRequest;
+using Efficio_proto::GetNoteResponse;
+using Efficio_proto::GetProjectRequest;
+using Efficio_proto::GetProjectResponse;
 
 using Efficio_proto::Note;
 using Efficio_proto::Project;
@@ -52,8 +61,23 @@ public:
         GetNoteResponse get_reply();
     };
 
-    class GetProjectClientCall;
+    class GetProjectClientCall final : public CommonClientCall {
+        GetProjectResponse response;
+        std::unique_ptr<ClientAsyncResponseReader<GetProjectResponse>>
+            response_reader;
+        Project *save_to;
 
+    public:
+        void Proceed(bool ok) override;
+
+        GetProjectClientCall(
+            GetProjectRequest &request,
+            CompletionQueue *cq_,
+            std::unique_ptr<Update::Stub> &stub_,
+            Project *save_to_
+        );
+    };
+  
     class CreateNoteClientCall final : public CommonClientCall {
         CreateNoteResponse reply_;
         std::unique_ptr<grpc::ClientAsyncResponseReader<CreateNoteResponse>>
@@ -69,23 +93,44 @@ public:
         CreateNoteResponse get_reply();
     };
 
-    class CreateProjectClientCall;
+    class CreateProjectClientCall : public CommonClientCall {
+        CreateProjectResponse response;
+        std::unique_ptr<ClientAsyncResponseReader<CreateProjectResponse>>
+            response_reader;
+        Project *save_to;
+
+    public:
+        void Proceed(bool ok) override;
+
+        CreateProjectClientCall(
+            CreateProjectRequest &request,
+            CompletionQueue *cq_,
+            std::unique_ptr<Update::Stub> &stub_,
+            Project *save_to_
+        );
+    };
+
     class TryJoinProjectClientCall;
 
     bool try_update_note(Note *note) const;
     bool try_fetch_note(Note *note) const;
     bool try_create_note(Note *note) const;
     bool try_create_project(Project *project);
+    bool get_note(Note *note);
+    bool get_project(Project *project, const std::string &code);
+    bool create_note(Note *note);
+    bool create_project(Project *project, const std::string &project_title);
     bool try_join_project(Project *project);
 
     explicit UpdateRequests(
-        const std::shared_ptr<Channel> &channel,
-        grpc::CompletionQueue *cq
+        std::shared_ptr<Channel> channel,
+        CompletionQueue *cq
     )
-        : cq_(cq), stub_(Update::NewStub(channel)) {};
+        : stub_(Update::NewStub(channel)), cq_(cq) {
+    }
 
 private:
-    grpc::CompletionQueue *cq_;
+    CompletionQueue *cq_;
     std::unique_ptr<Update::Stub> stub_;
 };
 

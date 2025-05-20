@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
-project(server)
+project(Server)
+
 add_subdirectory(Service)
+add_subdirectory(database)
+add_subdirectory(Handlers)
 
+add_executable(Server main.cpp)
 
-add_executable(start_server main.cpp)
-
-target_link_libraries(start_server Service Database)
+target_link_libraries(Server Service)

@@ -17,6 +17,14 @@ class ClientImplementation {
 
 public:
     explicit ClientImplementation(const std::shared_ptr<Channel> &channel);
+  
+    CompletionQueue *get_cq() {
+        return &cq_;
+    }
+
+    std::shared_ptr<Channel> get_channel() {
+        return channel_;
+    }
 
     void CompleteRpc();
     std::shared_ptr<Channel> get_channel();

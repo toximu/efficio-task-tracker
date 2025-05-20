@@ -7,5 +7,4 @@ add_link_options(-fsanitize=address,undefined,leak)
 
 add_subdirectory(server)
 add_subdirectory(proto)
-add_subdirectory(client)
-add_subdirectory(server/database)
+add_subdirectory(client/client)

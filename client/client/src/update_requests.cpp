@@ -70,24 +70,27 @@ UpdateRequests::CreateNoteClientCall::CreateNoteClientCall(
     const CreateNoteRequest &request,
     CompletionQueue *cq,
     const std::unique_ptr<Update::Stub> &stub
+
+UpdateRequests::GetProjectClientCall::GetProjectClientCall(
+    GetProjectRequest &request,
+    CompletionQueue *cq_,
+    std::unique_ptr<Update::Stub> &stub_,
+    Project *save_to_
 )
-    : responder_(stub->AsyncCreateNote(&context, request, cq)) {
-    context.set_deadline(
-        std::chrono::system_clock::now() + std::chrono::seconds(5)
-    );
-    responder_->Finish(&reply_, &status, this);
-    std::cout << "[CLIENT]: CREATE NOTE REQUEST SENT\n";
+    : CommonClientCall(), save_to(save_to_) {
+    response_reader = stub_->PrepareAsyncGetProject(&context, request, cq_);
+    response_reader->StartCall();
+    response_reader->Finish(&response, &status, (void *)this);
 }
 
-void UpdateRequests::CreateNoteClientCall::Proceed(const bool ok) {
-    if (!ok) {
-        std::cout << "[CLIENT WARNING]: RPC failed\n";
+void UpdateRequests::GetProjectClientCall::Proceed(bool ok) {
+    if (ok && status.ok()) {
+        if (response.has_project()) {
+            *save_to = response.project();
+        } else {
+            std::cout << response.error_text() << std::endl;
+        }
     }
-    delete this;
-}
-
-CreateNoteResponse UpdateRequests::CreateNoteClientCall::get_reply() {
-    return reply_;
 }
 
 bool UpdateRequests::try_update_note(Note *note) const {
@@ -147,13 +150,41 @@ bool UpdateRequests::try_create_note(Note *note) const {
         std::cout << "[CLIENT]: Completion queue failed\n";
         return false;
     }
+    
+bool UpdateRequests::get_project(Project *project, const std::string &code) {
+    auto request = new GetProjectRequest;
+    request->set_code(code);
+    new GetProjectClientCall(*request, cq_, stub_, project);
+    return true;
+}
 
-    if (!ok || !call->get_reply().has_note()) {
-        std::cout << "[CLIENT WARNING]: no note in reply\n";
-        return false;
+UpdateRequests::CreateProjectClientCall::CreateProjectClientCall(
+    CreateProjectRequest &request,
+    CompletionQueue *cq_,
+    std::unique_ptr<Update::Stub> &stub_,
+    Project *save_to_) : CommonClientCall(), save_to(save_to_)
+{
+    response_reader = stub_->PrepareAsyncCreateProject(&context, request, cq_);
+    response_reader->StartCall();
+    response_reader->Finish(&response, &status, (void *)this);
+}
+
+void UpdateRequests::CreateProjectClientCall::Proceed(bool ok) {
+    if (ok && status.ok()) {
+        if (response.has_project()) {
+            *save_to = response.project();
+        } else {
+            std::cout << response.error_text() << std::endl;
+        }
     }
+}
 
-    *note = call->get_reply().note();
-    std::cout << "[CLIENT]: CREATED NOTE id=" << note->id() << "\n";
+bool UpdateRequests::create_project(
+    Project *project,
+    const std::string &project_title
+) {
+    auto request = new CreateProjectRequest;
+    request->set_project_title(project_title);
+    new CreateProjectClientCall(*request, cq_, stub_, project);
     return true;
 }

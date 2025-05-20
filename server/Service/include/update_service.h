@@ -11,8 +11,16 @@ using grpc::ServerContext;
 
 using Efficio_proto::CreateNoteRequest;
 using Efficio_proto::CreateNoteResponse;
+using Efficio_proto::CreateProjectRequest;
+using Efficio_proto::CreateProjectResponse;
 using Efficio_proto::GetNoteRequest;
 using Efficio_proto::GetNoteResponse;
+using Efficio_proto::GetProjectRequest;
+using Efficio_proto::GetProjectResponse;
+using Efficio_proto::TryJoinProjectRequest;
+using Efficio_proto::TryJoinProjectResponse;
+using Efficio_proto::TryLeaveProjectRequest;
+using Efficio_proto::TryLeaveProjectResponse;
 using Efficio_proto::Update;
 using Efficio_proto::UpdateNoteRequest;
 using Efficio_proto::UpdateNoteResponse;
@@ -40,7 +48,7 @@ public:
     class GetNoteServerCall final : public CommonServerCall {
         GetNoteRequest request_;
         ServerAsyncResponseWriter<GetNoteResponse> responder_;
-        UpdateService &service_;
+        Update::AsyncService *service_;
 
     public:
         explicit GetNoteServerCall(
@@ -51,15 +59,60 @@ public:
     };
 
     class GetProjectServerCall final : public CommonServerCall {
-    public:
-        explicit GetProjectServerCall(UpdateService &service);
-        void Proceed(bool ok) override;
+        GetProjectRequest request_;
+        GetProjectResponse response_;
+        ServerAsyncResponseWriter<GetProjectResponse> responder_;
+        Update::AsyncService *service_;
 
-        // TODO: finish this call
+    public:
+        explicit GetProjectServerCall(
+            Update::AsyncService *service,
+            ServerCompletionQueue *cq
+        );
+        void Proceed(bool) override;
     };
 
-    class TryJoinProjectServerCall;
-    class CreateProjectServerCall;
+    class CreateProjectServerCall : public CommonServerCall {
+        CreateProjectRequest request_;
+        CreateProjectResponse response_;
+        ServerAsyncResponseWriter<CreateProjectResponse> responder_;
+        Update::AsyncService *service_;
+
+    public:
+        explicit CreateProjectServerCall(
+            Update::AsyncService *service,
+            ServerCompletionQueue *cq
+        );
+        void Proceed(bool) override;
+    };
+
+    class TryJoinProjectServerCall : public CommonServerCall {
+        TryJoinProjectRequest request_;
+        TryJoinProjectResponse response_;
+        ServerAsyncResponseWriter<TryJoinProjectResponse> responder_;
+        Update::AsyncService *service_;
+
+    public:
+        explicit TryJoinProjectServerCall(
+            Update::AsyncService *service,
+            ServerCompletionQueue *cq
+        );
+        void Proceed(bool) override;
+    };
+
+    class TryLeaveProjectServerCall : public CommonServerCall {
+        TryLeaveProjectRequest request_;
+        TryLeaveProjectResponse response_;
+        ServerAsyncResponseWriter<TryLeaveProjectResponse> responder_;
+        Update::AsyncService *service_;
+
+    public:
+        explicit TryLeaveProjectServerCall(
+            Update::AsyncService *service,
+            ServerCompletionQueue *cq
+        );
+        void Proceed(bool) override;
+    };
 
     class CreateNoteServerCall final : public CommonServerCall {
         CreateNoteRequest request_;
@@ -75,6 +128,8 @@ public:
     };
 
     Update::AsyncService &get_service();
+
+    void run();
 };
 
 #endif  // UPDATE_SERVICE_H

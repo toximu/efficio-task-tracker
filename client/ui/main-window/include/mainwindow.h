@@ -1,0 +1,45 @@
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
+#include <model-proto/model.pb.h>
+#include <QHBoxLayout>
+#include <QListWidget>
+#include <QMainWindow>
+#include <QObject>
+#include <QPushButton>
+#include <QWidget>
+#include <string>
+#include "bottombar.h"
+#include "notelist.h"
+#include "projectlist.h"
+
+using namespace Efficio_proto;
+
+namespace Ui {
+class MainWindow : public QWidget {
+    Q_OBJECT
+    std::string username;
+    QVBoxLayout *main_layout_;
+    BottomBar *top_bar_;
+    QHBoxLayout *content_layout_;
+    ProjectList *project_list_;
+    NoteList *note_list_;
+    QWidget *content_widget_;
+    QPushButton *new_project_button_;
+    QPushButton *new_note_button_;
+    Storage *storage_;
+
+    friend ProjectList;
+private slots:
+    void create_project();
+    void add_note();
+
+public:
+    explicit MainWindow(
+        QWidget *parent = nullptr,
+        std::string username = "none",
+        Storage *storage = nullptr
+    );
+};
+}  // namespace Ui
+#endif  // MAINWINDOW_H

@@ -20,3 +20,5 @@ target_include_directories(Database
 )
 
 target_link_libraries(Database PRIVATE OpenSSL::Crypto Qt6::Widgets Qt6::Core Qt6::Sql model-proto pqxx NoteWidget)
+add_executable(test_database main.cpp)
+target_link_libraries(test_database Database model-proto)

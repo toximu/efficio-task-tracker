@@ -1,9 +1,11 @@
 #include "client_implementation.h"
 #include <common_client_call.h>
 #include <grpcpp/grpcpp.h>
+#include <cassert>
 #include <iostream>
 #include "update_requests.h"
 #include "update_service.h"
+#include <thread>
 
 using grpc::Channel;
 using grpc::ClientAsyncResponseReader;
@@ -17,23 +19,30 @@ ClientImplementation::ClientImplementation(
     : channel_(channel),
       update_requests_(channel, &cq_),
       auth_requests_(channel, &cq_) {
+    std::thread t(&ClientImplementation::CompleteRpc, this);
+    t.detach();
 }
 
 void ClientImplementation::CompleteRpc() {
-    void *tag;
+    void *got_tag;
     bool ok = false;
 
-    while (cq_.Next(&tag, &ok)) {
-        const auto call = static_cast<CommonClientCall *>(tag);
+    while (cq_.Next(&got_tag, &ok)) {
+        std::cout << "got smth" << std::endl;
+        CommonClientCall *call = static_cast<CommonClientCall *>(got_tag);
+
+        assert(ok);
 
         if (call->status.ok()) {
+            std::cout << "start procceed" << std::endl;
             call->Proceed();
         } else {
-            std::cout << "[CLIENT]: RPC failed\n";
+            std::cout << "RPC failed" << std::endl;
         }
 
         delete call;
     }
+    std::cout << "complete rpc ended" << std::endl;
 }
 
 std::shared_ptr<Channel> ClientImplementation::get_channel() {

@@ -23,6 +23,7 @@ target_link_libraries(Service
         model-proto
         efficio-rpc
         protobuf::libprotobuf
+        Handlers
         gRPC::grpc
         gRPC::grpc++
         pqxx
