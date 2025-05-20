@@ -16,13 +16,51 @@ using Efficio_proto::GetNoteRequest;
 using Efficio_proto::GetNoteResponse;
 using Efficio_proto::GetProjectRequest;
 using Efficio_proto::GetProjectResponse;
+
 using Efficio_proto::Note;
 using Efficio_proto::Project;
 using Efficio_proto::Storage;
 using Efficio_proto::Update;
 
+using Efficio_proto::CreateNoteRequest;
+using Efficio_proto::CreateNoteResponse;
+using Efficio_proto::GetNoteRequest;
+using Efficio_proto::GetNoteResponse;
+using Efficio_proto::UpdateNoteRequest;
+using Efficio_proto::UpdateNoteResponse;
+
 class UpdateRequests {
 public:
+    class UpdateNoteClientCall final : public CommonClientCall {
+        UpdateNoteResponse reply_;
+        std::unique_ptr<grpc::ClientAsyncResponseReader<UpdateNoteResponse>>
+            responder_;
+
+    public:
+        UpdateNoteClientCall(
+            const UpdateNoteRequest &request,
+            grpc::CompletionQueue *cq,
+            const std::unique_ptr<Update::Stub> &stub
+        );
+        void Proceed(bool ok) override;
+        UpdateNoteResponse get_reply();
+    };
+
+    class GetNoteClientCall final : public CommonClientCall {
+        GetNoteResponse reply_;
+        std::unique_ptr<grpc::ClientAsyncResponseReader<GetNoteResponse>>
+            responder_;
+
+    public:
+        GetNoteClientCall(
+            const GetNoteRequest &request,
+            grpc::CompletionQueue *cq,
+            const std::unique_ptr<Update::Stub> &stub
+        );
+        void Proceed(bool ok) override;
+        GetNoteResponse get_reply();
+    };
+
     class GetProjectClientCall final : public CommonClientCall {
         GetProjectResponse response;
         std::unique_ptr<ClientAsyncResponseReader<GetProjectResponse>>
@@ -38,6 +76,21 @@ public:
             std::unique_ptr<Update::Stub> &stub_,
             Project *save_to_
         );
+    };
+  
+    class CreateNoteClientCall final : public CommonClientCall {
+        CreateNoteResponse reply_;
+        std::unique_ptr<grpc::ClientAsyncResponseReader<CreateNoteResponse>>
+            responder_;
+
+    public:
+        CreateNoteClientCall(
+            const CreateNoteRequest &request,
+            grpc::CompletionQueue *cq,
+            const std::unique_ptr<Update::Stub> &stub
+        );
+        void Proceed(bool ok) override;
+        CreateNoteResponse get_reply();
     };
 
     class CreateProjectClientCall : public CommonClientCall {
@@ -57,11 +110,12 @@ public:
         );
     };
 
-    class GetNoteClientCall;
-    class CreateNoteClientCall;
-
     class TryJoinProjectClientCall;
 
+    bool try_update_note(Note *note) const;
+    bool try_fetch_note(Note *note) const;
+    bool try_create_note(Note *note) const;
+    bool try_create_project(Project *project);
     bool get_note(Note *note);
     bool get_project(Project *project, const std::string &code);
     bool create_note(Note *note);

@@ -4,7 +4,6 @@
 #include <efficio-rpc-proto/efficio.grpc.pb.h>
 #include <efficio-rpc-proto/efficio.pb.h>
 #include <grpc++/grpc++.h>
-#include <model-proto/model.pb.h>
 #include "common_server_call.h"
 
 using grpc::ServerAsyncResponseWriter;
@@ -23,14 +22,28 @@ using Efficio_proto::TryJoinProjectResponse;
 using Efficio_proto::TryLeaveProjectRequest;
 using Efficio_proto::TryLeaveProjectResponse;
 using Efficio_proto::Update;
+using Efficio_proto::UpdateNoteRequest;
+using Efficio_proto::UpdateNoteResponse;
 
 class UpdateService final {
     Update::AsyncService service_;
     ServerContext ctx_;
-    ServerCompletionQueue *cq_;
+    std::unique_ptr<ServerCompletionQueue> cq_;
+    std::unique_ptr<grpc::Server> server_;
 
 public:
-    explicit UpdateService(ServerCompletionQueue *cq);
+    class UpdateNoteServerCall final : public CommonServerCall {
+        UpdateNoteRequest request_;
+        ServerAsyncResponseWriter<UpdateNoteResponse> responder_;
+        UpdateService &service_;
+
+    public:
+        explicit UpdateNoteServerCall(
+            UpdateService &service,
+            ServerCompletionQueue *cq
+        );
+        void Proceed(bool ok) override;
+    };
 
     class GetNoteServerCall final : public CommonServerCall {
         GetNoteRequest request_;
@@ -39,7 +52,7 @@ public:
 
     public:
         explicit GetNoteServerCall(
-            Update::AsyncService *service,
+            UpdateService &service,
             ServerCompletionQueue *cq
         );
         void Proceed(bool ok) override;
@@ -115,6 +128,7 @@ public:
     };
 
     Update::AsyncService &get_service();
+
     void run();
 };
 

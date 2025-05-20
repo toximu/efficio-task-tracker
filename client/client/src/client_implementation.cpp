@@ -3,8 +3,9 @@
 #include <grpcpp/grpcpp.h>
 #include <cassert>
 #include <iostream>
-#include <thread>
 #include "update_requests.h"
+#include "update_service.h"
+#include <thread>
 
 using grpc::Channel;
 using grpc::ClientAsyncResponseReader;
@@ -12,11 +13,15 @@ using grpc::ClientContext;
 using grpc::CompletionQueue;
 using grpc::Status;
 
-ClientImplementation::ClientImplementation(std::shared_ptr<Channel> channel)
-    : channel_(channel) {
+ClientImplementation::ClientImplementation(
+    const std::shared_ptr<Channel> &channel
+)
+    : channel_(channel),
+      update_requests_(channel, &cq_),
+      auth_requests_(channel, &cq_) {
     std::thread t(&ClientImplementation::CompleteRpc, this);
     t.detach();
-};
+}
 
 void ClientImplementation::CompleteRpc() {
     void *got_tag;
@@ -38,4 +43,28 @@ void ClientImplementation::CompleteRpc() {
         delete call;
     }
     std::cout << "complete rpc ended" << std::endl;
+}
+
+std::shared_ptr<Channel> ClientImplementation::get_channel() {
+    return channel_;
+}
+
+bool ClientImplementation::try_authenticate_user(User *user) const {
+    return auth_requests_.try_authenticate_user(user);
+}
+
+bool ClientImplementation::try_register_user(User *user) const {
+    return auth_requests_.try_register_user(user);
+}
+
+bool ClientImplementation::try_update_note(Note *note) const {
+    return update_requests_.try_update_note(note);
+}
+
+bool ClientImplementation::try_create_note(Note *note) const {
+    return update_requests_.try_create_note(note);
+}
+
+bool ClientImplementation::try_fetch_note(Note *note) const {
+    return update_requests_.try_fetch_note(note);
 }

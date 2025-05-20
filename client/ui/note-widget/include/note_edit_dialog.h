@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <memory>
 #include <vector>
+#include "client_implementation.h"
 #include "model-proto/model.pb.h"
 #include "tags_dialog.h"
 
@@ -22,8 +23,9 @@ class NoteEditDialog final : public QDialog {
 
 public:
     explicit NoteEditDialog(
-        QWidget* parent = nullptr,
-        Note* note = nullptr
+        ClientImplementation *client,
+        QWidget *parent = nullptr,
+        Note *note = nullptr
     );
     ~NoteEditDialog() override;
 
@@ -39,7 +41,7 @@ private:
     void setup_connections();
     void setup_ui();
 
-    void add_member_avatar(const std::string& member);
+    void add_member_avatar(const std::string &member);
 
     void clear_member_avatars();
     void update_tags_display();
@@ -47,11 +49,12 @@ private:
 
     [[nodiscard]] bool try_save_note() const;
 
-    Ui::NoteEditDialog* ui_{};
+    Ui::NoteEditDialog *ui_{};
     std::vector<std::unique_ptr<QLabel>> member_avatars_;
     std::vector<std::unique_ptr<QLabel>> tag_labels_;
     QList<TagsDialog::Tag> selected_tags_;
-    Note* note_;
+    Note *note_;
+    ClientImplementation *client_;
 };
 
-#endif // NOTE_EDIT_DIALOG_H
+#endif  // NOTE_EDIT_DIALOG_H

@@ -18,11 +18,55 @@ void UpdateService::run() {
     new CreateProjectServerCall(&service_, cq_);
 }
 
-UpdateService::GetNoteServerCall::GetNoteServerCall(
-    Update::AsyncService *service,
+UpdateService::UpdateNoteServerCall::UpdateNoteServerCall(
+    UpdateService &service,
     ServerCompletionQueue *cq
 )
     : CommonServerCall(cq), responder_(&ctx_), service_(service) {
+    service_.service_.RequestUpdateNote(
+        &ctx_, &request_, &responder_, cq_, cq_, this
+    );
+    status_ = PROCESS;
+}
+
+void UpdateService::UpdateNoteServerCall::Proceed(const bool ok) {
+    if (!ok) {
+        delete this;
+        return;
+    }
+
+    switch (status_) {
+        case PROCESS: {
+            new UpdateNoteServerCall(service_, cq_);
+
+            UpdateNoteResponse response;
+
+            NoteDao::update_note(request_.note());
+            response.mutable_note()->CopyFrom(request_.note());
+            std::cout << "[SERVER]: UPDATE NOTE REQUEST id="
+                      << request_.note().id()
+                      << ", title=" << response.mutable_note()->title()
+                      << std::endl;
+            responder_.Finish(response, grpc::Status::OK, this);
+            status_ = FINISH;
+            break;
+        }
+        case FINISH: {
+            delete this;
+            break;
+        }
+    }
+}
+
+UpdateService::GetNoteServerCall::GetNoteServerCall(
+    UpdateService &service,
+    ServerCompletionQueue *cq
+)
+    : CommonServerCall(cq), responder_(&ctx_), service_(service) {
+    service_.service_.RequestGetNote(
+        &ctx_, &request_, &responder_, cq_, cq_, this
+    );
+    status_ = PROCESS;
 }
 
 void UpdateService::GetNoteServerCall::Proceed(const bool ok) {
@@ -42,7 +86,15 @@ void UpdateService::GetNoteServerCall::Proceed(const bool ok) {
         }
         case PROCESS: {
             const GetNoteResponse response;
+            GetNoteResponse response;
 
+            const auto note = NoteDao::get_note(request_.id());
+            response.mutable_note()->CopyFrom(note);
+            std::cout << "[SERVER]: FETCH NOTE REQUEST id=" << request_.id()
+                      << ", title=" << response.mutable_note()->title()
+                      << ", first tag=" << response.note().tags()[0].text()
+                      << ":" << response.note().tags()[0].color() << std::endl;
+                      
             // TODO: query processing logic
 
             responder_.Finish(response, grpc::Status::OK, this);
@@ -242,7 +294,6 @@ void UpdateService::TryLeaveProjectServerCall::Proceed(const bool ok) {
         }
     }
 }
-
 
 Update::AsyncService &UpdateService::get_service() {
     return service_;
