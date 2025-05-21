@@ -94,7 +94,7 @@ void UpdateService::GetNoteServerCall::Proceed(const bool ok) {
                       << ", title=" << response.mutable_note()->title()
                       << ", first tag=" << response.note().tags()[0].text()
                       << ":" << response.note().tags()[0].color() << std::endl;
-                      
+
             // TODO: query processing logic
 
             responder_.Finish(response, grpc::Status::OK, this);
@@ -251,7 +251,6 @@ void UpdateService::TryJoinProjectServerCall::Proceed(const bool ok = true) {
     }
 }
 
-
 UpdateService::TryLeaveProjectServerCall::TryLeaveProjectServerCall(
     Update::AsyncService *service,
     ServerCompletionQueue *cq
@@ -279,17 +278,19 @@ void UpdateService::TryLeaveProjectServerCall::Proceed(const bool ok) {
             status_ = FINISH;
             new TryLeaveProjectServerCall(service_, cq_);
             std::cout << "[SERVER] : {try leave project} : get request, code="
-            << request_.code() << std::endl;
+                      << request_.code() << std::endl;
 
             // todo: check if user exists, if project exists etc.
-            UpdateHandler::try_leave_project(request_.code(), request_.user().login());
+            UpdateHandler::try_leave_project(
+                request_.code(), request_.user().login()
+            );
 
             response_.set_ok(1);
             responder_.Finish(response_, grpc::Status::OK, this);
         }
         case FINISH: {
             std::cout << "[SERVER] : {try leave project} : deleting call"
-            << std::endl;
+                      << std::endl;
             delete this;
         }
     }

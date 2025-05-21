@@ -61,23 +61,6 @@ public:
         GetNoteResponse get_reply();
     };
 
-    class GetProjectClientCall final : public CommonClientCall {
-        GetProjectResponse response;
-        std::unique_ptr<ClientAsyncResponseReader<GetProjectResponse>>
-            response_reader;
-        Project *save_to;
-
-    public:
-        void Proceed(bool ok) override;
-
-        GetProjectClientCall(
-            GetProjectRequest &request,
-            CompletionQueue *cq_,
-            std::unique_ptr<Update::Stub> &stub_,
-            Project *save_to_
-        );
-    };
-  
     class CreateNoteClientCall final : public CommonClientCall {
         CreateNoteResponse reply_;
         std::unique_ptr<grpc::ClientAsyncResponseReader<CreateNoteResponse>>
@@ -93,34 +76,13 @@ public:
         CreateNoteResponse get_reply();
     };
 
-    class CreateProjectClientCall : public CommonClientCall {
-        CreateProjectResponse response;
-        std::unique_ptr<ClientAsyncResponseReader<CreateProjectResponse>>
-            response_reader;
-        Project *save_to;
-
-    public:
-        void Proceed(bool ok) override;
-
-        CreateProjectClientCall(
-            CreateProjectRequest &request,
-            CompletionQueue *cq_,
-            std::unique_ptr<Update::Stub> &stub_,
-            Project *save_to_
-        );
-    };
-
     class TryJoinProjectClientCall;
 
     bool try_update_note(Note *note) const;
     bool try_fetch_note(Note *note) const;
     bool try_create_note(Note *note) const;
-    bool try_create_project(Project *project);
     bool get_note(Note *note);
-    bool get_project(Project *project, const std::string &code);
     bool create_note(Note *note);
-    bool create_project(Project *project, const std::string &project_title);
-    bool try_join_project(Project *project);
 
     explicit UpdateRequests(
         std::shared_ptr<Channel> channel,
