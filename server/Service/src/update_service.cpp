@@ -224,7 +224,7 @@ void UpdateService::TryJoinProjectServerCall::Proceed(const bool ok = true) {
         }
         case PROCESS: {
             // todo: validate user token
-
+            // todo: check if user already has this project
             status_ = FINISH;
             new TryJoinProjectServerCall(service_, cq_);
             std::cout << "[SERVER] : {try join project} : get request, code="

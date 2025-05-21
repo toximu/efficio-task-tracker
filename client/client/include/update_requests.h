@@ -31,6 +31,9 @@ using Efficio_proto::UpdateNoteResponse;
 
 class UpdateRequests {
 public:
+
+
+
     class UpdateNoteClientCall final : public CommonClientCall {
         UpdateNoteResponse reply_;
         std::unique_ptr<grpc::ClientAsyncResponseReader<UpdateNoteResponse>>
@@ -76,13 +79,17 @@ public:
         CreateNoteResponse get_reply();
     };
 
-    class TryJoinProjectClientCall;
-
     bool try_update_note(Note *note) const;
     bool try_fetch_note(Note *note) const;
     bool try_create_note(Note *note) const;
     bool get_note(Note *note);
     bool create_note(Note *note);
+  
+    bool get_project(Project &project, const std::string &code);
+    bool create_project(Project &project, const std::string &project_title);
+    bool try_leave_project(const std::string &code);
+    bool try_join_project(Project &project, const std::string &code);
+
 
     explicit UpdateRequests(
         std::shared_ptr<Channel> channel,
