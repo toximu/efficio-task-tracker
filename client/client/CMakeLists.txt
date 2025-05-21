@@ -13,7 +13,9 @@ find_package(Threads)
 file(GLOB SOURCES "src/*.cpp")
 file(GLOB HEADERS "include/*.h")
 
-add_library(Client STATIC ${SOURCES} ${HEADERS})
+add_library(Client STATIC ${SOURCES} ${HEADERS}
+        include/auth_requests.h
+        src/auth_requests.cpp)
 
 target_link_libraries(Client
         model-proto
@@ -21,6 +23,7 @@ target_link_libraries(Client
         protobuf::libprotobuf
         gRPC::grpc
         gRPC::grpc++
+        Service
 )
 
 target_include_directories(Client
