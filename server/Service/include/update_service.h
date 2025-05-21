@@ -32,6 +32,8 @@ class UpdateService final {
     std::unique_ptr<grpc::Server> server_;
 
 public:
+    UpdateService::UpdateService(ServerCompletionQueue *cq);
+
     class UpdateNoteServerCall final : public CommonServerCall {
         UpdateNoteRequest request_;
         ServerAsyncResponseWriter<UpdateNoteResponse> responder_;

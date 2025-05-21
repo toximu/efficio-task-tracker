@@ -10,13 +10,6 @@ using grpc::Channel;
 using grpc::ClientAsyncResponseReader;
 using grpc::CompletionQueue;
 
-using Efficio_proto::CreateProjectRequest;
-using Efficio_proto::CreateProjectResponse;
-using Efficio_proto::GetNoteRequest;
-using Efficio_proto::GetNoteResponse;
-using Efficio_proto::GetProjectRequest;
-using Efficio_proto::GetProjectResponse;
-
 using Efficio_proto::Note;
 using Efficio_proto::Project;
 using Efficio_proto::Storage;

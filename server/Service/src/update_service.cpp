@@ -14,8 +14,8 @@ UpdateService::UpdateService(ServerCompletionQueue *cq) : cq_(cq), service_() {
 }
 
 void UpdateService::run() {
-    new GetProjectServerCall(&service_, cq_);
-    new CreateProjectServerCall(&service_, cq_);
+    new GetProjectServerCall(&service_, cq_.get());
+    new CreateProjectServerCall(&service_, cq_.get());
 }
 
 UpdateService::UpdateNoteServerCall::UpdateNoteServerCall(

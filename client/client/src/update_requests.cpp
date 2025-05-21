@@ -19,6 +19,8 @@ using Efficio_proto::TryJoinProjectRequest;
 using Efficio_proto::TryJoinProjectResponse;
 using Efficio_proto::TryLeaveProjectRequest;
 using Efficio_proto::TryLeaveProjectResponse;
+using Efficio_proto::CreateProjectRequest;
+using Efficio_proto::CreateProjectResponse;
 using Efficio_proto::Update;
 
 
@@ -110,6 +112,7 @@ bool UpdateRequests::try_join_project(
     ClientContext context;
     std::cout << "CLIENT : [try join project] : sending request" << std::endl;
     Status status = stub_->TryJoinProject(&context, request, &response);
+
     if (status.ok() && response.has_project()) {
         std::cout << "CLIENT : [try join project] : got project!" << std::endl;
         project = std::move(*response.mutable_project());
@@ -123,6 +126,7 @@ bool UpdateRequests::try_join_project(
                   << std::endl;
     }
     return false;
+}
 
 UpdateRequests::UpdateNoteClientCall::UpdateNoteClientCall(
     const UpdateNoteRequest &request,
