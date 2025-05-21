@@ -13,64 +13,112 @@ using Efficio_proto::GetNoteRequest;
 using Efficio_proto::GetNoteResponse;
 using Efficio_proto::GetProjectRequest;
 using Efficio_proto::GetProjectResponse;
+using Efficio_proto::TryJoinProjectRequest;
+using Efficio_proto::TryJoinProjectResponse;
+using Efficio_proto::TryLeaveProjectRequest;
+using Efficio_proto::TryLeaveProjectResponse;
 using Efficio_proto::Update;
 
-UpdateRequests::GetProjectClientCall::GetProjectClientCall(
-    GetProjectRequest &request,
-    CompletionQueue *cq_,
-    std::unique_ptr<Update::Stub> &stub_,
-    Project *save_to_
-)
-    : CommonClientCall(), save_to(save_to_) {
-    response_reader = stub_->PrepareAsyncGetProject(&context, request, cq_);
-    response_reader->StartCall();
-    response_reader->Finish(&response, &status, (void *)this);
-}
 
-void UpdateRequests::GetProjectClientCall::Proceed(bool ok) {
-    if (ok && status.ok()) {
-        if (response.has_project()) {
-            *save_to = response.project();
-        } else {
-            std::cout << response.error_text() << std::endl;
-        }
+// todo: set user everywhere
+
+bool UpdateRequests::get_project(Project &project, const std::string &code) {
+    GetProjectRequest request;
+
+    request.set_code(code);
+
+    GetProjectResponse response;
+
+    ClientContext context;
+
+    std::cout << "CLIENT : [get project] : sending request" << std::endl;
+
+    Status status = stub_->GetProject(&context, request, &response);
+
+    if (status.ok() && response.has_project()) {
+        std::cout << "CLIENT : [get project] : got project!" << std::endl;
+        project = std::move(*response.mutable_project());
+        return true;
     }
-}
 
-bool UpdateRequests::get_project(Project *project, const std::string &code) {
-    auto request = new GetProjectRequest;
-    request->set_code(code);
-    new GetProjectClientCall(*request, cq_, stub_, project);
-    return true;
-}
-
-UpdateRequests::CreateProjectClientCall::CreateProjectClientCall(
-    CreateProjectRequest &request,
-    CompletionQueue *cq_,
-    std::unique_ptr<Update::Stub> &stub_,
-    Project *save_to_) : CommonClientCall(), save_to(save_to_)
-{
-    response_reader = stub_->PrepareAsyncCreateProject(&context, request, cq_);
-    response_reader->StartCall();
-    response_reader->Finish(&response, &status, (void *)this);
-}
-
-void UpdateRequests::CreateProjectClientCall::Proceed(bool ok) {
-    if (ok && status.ok()) {
-        if (response.has_project()) {
-            *save_to = response.project();
-        } else {
-            std::cout << response.error_text() << std::endl;
-        }
+    if (response.has_error_text()) {
+        std::cout << "CLIENT : [create project] : error_text : "
+                  << response.error_text() << std::endl;
+    } else {
+        std::cout << "CLIENT [create project] : status is not OK" << std::endl;
     }
+
+    return false;
 }
 
 bool UpdateRequests::create_project(
-    Project *project,
+    Project &project,
     const std::string &project_title
 ) {
-    auto request = new CreateProjectRequest;
-    request->set_project_title(project_title);
-    new CreateProjectClientCall(*request, cq_, stub_, project);
-    return true;
+    CreateProjectRequest request;
+    request.set_project_title(project_title);
+
+    CreateProjectResponse response;
+
+    ClientContext context;
+
+    std::cout << "CLIENT : [create project] : sending request" << std::endl;
+    Status status = stub_->CreateProject(&context, request, &response);
+
+    if (status.ok() && response.has_project()) {
+        std::cout << "CLIENT : [create project] : got project!" << std::endl;
+        project = std::move(*response.mutable_project());
+        return true;
+    }
+
+    if (response.has_error_text()) {
+        std::cout << "CLIENT [create project] {error text} : "
+                  << response.error_text() << std::endl;
+    } else {
+        std::cout << "CLIENT [create project] status is not OK" << std::endl;
+    }
+    return false;
+}
+
+bool UpdateRequests::try_leave_project(const std::string &code) {
+    TryLeaveProjectRequest request;
+
+    request.set_code(code);
+    TryLeaveProjectResponse response;
+    ClientContext context;
+    std::cout << "CLIENT : [try leave project] : sending request" << std::endl;
+    Status status = stub_->TryLeaveProject(&context, request, &response);
+
+    if (status.ok() && response.ok()) {
+        std::cout << "CLIENT : [try leave project] : left project" << std::endl;
+        return true;
+    }
+
+    std::cout << "CLIENT : [try leave project] : can't leave project"
+              << std::endl;
+}
+
+bool UpdateRequests::try_join_project(
+    Project &project,
+    const std::string &code
+) {
+    TryJoinProjectRequest request;
+    request.set_code(code);
+    TryJoinProjectResponse response;
+    ClientContext context;
+    std::cout << "CLIENT : [try join project] : sending request" << std::endl;
+    Status status = stub_->TryJoinProject(&context, request, &response);
+    if (status.ok() && response.has_project()) {
+        std::cout << "CLIENT : [try join project] : got project!" << std::endl;
+        project = std::move(*response.mutable_project());
+        return true;
+    }
+    if (response.has_error_text()) {
+        std::cout << "CLIENT : [try join project] : error_text : "
+                  << response.error_text() << std::endl;
+    } else {
+        std::cout << "CLIENT : [try join project] : status is not OK"
+                  << std::endl;
+    }
+    return false;
 }

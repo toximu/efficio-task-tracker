@@ -172,7 +172,7 @@ void UpdateService::TryJoinProjectServerCall::Proceed(const bool ok = true) {
         }
         case PROCESS: {
             // todo: validate user token
-
+            // todo: check if user already has this project
             status_ = FINISH;
             new TryJoinProjectServerCall(service_, cq_);
             std::cout << "[SERVER] : {try join project} : get request, code="
@@ -198,7 +198,6 @@ void UpdateService::TryJoinProjectServerCall::Proceed(const bool ok = true) {
         }
     }
 }
-
 
 UpdateService::TryLeaveProjectServerCall::TryLeaveProjectServerCall(
     Update::AsyncService *service,
@@ -227,22 +226,23 @@ void UpdateService::TryLeaveProjectServerCall::Proceed(const bool ok) {
             status_ = FINISH;
             new TryLeaveProjectServerCall(service_, cq_);
             std::cout << "[SERVER] : {try leave project} : get request, code="
-            << request_.code() << std::endl;
+                      << request_.code() << std::endl;
 
             // todo: check if user exists, if project exists etc.
-            UpdateHandler::try_leave_project(request_.code(), request_.user().login());
+            UpdateHandler::try_leave_project(
+                request_.code(), request_.user().login()
+            );
 
             response_.set_ok(1);
             responder_.Finish(response_, grpc::Status::OK, this);
         }
         case FINISH: {
             std::cout << "[SERVER] : {try leave project} : deleting call"
-            << std::endl;
+                      << std::endl;
             delete this;
         }
     }
 }
-
 
 Update::AsyncService &UpdateService::get_service() {
     return service_;

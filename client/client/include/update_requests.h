@@ -23,50 +23,19 @@ using Efficio_proto::Update;
 
 class UpdateRequests {
 public:
-    class GetProjectClientCall final : public CommonClientCall {
-        GetProjectResponse response;
-        std::unique_ptr<ClientAsyncResponseReader<GetProjectResponse>>
-            response_reader;
-        Project *save_to;
-
-    public:
-        void Proceed(bool ok) override;
-
-        GetProjectClientCall(
-            GetProjectRequest &request,
-            CompletionQueue *cq_,
-            std::unique_ptr<Update::Stub> &stub_,
-            Project *save_to_
-        );
-    };
-
-    class CreateProjectClientCall : public CommonClientCall {
-        CreateProjectResponse response;
-        std::unique_ptr<ClientAsyncResponseReader<CreateProjectResponse>>
-            response_reader;
-        Project *save_to;
-
-    public:
-        void Proceed(bool ok) override;
-
-        CreateProjectClientCall(
-            CreateProjectRequest &request,
-            CompletionQueue *cq_,
-            std::unique_ptr<Update::Stub> &stub_,
-            Project *save_to_
-        );
-    };
 
     class GetNoteClientCall;
     class CreateNoteClientCall;
 
-    class TryJoinProjectClientCall;
-
     bool get_note(Note *note);
-    bool get_project(Project *project, const std::string &code);
     bool create_note(Note *note);
-    bool create_project(Project *project, const std::string &project_title);
-    bool try_join_project(Project *project);
+
+    bool get_project(Project &project, const std::string &code);
+    bool create_project(Project &project, const std::string &project_title);
+    bool try_leave_project(const std::string &code);
+    bool try_join_project(Project &project, const std::string &code);
+
+
 
     explicit UpdateRequests(
         std::shared_ptr<Channel> channel,
