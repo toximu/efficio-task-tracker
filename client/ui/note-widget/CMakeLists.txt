@@ -34,7 +34,6 @@ add_library(NoteWidget STATIC ${SOURCES} ${HEADERS} ${UI_FILES})
 target_include_directories(NoteWidget
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         $<INSTALL_INTERFACE:include>
 )
 

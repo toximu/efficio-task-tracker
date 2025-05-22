@@ -17,8 +17,7 @@ target_include_directories(Database
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
+        ${CMAKE_SOURCE_DIR}/client/ui/note-widget/include
 )
 
-target_link_libraries(Database PRIVATE OpenSSL::Crypto Qt6::Widgets Qt6::Core Qt6::Sql model-proto pqxx NoteWidget)
-add_executable(test_database main.cpp)
-target_link_libraries(test_database Database model-proto)
+target_link_libraries(Database PRIVATE OpenSSL::Crypto Qt6::Widgets Qt6::Core Qt6::Sql NoteWidget model-proto pqxx )

@@ -64,7 +64,9 @@ bool UpdateHandler::try_leave_project(
     return true;
 }
 
-std::optional<Project> UpdateHandler::get_project(const std::string &project_code) {
+std::optional<Project> UpdateHandler::get_project(
+    const std::string &project_code
+) {
     Project project;
     bool ok = ProjectDAO::get_project(project_code, project);
     if (!ok) {

@@ -19,6 +19,7 @@ add_library(Service STATIC ${SOURCES} ${HEADERS}
         src/auth_service.cpp)
 
 target_link_libraries(Service
+        NoteWidget
         Database
         model-proto
         efficio-rpc

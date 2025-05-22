@@ -3,9 +3,9 @@
 #include <grpcpp/grpcpp.h>
 #include <cassert>
 #include <iostream>
+#include <thread>
 #include "update_requests.h"
 #include "update_service.h"
-#include <thread>
 
 using grpc::Channel;
 using grpc::ClientAsyncResponseReader;

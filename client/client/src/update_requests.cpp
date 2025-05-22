@@ -11,6 +11,8 @@ using grpc::ClientContext;
 using grpc::CompletionQueue;
 using grpc::Status;
 
+using Efficio_proto::CreateProjectRequest;
+using Efficio_proto::CreateProjectResponse;
 using Efficio_proto::GetNoteRequest;
 using Efficio_proto::GetNoteResponse;
 using Efficio_proto::GetProjectRequest;
@@ -19,10 +21,7 @@ using Efficio_proto::TryJoinProjectRequest;
 using Efficio_proto::TryJoinProjectResponse;
 using Efficio_proto::TryLeaveProjectRequest;
 using Efficio_proto::TryLeaveProjectResponse;
-using Efficio_proto::CreateProjectRequest;
-using Efficio_proto::CreateProjectResponse;
 using Efficio_proto::Update;
-
 
 // todo: set user everywhere
 
@@ -207,7 +206,6 @@ bool UpdateRequests::try_update_note(Note *note) const {
     *note = call->get_reply().note();
     std::cout << "[CLIENT]: UPDATE NOTE - " << note->title() << "\n";
     return true;
-
 }
 
 bool UpdateRequests::try_fetch_note(Note *note) const {

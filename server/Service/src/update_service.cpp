@@ -9,8 +9,7 @@ using Efficio_proto::GetNoteRequest;
 using Efficio_proto::GetNoteResponse;
 using Efficio_proto::Project;
 
-UpdateService::UpdateService(ServerCompletionQueue *cq) : cq_(cq), service_() {
-    // new GetNoteServerCall(&service_, cq_);
+UpdateService::UpdateService(ServerCompletionQueue *cq) : cq_(cq) {
 }
 
 void UpdateService::run() {
@@ -76,16 +75,9 @@ void UpdateService::GetNoteServerCall::Proceed(const bool ok) {
     }
 
     switch (status_) {
-        case CREATE: {
-            new GetNoteServerCall(service_, cq_);
-            service_->RequestGetNote(
-                &ctx_, &request_, &responder_, cq_, cq_, this
-            );
-            status_ = PROCESS;
-            break;
-        }
         case PROCESS: {
-            const GetNoteResponse response;
+            new GetNoteServerCall(service_, cq_);
+
             GetNoteResponse response;
 
             const auto note = NoteDao::get_note(request_.id());
@@ -94,8 +86,6 @@ void UpdateService::GetNoteServerCall::Proceed(const bool ok) {
                       << ", title=" << response.mutable_note()->title()
                       << ", first tag=" << response.note().tags()[0].text()
                       << ":" << response.note().tags()[0].color() << std::endl;
-
-            // TODO: query processing logic
 
             responder_.Finish(response, grpc::Status::OK, this);
             status_ = FINISH;

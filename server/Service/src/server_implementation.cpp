@@ -1,8 +1,6 @@
 #include "server_implementation.h"
 #include "common_server_call.h"
 
-using Efficio_proto::GetNoteRequest;
-
 void ServerImplementation::Run(const uint16_t port) {
     grpc::ServerBuilder builder;
     cq_ = builder.AddCompletionQueue();
@@ -14,8 +12,6 @@ void ServerImplementation::Run(const uint16_t port) {
 
     cq_ = builder.AddCompletionQueue();
     server_ = builder.BuildAndStart();
-    UpdateService update_service(cq_.get());
-    update_service.run();
     HandleRPCs();
 }
 
@@ -26,7 +22,7 @@ void ServerImplementation::HandleRPCs() {
 
     new AuthService::TryAuthenticateUserServerCall(auth_service_, cq_.get());
     new AuthService::TryRegisterUserServerCall(auth_service_, cq_.get());
-  
+
     void *tag;
     bool ok;
     while (cq_->Next(&tag, &ok)) {

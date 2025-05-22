@@ -1,7 +1,7 @@
 #include "note_dao.hpp"
 #include <pqxx/pqxx>
 #include "database_manager.hpp"
-// #include "tags_dialog.h"
+#include "tags_dialog.h"
 
 namespace {
 

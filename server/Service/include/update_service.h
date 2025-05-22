@@ -32,7 +32,7 @@ class UpdateService final {
     std::unique_ptr<grpc::Server> server_;
 
 public:
-    UpdateService::UpdateService(ServerCompletionQueue *cq);
+    UpdateService(ServerCompletionQueue *cq);
 
     class UpdateNoteServerCall final : public CommonServerCall {
         UpdateNoteRequest request_;
@@ -50,7 +50,7 @@ public:
     class GetNoteServerCall final : public CommonServerCall {
         GetNoteRequest request_;
         ServerAsyncResponseWriter<GetNoteResponse> responder_;
-        Update::AsyncService *service_;
+        UpdateService &service_;
 
     public:
         explicit GetNoteServerCall(
