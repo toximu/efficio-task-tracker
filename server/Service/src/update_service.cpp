@@ -13,8 +13,11 @@ UpdateService::UpdateService(ServerCompletionQueue *cq) : cq_(cq) {
 }
 
 void UpdateService::run() {
-    new GetProjectServerCall(&service_, cq_.get());
-    new CreateProjectServerCall(&service_, cq_.get());
+    new GetProjectServerCall(&service_, cq_);
+    new CreateProjectServerCall(&service_, cq_);
+    new TryJoinProjectServerCall(&service_, cq_);
+    new TryLeaveProjectServerCall(&service_, cq_);
+
 }
 
 UpdateService::UpdateNoteServerCall::UpdateNoteServerCall(
@@ -120,18 +123,10 @@ void UpdateService::GetProjectServerCall::Proceed(const bool ok = true) {
         case PROCESS: {
             status_ = FINISH;
 
-            // todo: validate user token
-            // todo: check if user has this project
             std::cout << "[SERVER] : {get project} : get request, code="
                       << request_.code() << std::endl;
             new GetProjectServerCall(service_, cq_);
-            auto project = UpdateHandler::get_project(request_.code());
-
-            if (project.has_value()) {
-                response_.set_allocated_project(&project.value());
-            } else {
-                response_.set_error_text("can't get project");
-            }
+            UpdateHandler::get_project(request_, response_);
             responder_.Finish(response_, grpc::Status::OK, this);
             break;
         }
@@ -167,17 +162,14 @@ void UpdateService::CreateProjectServerCall::Proceed(const bool ok) {
             break;
         }
         case PROCESS: {
-            // todo: validate user token
             status_ = FINISH;
             new GetProjectServerCall(service_, cq_);
 
             std::cout << "[SERVER] : {create project} : get request, title="
                       << request_.project_title() << std::endl;
 
-            Project *res_project = new Project(
-                UpdateHandler::create_project(request_.project_title())
-            );
-            response_.set_allocated_project(res_project);
+            UpdateHandler::create_project(request_, response_);
+
             responder_.Finish(response_, grpc::Status::OK, this);
             break;
         }
@@ -213,32 +205,22 @@ void UpdateService::TryJoinProjectServerCall::Proceed(const bool ok = true) {
             break;
         }
         case PROCESS: {
-            // todo: validate user token
-            // todo: check if user already has this project
             status_ = FINISH;
             new TryJoinProjectServerCall(service_, cq_);
             std::cout << "[SERVER] : {try join project} : get request, code="
                       << request_.code() << std::endl;
 
-            if (!UpdateHandler::try_join_project(
-                    request_.code(), request_.user().login()
-                )) {
-                response_.set_error_text("can't join project");
-                responder_.Finish(response_, grpc::Status::OK, this);
-                break;
-            }
+            UpdateHandler::try_join_project(request_, response_);
 
-            auto project = UpdateHandler::get_project(request_.code());
-            response_.set_allocated_project(&project.value());
             responder_.Finish(response_, grpc::Status::OK, this);
             break;
-        }
-        case FINISH: {
-            std::cout << "[SERVER] : {try join project} : deleting call"
-                      << std::endl;
-            delete this;
-        }
     }
+    case FINISH: {
+        std::cout << "[SERVER] : {try join project} : deleting call"
+                  << std::endl;
+        delete this;
+    }
+}
 }
 
 UpdateService::TryLeaveProjectServerCall::TryLeaveProjectServerCall(
@@ -270,9 +252,8 @@ void UpdateService::TryLeaveProjectServerCall::Proceed(const bool ok) {
             std::cout << "[SERVER] : {try leave project} : get request, code="
                       << request_.code() << std::endl;
 
-            // todo: check if user exists, if project exists etc.
             UpdateHandler::try_leave_project(
-                request_.code(), request_.user().login()
+                request_, response_
             );
 
             response_.set_ok(1);

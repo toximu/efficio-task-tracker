@@ -15,7 +15,7 @@ class ServerImplementation final {
     AuthService auth_service_;
 
 public:
-    void Run(uint16_t port);
+    explicit ServerImplementation(const uint16_t port, grpc::ServerBuilder &builder);
     void HandleRPCs();
 };
 

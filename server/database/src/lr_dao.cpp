@@ -67,11 +67,10 @@ int LRDao::try_register_user(
     pqxx::work transaction(connection);
 
     const std::string check_query = "SELECT * FROM users WHERE login = $1";
-    pqxx::params check_params;
-    check_params.append(login);
+
 
     const pqxx::result check_result =
-        transaction.exec(check_query, check_params);
+        transaction.exec_params(check_query, login);
 
     if (!check_result.empty()) {
         return -1;
@@ -81,12 +80,9 @@ int LRDao::try_register_user(
 
     const std::string insert_query =
         "INSERT INTO users (login, password) VALUES ($1, $2)";
-    pqxx::params insert_params;
-    insert_params.append(login);
-    insert_params.append(hashed_password);
 
     const pqxx::result insert_result =
-        transaction.exec(insert_query, insert_params);
+        transaction.exec_params(insert_query, login, hashed_password);
 
     transaction.commit();
     return insert_result.affected_rows() > 0 ? 1 : 0;
@@ -100,10 +96,8 @@ bool LRDao::validate_user(
     pqxx::work transaction(connection);
 
     const std::string query = "SELECT password FROM users WHERE login = $1";
-    pqxx::params params;
-    params.append(login);
 
-    const pqxx::result result = transaction.exec(query, params);
+    const pqxx::result result = transaction.exec_params(query, login);
 
     if (result.empty()) {
         transaction.commit();
@@ -119,7 +113,7 @@ bool LRDao::validate_user(
 
 bool LRDao::add_project_to_user(
     const std::string &user_login,
-    const int project_id
+    const std::string &project_code
 ) {
     auto &connection = DatabaseManager::get_instance().get_connection();
     pqxx::work transaction(connection);
@@ -128,26 +122,25 @@ bool LRDao::add_project_to_user(
         "UPDATE users SET projects = array_append(projects, ?)"
         "WHERE login = ?";
     pqxx::params params;
-    params.append(project_id);
+    params.append(project_code);
     params.append(user_login);
 
-    const pqxx::result result = transaction.exec(query, params);
+    const pqxx::result result =
+        transaction.exec_params(query, params);
     transaction.commit();
     return result.affected_rows() > 0;
 }
 
 bool LRDao::get_user_projects(
     const std::string &login,
-    std::vector<int> &projects
+    std::vector<std::string> &projects
 ) {
     auto &connection = DatabaseManager::get_instance().get_connection();
     pqxx::work transaction(connection);
 
     const std::string query = "SELECT projects FROM users WHERE login = $1";
-    pqxx::params params;
-    params.append(login);
 
-    const pqxx::result result = transaction.exec(query, params);
+    const pqxx::result result = transaction.exec_params(query, login);
 
     if (!result.empty()) {
         const auto &row = result[0];
@@ -164,7 +157,7 @@ bool LRDao::get_user_projects(
             std::string project_id;
             while (std::getline(iss, project_id, ',')) {
                 if (!project_id.empty()) {
-                    projects.push_back(std::stoi(project_id));
+                    projects.push_back(project_id);
                 }
             }
 
@@ -175,4 +168,24 @@ bool LRDao::get_user_projects(
 
     transaction.commit();
     return false;
+}
+
+bool LRDao::delete_project_from_user(
+    const std::string &login,
+    const std::string &project_code
+) {
+    auto &connection = DatabaseManager::get_instance().get_connection();
+    pqxx::work transaction(connection);
+    const std::string query =
+        "UPDATE users SET projects = array_remove(projects, $1) WHERE "
+        "login = $2"
+        "RETURNING 1";
+
+    const pqxx::result result =
+        transaction.exec_params(query, project_code, login);
+    transaction.commit();
+    if (result.empty()) {
+        return false;
+    }
+    return true;
 }

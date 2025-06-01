@@ -1,15 +1,15 @@
 #include "update_handler.hpp"
 #include <model-proto/model.pb.h>
 #include <random>
+#include "lr_dao.hpp"
 #include "project_dao.hpp"
 
 using Efficio_proto::Project;
 
 std::string UpdateHandler::generate_project_code() {
     static const std::string chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, chars.size() - 1);
+    static std::mt19937 gen(std::random_device{}());
+    static std::uniform_int_distribution<std::size_t> dis(0, chars.size() - 1);
     std::string result;
     for (size_t i = 0; i < 6; ++i) {
         result += chars[dis(gen)];
@@ -17,9 +17,18 @@ std::string UpdateHandler::generate_project_code() {
     return result;
 }
 
-Project UpdateHandler::create_project(const std::string &title) {
-    Project project;
-    project.set_title(title);
+bool UpdateHandler::create_project(
+    const CreateProjectRequest &request,
+    CreateProjectResponse &response
+) {
+    if (!LRDao::validate_user(
+            request.user().login(), request.user().hashed_password()
+        )) {
+        response.set_allocated_error_text(new std::string("Incorrect user"));
+        return false;
+    }
+    Project *project = new Project();
+    project->set_title(request.project_title());
     std::string project_code;
     while (true) {
         project_code = generate_project_code();
@@ -27,50 +36,87 @@ Project UpdateHandler::create_project(const std::string &title) {
             break;
         }
     }
-    project.set_code(project_code);
-    ProjectDAO::insert_project(project);
-    return std::move(project);
+    project->set_code(project_code);
+    *project->add_members() = request.user().login();
+    ProjectDAO::insert_project(*project);
+    LRDao::add_project_to_user(request.user().login(), project_code);
+    response.set_allocated_project(project);
+    return true;
 }
 
 bool UpdateHandler::try_join_project(
-    const std::string &project_code,
-    const std::string &login
+    const TryJoinProjectRequest &request,
+    TryJoinProjectResponse &response
 ) {
-    // todo: check if login exists
-
-    // todo: check if users has not this project already
-
-    if (!ProjectDAO::add_member_to_project(project_code, login)) {
+    if (!LRDao::validate_user(
+            request.user().login(), request.user().hashed_password()
+        )) {
+        response.set_allocated_error_text(new std::string("Incorrect user"));
         return false;
     }
 
-    // todo: add project to user(UserDAO not exists yet)
+    {
+        std::vector<std::string> project_codes;
+        LRDao::get_user_projects(request.user().login(), project_codes);
+        for (const auto &project_code : project_codes) {
+            if (project_code == request.code()) {
+                response.set_allocated_error_text(
+                    new std::string("Already have this project")
+                );
+                return false;
+            }
+        }
+    }
+
+    if (!ProjectDAO::add_member_to_project(
+            request.code(), request.user().login()
+        )) {
+        response.set_allocated_error_text(
+            new std::string("Can't add member to project")
+        );
+        return false;
+    }
+    if (!LRDao::add_project_to_user(request.user().login(), request.code())) {
+        response.set_allocated_error_text(
+            new std::string("Can't add project to user")
+        );
+        return false;
+    }
+
+    Project *project = new Project();
+    ProjectDAO::get_project(request.code(), *project);
+    response.set_allocated_project(project);
 
     return true;
 }
 
 bool UpdateHandler::try_leave_project(
-    const std::string &project_code,
-    const std::string &login
+    const TryLeaveProjectRequest &request,
+    TryLeaveProjectResponse &response
 ) {
-    // todo : check if login exists
-
-    if (!ProjectDAO::delete_member_from_project(project_code, login)) {
+    if (!LRDao::validate_user(
+            request.user().login(), request.user().hashed_password()
+        )) {
         return false;
     }
 
-    // todo : delete project from user
+    ProjectDAO::delete_member_from_project(request.code(), request.user().login());
+
+    LRDao::delete_project_from_user(request.user().login(), request.code());
 
     return true;
 }
 
-std::optional<Project> UpdateHandler::get_project(
-    const std::string &project_code
+bool UpdateHandler::get_project(
+    const GetProjectRequest &request,
+    GetProjectResponse &response
 ) {
-    Project project;
-    bool ok = ProjectDAO::get_project(project_code, project);
+    Project *project = new Project();
+    bool ok = ProjectDAO::get_project(request.code(), *project);
     if (!ok) {
-        return std::nullopt;
+        response.set_allocated_error_text(new std::string("Can't get project"));
+        return false;
     }
-    return project;
+    response.set_allocated_project(project);
+    return true;
 }

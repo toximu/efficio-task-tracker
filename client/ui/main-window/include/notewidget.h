@@ -26,7 +26,7 @@ public:
 
 private slots:
 
-    // void open_note_window() const;
+    void open_note_window() const;
 };
 }  // namespace Ui
 #endif  // NOTEWIDGET_H

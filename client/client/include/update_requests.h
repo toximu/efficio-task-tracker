@@ -65,7 +65,7 @@ public:
             grpc::CompletionQueue *cq,
             const std::unique_ptr<Update::Stub> &stub
         );
-        void Proceed(bool ok) override;
+        // void Proceed(bool ok) override;
         CreateNoteResponse get_reply();
     };
 

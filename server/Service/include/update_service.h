@@ -28,7 +28,7 @@ using Efficio_proto::UpdateNoteResponse;
 class UpdateService final {
     Update::AsyncService service_;
     ServerContext ctx_;
-    std::unique_ptr<ServerCompletionQueue> cq_;
+    ServerCompletionQueue *cq_;
     std::unique_ptr<grpc::Server> server_;
 
 public:

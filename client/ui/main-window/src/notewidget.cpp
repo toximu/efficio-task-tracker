@@ -3,7 +3,7 @@
 #include <QPushButton>
 #include <QWidget>
 
-// #include "note_edit_dialog.h"
+#include "note_edit_dialog.h"
 
 namespace Ui {
 NoteWidget::NoteWidget(QWidget *parent, const Note *model_note)

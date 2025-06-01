@@ -11,8 +11,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 COMPONENTS Widgets Core Gui Sql REQUIRED)
 
-add_subdirectory(scripts)
-add_subdirectory(database)
+#add_subdirectory(scripts)
+#add_subdirectory(database)
 add_subdirectory(ui/main-window)
 add_subdirectory(ui/note-widget)
 add_subdirectory(ui/authorization-windows)
@@ -28,8 +28,8 @@ target_link_libraries(EfficioTaskTracker PRIVATE
         Qt6::Sql
         Database
         Scripts
-        MainWindow
         NoteWidget
+        MainWindow
         AuthorizationWindows
         ThemeManager
         model-proto

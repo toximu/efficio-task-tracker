@@ -11,6 +11,7 @@ file(GLOB HEADERS "include/*.hpp")
 add_library(Handlers STATIC ${SOURCES} ${HEADERS})
 
 target_link_libraries(Handlers
+        efficio-rpc
         model-proto
         Database
 )

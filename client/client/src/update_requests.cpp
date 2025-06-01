@@ -183,6 +183,7 @@ UpdateRequests::CreateNoteClientCall::CreateNoteClientCall(
     CompletionQueue *cq,
     const std::unique_ptr<Update::Stub> &stub
 ) {
+    1+1;
 }
 
 bool UpdateRequests::try_update_note(Note *note) const {
@@ -234,7 +235,7 @@ bool UpdateRequests::try_fetch_note(Note *note) const {
 bool UpdateRequests::try_create_note(Note *note) const {
     const CreateNoteRequest request;
 
-    const auto call = new CreateNoteClientCall(request, cq_, stub_);
+    // const auto call = new CreateNoteClientCall(request, cq_, stub_);
 
     void *tag;
     bool ok = false;
