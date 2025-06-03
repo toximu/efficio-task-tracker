@@ -363,27 +363,31 @@
     </item>
    </layout>
   </widget>
-  <widget class="QPushButton" name="switch_theme">
-    <property name="geometry">
-     <rect>
-      <x>660</x> 
-      <y>440</y> 
-      <width>20</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>20</width>
-      <height>20</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>20</width>
-      <height>20</height>
-     </size>
-    </property>
+  <widget class="QPushButton" name="delete_button">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>409</y>
+     <width>70</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>70</width>
+     <height>45</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>11</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Удалить</string>
+   </property>
   </widget>
  </widget>
  <resources/>
