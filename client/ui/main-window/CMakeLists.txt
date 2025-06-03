@@ -36,4 +36,5 @@ target_link_libraries(MainWindow PRIVATE
         Qt6::Sql
         Database
         NoteWidget
+        Client
 )

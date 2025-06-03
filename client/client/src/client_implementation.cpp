@@ -13,14 +13,24 @@ using grpc::ClientContext;
 using grpc::CompletionQueue;
 using grpc::Status;
 
-ClientImplementation::ClientImplementation(
-    const std::shared_ptr<Channel> &channel
-)
-    : channel_(channel),
-      update_requests_(channel, &cq_),
-      auth_requests_(channel, &cq_) {
-    std::thread t(&ClientImplementation::CompleteRpc, this);
-    t.detach();
+CompletionQueue ClientImplementation::cq_;
+std::shared_ptr<Channel> ClientImplementation::channel_;
+UpdateRequests ClientImplementation::update_requests_(nullptr, nullptr);
+AuthRequests ClientImplementation::auth_requests_(nullptr, nullptr);
+
+void ClientImplementation::init() {
+    channel_ =
+        CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
+    update_requests_ = UpdateRequests(channel_, &cq_);
+    auth_requests_ = AuthRequests(channel_, &cq_);
+}
+
+ClientImplementation &ClientImplementation::get_instance() {
+    if (channel_ == nullptr) {
+        init();
+    }
+    static ClientImplementation instance;
+    return instance;
 }
 
 void ClientImplementation::CompleteRpc() {
@@ -49,22 +59,26 @@ std::shared_ptr<Channel> ClientImplementation::get_channel() {
     return channel_;
 }
 
-bool ClientImplementation::try_authenticate_user(User *user) const {
+CompletionQueue *ClientImplementation::get_cq() {
+    return &cq_;
+}
+
+bool ClientImplementation::try_authenticate_user(User *user) {
     return auth_requests_.try_authenticate_user(user);
 }
 
-bool ClientImplementation::try_register_user(User *user) const {
+bool ClientImplementation::try_register_user(User *user) {
     return auth_requests_.try_register_user(user);
 }
 
-bool ClientImplementation::try_update_note(Note *note) const {
+bool ClientImplementation::try_update_note(Note *note) {
     return update_requests_.try_update_note(note);
 }
 
-bool ClientImplementation::try_create_note(Note *note) const {
+bool ClientImplementation::try_create_note(Note *note) {
     return update_requests_.try_create_note(note);
 }
 
-bool ClientImplementation::try_fetch_note(Note *note) const {
+bool ClientImplementation::try_fetch_note(Note *note) {
     return update_requests_.try_fetch_note(note);
 }

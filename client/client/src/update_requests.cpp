@@ -183,7 +183,7 @@ UpdateRequests::CreateNoteClientCall::CreateNoteClientCall(
     CompletionQueue *cq,
     const std::unique_ptr<Update::Stub> &stub
 ) {
-    1+1;
+    1 + 1;
 }
 
 bool UpdateRequests::try_update_note(Note *note) const {

@@ -48,7 +48,8 @@ Note NoteDao::initialize_note_for_user(const std::string &login) {
         "VALUES ($1, $2) "
         "RETURNING id, title, content";
 
-    const pqxx::result result = transaction.exec_params(query, "Пустая заметка","");
+    const pqxx::result result =
+        transaction.exec_params(query, "Пустая заметка", "");
 
     if (result.empty()) {
         return {};
@@ -87,14 +88,10 @@ bool NoteDao::update_note(const Note &note) {
     params.append(tags_array);
     params.append(note.id());
 
-    const pqxx::result result = transaction.exec_params(query,
-        note.title(),
-        note.text(),
-        members_array,
-        note.date(),
-        tags_array,
-        note.id()
-        );
+    const pqxx::result result = transaction.exec_params(
+        query, note.title(), note.text(), members_array, note.date(),
+        tags_array, note.id()
+    );
     transaction.commit();
     return result.affected_rows() > 0;
 }

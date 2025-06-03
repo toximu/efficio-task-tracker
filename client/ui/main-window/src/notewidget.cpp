@@ -2,7 +2,6 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QWidget>
-
 #include "note_edit_dialog.h"
 
 namespace Ui {
@@ -38,6 +37,7 @@ NoteWidget::NoteWidget(QWidget *parent, const Note *model_note)
 
 void NoteWidget::open_note_window() const {
     auto dialog = new ::NoteEditDialog(
+
         const_cast<QWidget *>(qobject_cast<const QWidget *>(this)),
         const_cast<Note *>(model_note_)
     );

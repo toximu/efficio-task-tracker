@@ -19,11 +19,8 @@ const std::vector<QString> RegistrationWindow::THEMES = {
     Ui::registration_window_blue_theme
 };
 
-RegistrationWindow::RegistrationWindow(
-    ClientImplementation *client,
-    QWidget *parent
-)
-    : QWidget(parent), ui(new Ui::RegistrationWindow), client_(client) {
+RegistrationWindow::RegistrationWindow(QWidget *parent)
+    : QWidget(parent), ui(new Ui::RegistrationWindow) {
     ui->setupUi(this);
 
     setFixedSize(380, 480);
@@ -81,7 +78,7 @@ void RegistrationWindow::on_switch_mode_clicked() {
         old->deleteLater();
     }
     Storage storage;
-    auto *login_window = new LoginWindow(client_, app_window);
+    auto *login_window = new LoginWindow(app_window);
 
     app_window->setCentralWidget(login_window);
     const QRect screenGeometry =
@@ -164,7 +161,9 @@ void RegistrationWindow::on_push_registration_clicked() {
                 user->set_login(created_login.toStdString());
                 user->set_hashed_password(created_password.toStdString());
 
-                const int try_register_user = client_->try_register_user(user);
+                const int try_register_user =
+                    ClientImplementation::get_instance().try_register_user(user
+                    );
                 if (try_register_user == 0) {
                     QMessageBox::warning(
                         this, "Ошибка",

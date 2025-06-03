@@ -22,11 +22,7 @@ class NoteEditDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit NoteEditDialog(
-        ClientImplementation *client,
-        QWidget *parent = nullptr,
-        Note *note = nullptr
-    );
+    explicit NoteEditDialog(QWidget *parent = nullptr, Note *note = nullptr);
     ~NoteEditDialog() override;
 
 private slots:
@@ -54,7 +50,6 @@ private:
     std::vector<std::unique_ptr<QLabel>> tag_labels_;
     QList<TagsDialog::Tag> selected_tags_;
     Note *note_;
-    ClientImplementation *client_;
 };
 
 #endif  // NOTE_EDIT_DIALOG_H

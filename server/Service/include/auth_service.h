@@ -24,10 +24,10 @@ class AuthService final {
     protected:
         AuthRequest request_;
         ServerAsyncResponseWriter<AuthResponse> responder_;
-        AuthService &service_;
+        Auth::AsyncService *service_;
 
         explicit AuthServerOperation(
-            AuthService &service,
+            Auth::AsyncService *service,
             ServerCompletionQueue *cq
         )
             : CommonServerCall(cq), responder_(&ctx_), service_(service) {
@@ -42,7 +42,7 @@ public:
     class TryAuthenticateUserServerCall final : public AuthServerOperation {
     public:
         explicit TryAuthenticateUserServerCall(
-            AuthService &service,
+            Auth::AsyncService *service,
             ServerCompletionQueue *cq
         );
         void Proceed(bool) override;
@@ -51,13 +51,15 @@ public:
     class TryRegisterUserServerCall final : AuthServerOperation {
     public:
         explicit TryRegisterUserServerCall(
-            AuthService &service,
+            Auth::AsyncService *service,
             ServerCompletionQueue *cq
         );
         void Proceed(bool) override;
     };
 
     Auth::AsyncService &get_service();
+
+    void run();
 };
 
 #endif  // AUTH_SERVICE_H

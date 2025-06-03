@@ -20,14 +20,11 @@ class LoginWindow final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit LoginWindow(
-        ClientImplementation *client,
-        QWidget *parent = nullptr
-    );
+    explicit LoginWindow(QWidget *parent = nullptr);
     ~LoginWindow() override;
 
     static const std::vector<QString> THEMES;
-    void handle_theme_changed(int theme);
+    void handle_theme_changed(const int theme);
 
 private slots:
     void on_switch_mode_clicked();
@@ -37,5 +34,4 @@ private slots:
 private:
     Ui::LoginWindow *ui;
     int counter_on_switch_theme_clicks = 0;
-    ClientImplementation *client_;
 };
