@@ -25,10 +25,13 @@ const std::vector<QString> NoteEditDialog::THEMES = {
 NoteEditDialog::NoteEditDialog(QWidget* parent, Note* note)
     : QDialog(parent),
       ui_(new Ui::NoteEditDialog),
-      note_(note)  {
+      note_(note),
+      deleteButton(new QPushButton("Удалить", this)) {
     ui_->setupUi(this);
     setWindowTitle("EFFICIO");
 
+    deleteButton->setGeometry(width() - 80, height() - 40, 100, width() - 100);
+    deleteButton->setFixedSize(100, 30);
     init_basic_fields();
     init_additional_fields();
     setup_connections();
@@ -121,31 +124,46 @@ void NoteEditDialog::setup_connections() {
 void NoteEditDialog::handle_language_changed(std::string new_language) {
     if (new_language == "RU") {
         setWindowTitle("EFFICIO");
-        ui_->saveButton->setText(tr("Сохранить"));
-        ui_->cancelButton->setText(tr("Отмена"));
-        ui_->joinButton->setText(ui_->membersLabel->isVisible() ? tr("Покинуть") : tr("Присоединиться"));
-        ui_->addMembersButton->setText(tr("Добавить участников"));
-        ui_->addDateButton->setText(tr("Добавить дату"));
-        ui_->addTagsButton->setText(tr("Добавить теги"));
-        ui_->projectNameLabel->setText(tr("Проект:"));
-        ui_->descriptionLabel->setText(tr("Описание:"));
-        ui_->descriptionTextEdit->setText(tr("Добавьте подробное описание вашей заметки"));
-        ui_->sidePanelLabel->setText(tr("Участники:"));
-        ui_->sidePanelLabel_2->setText(tr("Теги:"));
+        ui_->saveButton->setText("Сохранить");
+        deleteButton->setText("Удалить");
+        ui_->dateLabel->setText("Срок");
+        ui_->cancelButton->setText("Отмена");
+        ui_->joinButton->setText(ui_->membersLabel->isVisible() ? "Покинуть" : "Присоединиться");
+        ui_->addMembersButton->setText("Добавить участников");
+        ui_->addDateButton->setText("Добавить дату");
+        ui_->addTagsButton->setText("Добавить теги");
+        ui_->projectNameLabel->setText("Проект:");
+        ui_->descriptionLabel->setText("Описание:");
+        if(note_->get_title() == "" or note_->get_title() == "Empty note"){
+            ui_->titleLineEdit->setText("Пустая заметка");
+        }
+        if(note_->get_text() == "" or note_->get_text() == "Add a detailed description of your note"){
+            ui_->descriptionTextEdit->setPlaceholderText("Добавьте подробное описание вашей заметки");
+        }
+        ui_->sidePanelLabel->setText("Участники:");
+        ui_->sidePanelLabel_2->setText("Теги:");
     } 
     else if(new_language == "EN") {
         setWindowTitle("EFFICIO");
-        ui_->saveButton->setText(tr("Save"));
-        ui_->cancelButton->setText(tr("Cancel"));
-        ui_->joinButton->setText(ui_->membersLabel->isVisible() ? tr("Leave") : tr("Join"));
-        ui_->addMembersButton->setText(tr("Add members"));
-        ui_->addDateButton->setText(tr("Add date"));
-        ui_->descriptionTextEdit->setText(tr("Add a detailed description of your note"));
-        ui_->addTagsButton->setText(tr("Add tags"));
-        ui_->projectNameLabel->setText(tr("Project:"));
-        ui_->descriptionLabel->setText(tr("Description:"));
-        ui_->sidePanelLabel->setText(tr("Members:"));
-        ui_->sidePanelLabel_2->setText(tr("Tags:"));
+        ui_->saveButton->setText("Save");
+        ui_->dateLabel->setText("Deadline");        
+        deleteButton->setText("Delete");
+        ui_->cancelButton->setText("Cancel");
+        ui_->joinButton->setText(ui_->membersLabel->isVisible() ? "Leave" : "Join");
+        ui_->addMembersButton->setText("Add members");
+        ui_->addDateButton->setText("Add date");
+        ui_->addTagsButton->setText("Add tags");
+        ui_->projectNameLabel->setText("Project:");
+        ui_->descriptionLabel->setText("Description:");
+        if(note_->get_title() == "" or note_->get_title() == "Пустая заметка"){
+            ui_->titleLineEdit->setText("Empty note");
+        }
+
+        if(note_->get_text() == "" or note_->get_text() == "Добавьте подробное описание вашей заметки"){
+            ui_->descriptionTextEdit->setPlaceholderText("Add a detailed description of your note");
+        }
+        ui_->sidePanelLabel->setText("Members:");
+        ui_->sidePanelLabel_2->setText("Tags:");
     }
 }
 
@@ -198,6 +216,22 @@ void NoteEditDialog::on_save_button_click() {
         } else {
             QMessageBox::information(this, "Error", "Failed to save the note");
         }
+    }
+    close();
+}
+
+void NoteEditDialog::on_delete_button_click() {
+    QMessageBox::StandardButton reply = QMessageBox::question(
+        this, 
+        tr("Удаление заметки"),
+        tr("Вы уверены, что хотите удалить заметку?"),
+        QMessageBox::Yes | QMessageBox::No
+    );
+    
+    if (reply == QMessageBox::Yes) { // здесь должен выполняться запрос на удаление заметки
+        this->deleteLater();
+    } else if (reply == QMessageBox::Yes) {
+        QMessageBox::critical(this, tr("Ошибка"), tr("Не удалось удалить заметку"));
     }
     close();
 }

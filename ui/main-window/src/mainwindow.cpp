@@ -48,13 +48,13 @@ MainWindow::MainWindow(
     : QWidget(parent),
       username(username),
       main_layout_(new QVBoxLayout(this)),
-      top_bar_(new BottomBar(this, username, tr("EFFICIO :: Task-Tracker"))),
+      top_bar_(new BottomBar(this, username, "EFFICIO :: Task-Tracker")),
       content_layout_(new QHBoxLayout(this)),
       project_list_(new ProjectList(this)),
       note_list_(new NoteList(this)),
       content_widget_(new QWidget(this)),
-      new_project_button_(new QPushButton(tr("Новый проект"), this)),
-      new_note_button_(new QPushButton(tr("Новая заметка"), this)),
+      new_project_button_(new QPushButton("Новый проект", this)),
+      new_note_button_(new QPushButton("Новая заметка", this)),
       storage_(storage) {
     this->setObjectName("main-window");
     this->setAttribute(Qt::WA_StyledBackground);
@@ -98,26 +98,23 @@ MainWindow::MainWindow(
         StyleManager::instance(), &StyleManager::font_size_changed,
         this, &MainWindow::handle_font_size_changed
     );
-    handle_theme_changed(StyleManager::instance()->current_theme());
-    connect(StyleManager::instance(), &StyleManager::font_size_changed,
-            this, &Ui::MainWindow::handle_font_size_changed
-    );
-    handle_font_size_changed(StyleManager::instance()->current_font_size());
     connect(LanguageManager::instance(), &LanguageManager::language_changed,
             this, &MainWindow::handle_language_changed
     );
+    handle_theme_changed(StyleManager::instance()->current_theme());
+    handle_font_size_changed(StyleManager::instance()->current_font_size());
     handle_language_changed(LanguageManager::instance()->current_language());
 }
 
 
 void MainWindow::handle_language_changed(std::string new_language) {
     if (new_language == "RU") {
-        new_project_button_->setText(tr("Новый проект"));
-        new_note_button_->setText(tr("Новая заметка"));
+        new_project_button_->setText("Новый проект");
+        new_note_button_->setText("Новая заметка");
     } 
     else if(new_language == "EN") {
-        new_project_button_->setText(tr("New project"));
-        new_note_button_->setText(tr("New note"));
+        new_project_button_->setText("New project");
+        new_note_button_->setText("New note");
     }
 }
 
@@ -172,21 +169,36 @@ void MainWindow::on_profile_button_click() {
 
 void MainWindow::add_project() {
     bool ok;
-    QString name_of_project = QInputDialog::getText(
-        nullptr, tr("Название проекта:"), tr("Введите название"), QLineEdit::Normal, "",
-        &ok
-    );
-    if (ok) {
-        int id = 0;
+    QString name_of_project;
+    if (LanguageManager::instance()->current_language() == "RU") {
+        name_of_project = QInputDialog::getText(
+            nullptr, "Название проекта:", "Введите название", QLineEdit::Normal, "",
+            &ok
+        );
+    } else if (LanguageManager::instance()->current_language() == "EN") {
+        name_of_project = QInputDialog::getText(
+            nullptr, "Name of project:", "Create a name", QLineEdit::Normal, "",
+            &ok
+        );
+    }
+    if (ok && name_of_project.trimmed()== ""){
+        if (LanguageManager::instance()->current_language() == "RU") {
+            QMessageBox::warning(this, "Ошибка", "Введите название!");
+        } else {
+            QMessageBox::warning(this, "Error", "Please enter a name!");
+        }
+    } else if (ok){
+        int id = 0; 
 
-        if (DB::ProjectDAO::create_project(name_of_project.toStdString(), id)) {
+        if (DB::ProjectDAO::create_project(name_of_project.trimmed().toStdString(), id)) {
             LRDao::add_project_to_user(username, id);
             auto &project = storage_->add_project(
-                Project(id, name_of_project.toStdString(), "")
+                Project(id, name_of_project.trimmed().toStdString(), "")
             );
             project_list_->add_project(&project);
         }
     }
+    handle_font_size_changed(StyleManager::instance()->current_font_size());
 }
 
 void MainWindow::add_note() {
@@ -198,14 +210,19 @@ void MainWindow::add_note() {
                 project_item->project_->get_id(), id
             );
             auto &note =
-                project_item->project_->add_note({id, tr("Пустая заметка").toStdString(), ""});
+                project_item->project_->add_note({id, "Пустая заметка", ""});
             note_list_->add_note_widget(&note);
         }
     } else {
         QMessageBox msg;
-        msg.setText(tr("Проект не выбран!"));
+        if (LanguageManager::instance()->current_language() == "RU") {
+            msg.setText("Сперва выберите проект!");
+        } else if (LanguageManager::instance()->current_language() == "EN") {
+            msg.setText("Choose a project first!");
+        }
         msg.exec();
     }
+    handle_font_size_changed(StyleManager::instance()->current_font_size());
 }
 
 }  // namespace Ui

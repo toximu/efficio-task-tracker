@@ -6,14 +6,7 @@
 #include "style_manager.h"
 #include "language_manager.h"
 #include "registration_window_style_sheet.h"
-
-const std::vector<QString> RegistrationWindow::THEMES = {
-    Ui::registration_window_light_autumn_theme,
-    Ui::registration_window_dark_autumn_theme,
-    Ui::registration_window_dark_purple_theme,
-    Ui::registration_window_light_purple_theme,
-    Ui::registration_window_blue_theme
-};
+#include <QDebug>
 
 RegistrationWindow::RegistrationWindow(QWidget *parent)
     : QWidget(parent), ui(new Ui::RegistrationWindow) {
@@ -28,51 +21,48 @@ RegistrationWindow::RegistrationWindow(QWidget *parent)
 
     setAttribute(Qt::WA_StyledBackground, true);
 
-    connect(ui->switch_theme, &QPushButton::clicked, this, 
-        &RegistrationWindow::on_switch_theme_clicked, Qt::UniqueConnection);
     connect(ui->push_registration, &QPushButton::clicked, this,
         &RegistrationWindow::on_push_registration_clicked, Qt::UniqueConnection);
     connect(ui->switch_mode, &QPushButton::clicked, this,
-        &RegistrationWindow::on_switch_mode_clicked, Qt::UniqueConnection);
-    connect(StyleManager::instance(), &StyleManager::theme_changed,
-            this, &RegistrationWindow::handle_theme_changed);
-    
-    handle_theme_changed(StyleManager::instance()->current_theme());
+        &RegistrationWindow::on_switch_mode_clicked, Qt::UniqueConnection);    
+    connect(ui->switch_theme, &QPushButton::clicked, this,
+        &RegistrationWindow::on_switch_language_clicked, Qt::UniqueConnection); 
+
     connect(LanguageManager::instance(), &LanguageManager::language_changed,
             this, &RegistrationWindow::handle_language_changed
     );
     handle_language_changed(LanguageManager::instance()->current_language());
+    this->setStyleSheet(Ui::registration_window_light_autumn_theme);
 }
 
 void RegistrationWindow::handle_language_changed(std::string new_language) {
     if (new_language == "RU") {
         ui->create_login->setPlaceholderText(tr("Введите логин:"));
+        ui->registration_label->setText(tr("Регистрация"));
         ui->create_password->setPlaceholderText(tr("Введите пароль:"));
         ui->repeat_password->setPlaceholderText(tr("Повторите пароль:"));
         ui->switch_mode->setText(tr("Уже есть аккаунт? Войдите!"));
-        ui->switch_theme->setText(tr("Тема"));
-        ui->push_registration->setText(tr("Already have an account? Login!"));
+        ui->switch_theme->setText(tr("RU"));
+        ui->push_registration->setText(tr("Зарегистрироваться"));
     } 
     else if (new_language == "EN") {
         ui->create_login->setPlaceholderText(tr("Enter login:"));
+        ui->registration_label->setText(tr("Registration"));
         ui->create_password->setPlaceholderText(tr("Enter password:"));
         ui->repeat_password->setPlaceholderText(tr("Repeat password:"));
-        ui->switch_mode->setText(tr("Back"));
-        ui->switch_theme->setText(tr("Theme"));
+        ui->switch_mode->setText(tr("Already have an account? Login!"));
+        ui->switch_theme->setText(tr("EN"));
         ui->push_registration->setText(tr("Register"));
     }
 }
 
-
-
-void RegistrationWindow::handle_theme_changed(int theme) {
-    this->setStyleSheet(THEMES[theme]);
-}
-
-void RegistrationWindow::on_switch_theme_clicked() {
-    if ((this->counter_on_switch_theme_clicks++)%2) {
-        int next_theme = (StyleManager::instance()->current_theme() + 1) % 5;
-        StyleManager::instance()->apply_theme(next_theme);
+void RegistrationWindow::on_switch_language_clicked() {
+    if (ui->switch_theme->text() == tr("RU")) {
+        ui->switch_theme->setText(tr("EN"));
+        LanguageManager::instance()->apply_language("EN");
+    } else {
+        ui->switch_theme->setText(tr("RU"));
+        LanguageManager::instance()->apply_language("RU");
     }
 }
 

@@ -3,9 +3,8 @@
 
 #include <QDialog>
 #include <QtCharts>
-#include <QTabWidget>
-#include <QVBoxLayout>
-#include <QDialogButtonBox>
+#include <QChartView>
+#include <QPieSeries>
 #include <vector>
 
 class AnalyticsWindow : public QDialog
@@ -13,26 +12,34 @@ class AnalyticsWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit AnalyticsWindow(QWidget *parent = nullptr);
+    explicit AnalyticsWindow(
+        QWidget *parent = nullptr,
+        int created_count = 3, 
+        int completed_count = 4, 
+        int expired_count = 5        
+    );
     ~AnalyticsWindow();
 
-    void setTasksData(int created, int completed, int overdue);
-    void setProjectsData(const QMap<QString, int>& projects);
+    static const std::vector<QString> THEMES;
+
+private:
+
     void handle_theme_changed(int theme);
     void handle_font_size_changed(std::string font_size);
     void handle_language_changed(std::string new_language);
     void on_switch_theme_clicked();
+    void setup_chart();
     
-    static const std::vector<QString> THEMES;
-
-private:
-    QTabWidget *tab_widget;
-    QVBoxLayout *tasks_layout;
-    QVBoxLayout *projects_layout;
-    QDialogButtonBox *button_box;
-
-    QChart *createTasksChart(int created, int completed, int overdue);
-    QChart *createProjectsChart(const QMap<QString, int>& projects);
+    int m_created_count;
+    int m_completed_count;
+    int m_expired_count;
+    
+    QChartView *chart_view;
+    QPieSeries *series;
+    QChart *chart;
+    QPieSlice *completed_slice;
+    QPieSlice *expired_slice;
+    QPieSlice *created_slice;
 };
 
 #endif // ANALYTICS_DIALOG_H

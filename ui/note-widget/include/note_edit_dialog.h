@@ -38,6 +38,7 @@ private slots:
     void on_add_members_button_click();
     void on_add_tags_button_click();
     void on_switch_theme_button_click();
+    void on_delete_button_click();
 
 private:
     void init_basic_fields();
@@ -54,6 +55,7 @@ private:
     [[nodiscard]] bool try_save_note() const;
 
     Ui::NoteEditDialog* ui_{};
+    QPushButton *deleteButton;
     std::vector<std::unique_ptr<QLabel>> member_avatars_;
     std::vector<std::unique_ptr<QLabel>> tag_labels_;
     QList<TagsDialog::Tag> selected_tags_;

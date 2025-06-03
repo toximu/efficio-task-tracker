@@ -76,7 +76,17 @@ QString note_edit_dialog_light_autumn_theme = R"(
         background-color: #dadada;
     }
 
-    /* Боковое меню */
+    QPushButton#deleteButton {
+        font-family: 'Arial';
+        border-radius: 10px;
+        background-color: white;
+        color: #fea36b;
+        padding: 5px 10px;
+    }
+
+    QPushButton#deleteButton:hover {
+        background-color: #dadada;
+    }
 
     QPushButton#joinButton,
     QPushButton#addMembersButton,
@@ -112,8 +122,6 @@ QString note_edit_dialog_light_autumn_theme = R"(
         color: #727272;
     }
 
-    /* Дополнительные элементы заметки */
-
     QDateEdit#dateEdit {
         font-family: 'Arial';
         border-radius: 5px;
@@ -131,8 +139,6 @@ QString note_edit_dialog_light_autumn_theme = R"(
         width: 20px;
         border-radius: 5px;
     }
-
-    /* Окно с сообщением */
 
     QMessageBox {
         background-color: #ffffff;
@@ -248,6 +254,18 @@ QString note_edit_dialog_dark_autumn_theme = R"(
     }
 
     QPushButton#cancelButton:hover {
+        background-color: #01635d;
+    }
+
+    QPushButton#deleteButton {
+        font-family: 'Arial';
+        border-radius: 10px;
+        background-color: #089083;
+        color: white;
+        padding: 5px 10px;
+    }
+
+    QPushButton#deleteButton:hover {
         background-color: #01635d;
     }
 
@@ -419,6 +437,18 @@ QString note_edit_dialog_light_purple_theme = R"(
         background-color: rgb(27, 6, 16);
     }
 
+    QPushButton#deleteButton {
+        font-family: 'Arial';
+        border-radius: 10px;
+        background-color: rgb(42, 10, 25);
+        color: rgb(218, 207, 235);
+        padding: 5px 10px;
+    }
+
+    QPushButton#deleteButton:hover {
+        background-color: rgb(27, 6, 16);
+    }
+
     QPushButton#joinButton,
     QPushButton#addMembersButton,
     QPushButton#addDateButton,
@@ -583,6 +613,18 @@ QString note_edit_dialog_dark_purple_theme = R"(
     }
 
     QPushButton#cancelButton:hover {
+        background-color: rgb(27, 6, 16);
+    }
+
+    QPushButton#deleteButton {
+        font-family: 'Arial';
+        border-radius: 10px;
+        background-color: rgb(42, 10, 25);
+        color: #9882B9;
+        padding: 5px 10px;
+    }
+
+    QPushButton#deleteButton:hover {
         background-color: rgb(27, 6, 16);
     }
 
@@ -758,6 +800,20 @@ QString note_edit_dialog_blue_theme = R"(
     }
 
     QPushButton#cancelButton:hover {
+        background-color: #568F7C;
+        color: #07142B;
+    }
+
+    QPushButton#deleteButton {
+        font-family: 'Arial';
+        border-radius: 10px;
+        background-color: #326D6C;
+        color: #BDD1BD;
+        padding: 5px 10px;
+        border: 1px solid #568F7C;
+    }
+
+    QPushButton#deleteButton:hover {
         background-color: #568F7C;
         color: #07142B;
     }

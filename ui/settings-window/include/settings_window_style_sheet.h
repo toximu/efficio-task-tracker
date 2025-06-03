@@ -23,38 +23,38 @@ namespace Ui {
             font-size: 35px;
         }
 
-        QPushButton#language_button {
+        QPushButton#switch_theme {
             background-color: #fea36b;
             width: 50px;
             height: 30px;
             color: #f5f5f5;
             padding: 2px;
-            font-size: 20px;
+            font-size: 15px;
             border-radius: 7px;
         }
 
-        QPushButton#language_button:hover {
+        QPushButton#switch_theme:hover {
             background-color:rgb(245, 148, 89);
         }
-        QPushButton#language_button:pressed {
+        QPushButton#switch_theme:pressed {
             background-color:rgb(238, 122, 50);
         }
 
-        QPushButton#theme_button {  
+        QPushButton#language_button {  
             background-color: #089083;
             width: 50px;      
             height: 30px;
             color: #f5f5f5;
             padding: 2px;    
-            font-size: 15px;
+            font-size: 20px;
             border-radius: 7px;
         }
-        QPushButton#theme_button:hover {
+        QPushButton#language_button:hover {
             background-color: rgb(8, 82, 74);
             color: #f5f5f5;
         }
 
-        QPushButton::pressed#switch_theme {
+        QPushButton::pressed#language_button {
             background-color:rgb(3, 58, 54);
             color: #f5f5f5;
         }

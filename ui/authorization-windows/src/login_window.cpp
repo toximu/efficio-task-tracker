@@ -9,14 +9,7 @@
 #include "language_manager.h"
 #include <QMessageBox>
 #include <QScreen>
-
-const std::vector<QString> LoginWindow::THEMES = {
-    Ui::login_window_light_autumn_theme,
-    Ui::login_window_dark_autumn_theme,
-    Ui::login_window_dark_purple_theme,
-    Ui::login_window_light_purple_theme,
-    Ui::login_window_blue_theme
-};
+#include <QDebug>
 
 LoginWindow::LoginWindow(QWidget *parent)
     : QWidget(parent), ui(new Ui::LoginWindow) {
@@ -27,48 +20,45 @@ LoginWindow::LoginWindow(QWidget *parent)
     ui->input_password->setPlaceholderText(tr("Введите пароль:"));
     ui->input_password->setEchoMode(QLineEdit::Password);
 
-    connect(ui->switch_theme, &QPushButton::clicked, this, 
-        &LoginWindow::on_switch_theme_clicked, Qt::UniqueConnection);
     connect(ui->switch_mode, &QPushButton::clicked, this,
         &LoginWindow::on_switch_mode_clicked);
     connect(ui->push_enter, &QPushButton::clicked, this,
         &LoginWindow::on_push_enter_clicked);
-    connect(StyleManager::instance(), &StyleManager::theme_changed,
-            this, &LoginWindow::handle_theme_changed);
-
-    handle_theme_changed(StyleManager::instance()->current_theme());
     connect(LanguageManager::instance(), &LanguageManager::language_changed,
             this, &LoginWindow::handle_language_changed
     );
+    connect(ui->switch_theme, &QPushButton::clicked, this,
+        &LoginWindow::on_switch_language_clicked, Qt::UniqueConnection); 
     handle_language_changed(LanguageManager::instance()->current_language());
+    setStyleSheet(Ui::login_window_light_autumn_theme);
 }
 
 void LoginWindow::handle_language_changed(std::string new_language) {
     if (new_language == "RU") {
         ui->input_login->setPlaceholderText(tr("Введите логин:"));
+        ui->enter_label->setText(tr("Вход"));
         ui->input_password->setPlaceholderText(tr("Введите пароль:"));
         ui->switch_mode->setText(tr("Еще нет аккаунта? Зарегестрируйтесь!"));
-        ui->switch_theme->setText(tr("Тема"));
+        ui->switch_theme->setText(tr("RU"));
         ui->push_enter->setText(tr("Войти"));
     } 
     else if (new_language == "EN") {
         ui->input_login->setPlaceholderText(tr("Enter login:"));
+        ui->enter_label->setText(tr("Enter"));
         ui->input_password->setPlaceholderText(tr("Enter password:"));
         ui->switch_mode->setText(tr("Don't have an account yet? Register!"));
-        ui->switch_theme->setText(tr("Theme"));
+        ui->switch_theme->setText(tr("EN"));
         ui->push_enter->setText(tr("Login"));
     }
 }
 
-
-void LoginWindow::handle_theme_changed(int theme) {
-    this->setStyleSheet(THEMES[theme]);
-}
-
-void LoginWindow::on_switch_theme_clicked() {
-    if ((this->counter_on_switch_theme_clicks++) % 2) {
-        int next_theme = (StyleManager::instance()->current_theme() + 1) % 5;
-        StyleManager::instance()->apply_theme(next_theme);
+void LoginWindow::on_switch_language_clicked() {
+    if (ui->switch_theme->text() == tr("RU")) {
+        ui->switch_theme->setText(tr("EN"));
+        LanguageManager::instance()->apply_language("EN");
+    } else {
+        ui->switch_theme->setText(tr("RU"));
+        LanguageManager::instance()->apply_language("RU");
     }
 }
 

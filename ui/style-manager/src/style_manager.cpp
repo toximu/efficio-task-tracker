@@ -28,10 +28,10 @@ int StyleManager::current_theme() const {
 }
 
 void StyleManager::apply_font_size(std::string font_size_) {
-    this->current_font_size_ = font_size_;
-    emit font_size_changed(this->current_font_size_);
+    current_font_size_ = font_size_;
+    emit font_size_changed(current_font_size_);
 }
 
 std::string StyleManager::current_font_size() const {
-    return this->current_font_size_;
+    return current_font_size_;
 }

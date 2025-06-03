@@ -19,14 +19,12 @@ public:
     explicit LoginWindow(QWidget *parent = nullptr);
     ~LoginWindow() override;
 
-    static const std::vector<QString> THEMES;
-    void handle_theme_changed(int theme);
     void handle_language_changed(std::string new_language);
 
 private slots:
     void on_switch_mode_clicked();
     void on_push_enter_clicked();
-    void on_switch_theme_clicked();
+    void on_switch_language_clicked();
 
 private:
     std::shared_ptr<Ui::LoginWindow> ui;
