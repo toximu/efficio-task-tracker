@@ -119,14 +119,14 @@ bool LRDao::add_project_to_user(
     pqxx::work transaction(connection);
 
     const std::string query =
-        "UPDATE users SET projects = array_append(projects, ?)"
-        "WHERE login = ?";
-    pqxx::params params;
-    params.append(project_code);
-    params.append(user_login);
+        "UPDATE users SET projects = array_append(projects, $1) "
+        "WHERE login = $2";
+    // pqxx::params params;
+    // params.append(project_code);
+    // params.append(user_login);
 
     const pqxx::result result =
-        transaction.exec_params(query, params);
+        transaction.exec_params(query, project_code, user_login);
     transaction.commit();
     return result.affected_rows() > 0;
 }

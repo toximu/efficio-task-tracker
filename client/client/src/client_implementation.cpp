@@ -19,8 +19,8 @@ ClientImplementation::ClientImplementation(
     : channel_(channel),
       update_requests_(channel, &cq_),
       auth_requests_(channel, &cq_) {
-    std::thread t(&ClientImplementation::CompleteRpc, this);
-    t.detach();
+    complete_rpc_thread_ =
+        std::thread(&ClientImplementation::CompleteRpc, this);
 }
 
 void ClientImplementation::CompleteRpc() {
@@ -68,3 +68,31 @@ bool ClientImplementation::try_create_note(Note *note) const {
 bool ClientImplementation::try_fetch_note(Note *note) const {
     return update_requests_.try_fetch_note(note);
 }
+
+bool ClientImplementation::create_project(
+    Project *project,
+    const std::string &title,
+    const User &user
+) {
+    return update_requests_.create_project(*project, title, user);
+}
+
+bool ClientImplementation::get_project(
+    Project *project,
+    const std::string &code
+) {
+    return update_requests_.get_project(*project, code);
+}
+
+bool ClientImplementation::try_join_project(Project *project, const std::string &code,const User &user) {
+    return update_requests_.try_join_project(*project, code, user);
+}
+
+bool ClientImplementation::try_leave_project(
+    const std::string &code,
+    const User &user
+) {
+    return update_requests_.try_leave_project(code, user);
+}
+
+

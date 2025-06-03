@@ -2,6 +2,7 @@
 #define CLIENTIMPLEMENTATION_H
 
 #include <grpcpp/grpcpp.h>
+#include <thread>
 #include "auth_requests.h"
 #include "update_requests.h"
 
@@ -17,6 +18,7 @@ class ClientImplementation {
 
 public:
     explicit ClientImplementation(const std::shared_ptr<Channel> &channel);
+    std::thread complete_rpc_thread_;
 
     CompletionQueue *get_cq() {
         return &cq_;
@@ -31,6 +33,22 @@ public:
     bool try_update_note(Note *note) const;
     bool try_create_note(Note *note) const;
     bool try_fetch_note(Note *note) const;
+
+    bool create_project(
+        Project *project,
+        const std::string &title,
+        const User &user
+    );
+    bool get_project(Project *project, const std::string &code);
+    bool try_join_project(
+        Project *project,
+        const std::string &code,
+        const User &user
+    );
+    bool try_leave_project(
+        const std::string &code,
+        const User &user
+    );
 };
 
 #endif  // CLIENTIMPLEMENTATION_H

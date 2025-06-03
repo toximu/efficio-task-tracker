@@ -7,19 +7,20 @@ ServerImplementation::ServerImplementation(
 )
     : cq_(builder.AddCompletionQueue()),
     update_service_(cq_.get()) {
-    cq_ = builder.AddCompletionQueue();
     builder.AddListeningPort(
         "localhost:" + std::to_string(port), grpc::InsecureServerCredentials()
     );
 
     builder.RegisterService(&update_service_.get_service());
     builder.RegisterService(&auth_service_.get_service());
+
     server_ = builder.BuildAndStart();
+    update_service_.run();
 }
 
 void ServerImplementation::HandleRPCs() {
     new UpdateService::GetNoteServerCall(update_service_, cq_.get());
-    // new UpdateService::CreateNoteServerCall(update_service_, cq_.get());
+    new UpdateService::CreateNoteServerCall(update_service_, cq_.get());
     new UpdateService::UpdateNoteServerCall(update_service_, cq_.get());
 
     new AuthService::TryAuthenticateUserServerCall(auth_service_, cq_.get());

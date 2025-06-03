@@ -14,6 +14,7 @@ using Efficio_proto::Note;
 using Efficio_proto::Project;
 using Efficio_proto::Storage;
 using Efficio_proto::Update;
+using Efficio_proto::User;
 
 using Efficio_proto::CreateNoteRequest;
 using Efficio_proto::CreateNoteResponse;
@@ -65,7 +66,7 @@ public:
             grpc::CompletionQueue *cq,
             const std::unique_ptr<Update::Stub> &stub
         );
-        // void Proceed(bool ok) override;
+        void Proceed(bool ok) override;
         CreateNoteResponse get_reply();
     };
 
@@ -76,9 +77,13 @@ public:
     bool create_note(Note *note);
 
     bool get_project(Project &project, const std::string &code);
-    bool create_project(Project &project, const std::string &project_title);
-    bool try_leave_project(const std::string &code);
-    bool try_join_project(Project &project, const std::string &code);
+    bool create_project(
+        Project &project,
+        const std::string &project_title,
+        const User &user
+    );
+    bool try_leave_project(const std::string &code, const User &user);
+    bool try_join_project(Project &project, const std::string &code, const User &user);
 
     explicit UpdateRequests(
         std::shared_ptr<Channel> channel,
