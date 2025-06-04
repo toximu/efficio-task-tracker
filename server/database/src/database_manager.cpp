@@ -22,7 +22,7 @@ DatabaseManager::DatabaseManager() {
         "login VARCHAR(50) PRIMARY KEY, "
         "password VARCHAR(50) NOT NULL, "
         "token VARCHAR(100), "
-        "projects INT[]"
+        "projects VARCHAR(6)[]"
         ")"
     );
 

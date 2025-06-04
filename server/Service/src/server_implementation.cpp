@@ -4,9 +4,8 @@
 ServerImplementation::ServerImplementation(
     const uint16_t port,
     grpc::ServerBuilder &builder
-)
-    : cq_(builder.AddCompletionQueue()), update_service_(cq_.get()) {
-    cq_ = builder.AddCompletionQueue();
+)   : cq_(builder.AddCompletionQueue()), update_service_(cq_.get()) {
+
     builder.AddListeningPort(
         "localhost:" + std::to_string(port), grpc::InsecureServerCredentials()
     );
@@ -14,10 +13,12 @@ ServerImplementation::ServerImplementation(
     builder.RegisterService(&update_service_.get_service());
     builder.RegisterService(&auth_service_.get_service());
 
-    update_service_.run();
-    auth_service_.run();
+
 
     server_ = builder.BuildAndStart();
+    
+        update_service_.run();
+    auth_service_.run();
 }
 
 void ServerImplementation::HandleRPCs() const {

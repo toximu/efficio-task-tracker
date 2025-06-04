@@ -21,9 +21,9 @@ using Efficio_proto::TryJoinProjectRequest;
 using Efficio_proto::TryJoinProjectResponse;
 using Efficio_proto::TryLeaveProjectRequest;
 using Efficio_proto::TryLeaveProjectResponse;
+using Efficio_proto::User;
 using Efficio_proto::Update;
 
-// todo: set user everywhere
 
 bool UpdateRequests::get_project(Project &project, const std::string &code) {
     GetProjectRequest request;
@@ -56,10 +56,13 @@ bool UpdateRequests::get_project(Project &project, const std::string &code) {
 
 bool UpdateRequests::create_project(
     Project &project,
-    const std::string &project_title
+    const std::string &project_title,
+    const User& user
 ) {
     CreateProjectRequest request;
     request.set_project_title(project_title);
+    User* copy_user = new User(user);
+    request.set_allocated_user(copy_user);
 
     CreateProjectResponse response;
 
@@ -83,10 +86,13 @@ bool UpdateRequests::create_project(
     return false;
 }
 
-bool UpdateRequests::try_leave_project(const std::string &code) {
+bool UpdateRequests::try_leave_project(const std::string &code, const User &user) {
     TryLeaveProjectRequest request;
 
     request.set_code(code);
+    User* copy_user = new User(user);
+    request.set_allocated_user(copy_user);
+
     TryLeaveProjectResponse response;
     ClientContext context;
     std::cout << "CLIENT : [try leave project] : sending request" << std::endl;
@@ -99,14 +105,18 @@ bool UpdateRequests::try_leave_project(const std::string &code) {
 
     std::cout << "CLIENT : [try leave project] : can't leave project"
               << std::endl;
+    return false;
 }
 
 bool UpdateRequests::try_join_project(
     Project &project,
-    const std::string &code
+    const std::string &code,
+    const User &user
 ) {
     TryJoinProjectRequest request;
     request.set_code(code);
+    User* copy_user = new User(user);
+    request.set_allocated_user(copy_user);
     TryJoinProjectResponse response;
     ClientContext context;
     std::cout << "CLIENT : [try join project] : sending request" << std::endl;
@@ -182,8 +192,22 @@ UpdateRequests::CreateNoteClientCall::CreateNoteClientCall(
     const CreateNoteRequest &request,
     CompletionQueue *cq,
     const std::unique_ptr<Update::Stub> &stub
-) {
-    1 + 1;
+
+)
+    : responder_(stub->AsyncCreateNote(&context, request, cq)) {
+    context.set_deadline(
+        std::chrono::system_clock::now() + std::chrono::seconds(5)
+    );
+    responder_->Finish(&reply_, &status, this);
+    std::cout << "[CLIENT]: CREATE NOTE REQUEST SENT\n";
+}
+
+void UpdateRequests::CreateNoteClientCall::Proceed(const bool ok) {
+    if (!ok) {
+        std::cout << "[CLIENT WARNING]: RPC failed\n";
+    }
+    delete this;
+
 }
 
 bool UpdateRequests::try_update_note(Note *note) const {

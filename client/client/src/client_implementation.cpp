@@ -13,24 +13,15 @@ using grpc::ClientContext;
 using grpc::CompletionQueue;
 using grpc::Status;
 
-CompletionQueue ClientImplementation::cq_;
-std::shared_ptr<Channel> ClientImplementation::channel_;
-UpdateRequests ClientImplementation::update_requests_(nullptr, nullptr);
-AuthRequests ClientImplementation::auth_requests_(nullptr, nullptr);
+ClientImplementation::ClientImplementation(
+    const std::shared_ptr<Channel> &channel
+)
+    : channel_(channel),
+      update_requests_(channel, &cq_),
+      auth_requests_(channel, &cq_) {
+    complete_rpc_thread_ =
+        std::thread(&ClientImplementation::CompleteRpc, this);
 
-void ClientImplementation::init() {
-    channel_ =
-        CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
-    update_requests_ = UpdateRequests(channel_, &cq_);
-    auth_requests_ = AuthRequests(channel_, &cq_);
-}
-
-ClientImplementation &ClientImplementation::get_instance() {
-    if (channel_ == nullptr) {
-        init();
-    }
-    static ClientImplementation instance;
-    return instance;
 }
 
 void ClientImplementation::CompleteRpc() {
@@ -82,3 +73,31 @@ bool ClientImplementation::try_create_note(Note *note) {
 bool ClientImplementation::try_fetch_note(Note *note) {
     return update_requests_.try_fetch_note(note);
 }
+
+bool ClientImplementation::create_project(
+    Project *project,
+    const std::string &title,
+    const User &user
+) {
+    return update_requests_.create_project(*project, title, user);
+}
+
+bool ClientImplementation::get_project(
+    Project *project,
+    const std::string &code
+) {
+    return update_requests_.get_project(*project, code);
+}
+
+bool ClientImplementation::try_join_project(Project *project, const std::string &code,const User &user) {
+    return update_requests_.try_join_project(*project, code, user);
+}
+
+bool ClientImplementation::try_leave_project(
+    const std::string &code,
+    const User &user
+) {
+    return update_requests_.try_leave_project(code, user);
+}
+
+

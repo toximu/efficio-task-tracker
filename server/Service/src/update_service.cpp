@@ -100,6 +100,46 @@ void UpdateService::GetNoteServerCall::Proceed(const bool ok) {
     }
 }
 
+UpdateService::CreateNoteServerCall::CreateNoteServerCall(
+    UpdateService &service,
+    ServerCompletionQueue *cq
+)
+    : CommonServerCall(cq), responder_(&ctx_), service_(service) {
+    service_.service_.RequestCreateNote(
+        &ctx_, &request_, &responder_, cq_, cq_, this
+    );
+    status_ = PROCESS;
+}
+
+void UpdateService::CreateNoteServerCall::Proceed(const bool ok) {
+    if (!ok) {
+        delete this;
+        return;
+    }
+
+    switch (status_) {
+        case PROCESS: {
+            new CreateNoteServerCall(service_, cq_);
+            CreateNoteResponse response;
+
+            const auto new_note =
+                NoteDao::initialize_note_for_user(request_.user().login());
+            response.mutable_note()->CopyFrom(new_note);
+
+            std::cout << "[SERVER]: CREATE NOTE REQUEST id=" << new_note.id()
+                      << std::endl;
+
+            responder_.Finish(response, grpc::Status::OK, this);
+            status_ = FINISH;
+            break;
+        }
+        case FINISH: {
+            delete this;
+            break;
+        }
+    }
+}
+
 UpdateService::GetProjectServerCall::GetProjectServerCall(
     Update::AsyncService *service,
     ServerCompletionQueue *cq
@@ -120,11 +160,12 @@ void UpdateService::GetProjectServerCall::Proceed(const bool ok = true) {
             break;
         }
         case PROCESS: {
+            new GetProjectServerCall(service_, cq_);
             status_ = FINISH;
 
             std::cout << "[SERVER] : {get project} : get request, code="
                       << request_.code() << std::endl;
-            new GetProjectServerCall(service_, cq_);
+
             UpdateHandler::get_project(request_, response_);
             responder_.Finish(response_, grpc::Status::OK, this);
             break;

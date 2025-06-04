@@ -30,3 +30,5 @@ target_include_directories(Client
         ${CMAKE_CURRENT_BINARY_DIR}
 )
 
+#add_executable(test-server main.cpp)
+#target_link_libraries(test-server Client)
