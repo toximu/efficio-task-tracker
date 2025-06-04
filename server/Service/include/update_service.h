@@ -37,11 +37,11 @@ public:
     class UpdateNoteServerCall final : public CommonServerCall {
         UpdateNoteRequest request_;
         ServerAsyncResponseWriter<UpdateNoteResponse> responder_;
-        UpdateService &service_;
+        Update::AsyncService *service_;
 
     public:
         explicit UpdateNoteServerCall(
-            UpdateService &service,
+            Update::AsyncService *service,
             ServerCompletionQueue *cq
         );
         void Proceed(bool ok) override;
@@ -50,11 +50,11 @@ public:
     class GetNoteServerCall final : public CommonServerCall {
         GetNoteRequest request_;
         ServerAsyncResponseWriter<GetNoteResponse> responder_;
-        UpdateService &service_;
+        Update::AsyncService *service_;
 
     public:
         explicit GetNoteServerCall(
-            UpdateService &service,
+            Update::AsyncService *service,
             ServerCompletionQueue *cq
         );
         void Proceed(bool ok) override;
@@ -119,11 +119,11 @@ public:
     class CreateNoteServerCall final : public CommonServerCall {
         CreateNoteRequest request_;
         ServerAsyncResponseWriter<CreateNoteResponse> responder_;
-        UpdateService &service_;
+        Update::AsyncService *service_;
 
     public:
         explicit CreateNoteServerCall(
-            UpdateService &service,
+            Update::AsyncService *service,
             ServerCompletionQueue *cq
         );
         void Proceed(bool ok) override;

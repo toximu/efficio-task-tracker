@@ -2,11 +2,11 @@
 #include "lr_dao.hpp"
 
 AuthService::TryAuthenticateUserServerCall::TryAuthenticateUserServerCall(
-    AuthService &service,
+    Auth::AsyncService *service,
     ServerCompletionQueue *cq
 )
     : AuthServerOperation(service, cq) {
-    service_.service_.RequestTryAuthenticateUser(
+    service_->RequestTryAuthenticateUser(
         &ctx_, &request_, &responder_, cq_, cq_, this
     );
     status_ = PROCESS;
@@ -51,11 +51,11 @@ void AuthService::TryAuthenticateUserServerCall::Proceed(const bool ok) {
 }
 
 AuthService::TryRegisterUserServerCall::TryRegisterUserServerCall(
-    AuthService &service,
+    Auth::AsyncService *service,
     ServerCompletionQueue *cq
 )
     : AuthServerOperation(service, cq) {
-    service_.service_.RequestTryRegisterUser(
+    service_->RequestTryRegisterUser(
         &ctx_, &request_, &responder_, cq_, cq_, this
     );
     status_ = PROCESS;
@@ -101,4 +101,9 @@ void AuthService::TryRegisterUserServerCall::Proceed(const bool ok) {
 
 Auth::AsyncService &AuthService::get_service() {
     return service_;
+}
+
+void AuthService::run() {
+    new TryAuthenticateUserServerCall(&service_, cq_.get());
+    new TryRegisterUserServerCall(&service_, cq_.get());
 }

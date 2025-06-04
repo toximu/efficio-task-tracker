@@ -21,6 +21,7 @@ ClientImplementation::ClientImplementation(
       auth_requests_(channel, &cq_) {
     complete_rpc_thread_ =
         std::thread(&ClientImplementation::CompleteRpc, this);
+
 }
 
 void ClientImplementation::CompleteRpc() {
@@ -49,23 +50,27 @@ std::shared_ptr<Channel> ClientImplementation::get_channel() {
     return channel_;
 }
 
-bool ClientImplementation::try_authenticate_user(User *user) const {
+CompletionQueue *ClientImplementation::get_cq() {
+    return &cq_;
+}
+
+bool ClientImplementation::try_authenticate_user(User *user) {
     return auth_requests_.try_authenticate_user(user);
 }
 
-bool ClientImplementation::try_register_user(User *user) const {
+bool ClientImplementation::try_register_user(User *user) {
     return auth_requests_.try_register_user(user);
 }
 
-bool ClientImplementation::try_update_note(Note *note) const {
+bool ClientImplementation::try_update_note(Note *note) {
     return update_requests_.try_update_note(note);
 }
 
-bool ClientImplementation::try_create_note(Note *note) const {
+bool ClientImplementation::try_create_note(Note *note) {
     return update_requests_.try_create_note(note);
 }
 
-bool ClientImplementation::try_fetch_note(Note *note) const {
+bool ClientImplementation::try_fetch_note(Note *note) {
     return update_requests_.try_fetch_note(note);
 }
 

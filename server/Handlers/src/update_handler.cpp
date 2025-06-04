@@ -100,7 +100,9 @@ bool UpdateHandler::try_leave_project(
         return false;
     }
 
-    ProjectDAO::delete_member_from_project(request.code(), request.user().login());
+    ProjectDAO::delete_member_from_project(
+        request.code(), request.user().login()
+    );
 
     LRDao::delete_project_from_user(request.user().login(), request.code());
 

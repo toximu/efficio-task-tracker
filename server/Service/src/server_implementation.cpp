@@ -4,28 +4,24 @@
 ServerImplementation::ServerImplementation(
     const uint16_t port,
     grpc::ServerBuilder &builder
-)
-    : cq_(builder.AddCompletionQueue()),
-    update_service_(cq_.get()) {
-    std::string server_address = "127.0.0.1:" + std::to_string(port);
+)   : cq_(builder.AddCompletionQueue()), update_service_(cq_.get()) {
 
-    builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
+    builder.AddListeningPort(
+        "localhost:" + std::to_string(port), grpc::InsecureServerCredentials()
+    );
 
     builder.RegisterService(&update_service_.get_service());
     builder.RegisterService(&auth_service_.get_service());
 
+
+
     server_ = builder.BuildAndStart();
-    update_service_.run();
+    
+        update_service_.run();
+    auth_service_.run();
 }
 
-void ServerImplementation::HandleRPCs() {
-    new UpdateService::GetNoteServerCall(update_service_, cq_.get());
-    new UpdateService::CreateNoteServerCall(update_service_, cq_.get());
-    new UpdateService::UpdateNoteServerCall(update_service_, cq_.get());
-
-    new AuthService::TryAuthenticateUserServerCall(auth_service_, cq_.get());
-    new AuthService::TryRegisterUserServerCall(auth_service_, cq_.get());
-
+void ServerImplementation::HandleRPCs() const {
     void *tag;
     bool ok;
     while (cq_->Next(&tag, &ok)) {

@@ -18,16 +18,17 @@ void UpdateService::run() {
     new TryJoinProjectServerCall(&service_, cq_);
     new TryLeaveProjectServerCall(&service_, cq_);
 
+    new GetNoteServerCall(&service_, cq_);
+    new CreateNoteServerCall(&service_, cq_);
+    new UpdateNoteServerCall(&service_, cq_);
 }
 
 UpdateService::UpdateNoteServerCall::UpdateNoteServerCall(
-    UpdateService &service,
+    Update::AsyncService *service,
     ServerCompletionQueue *cq
 )
     : CommonServerCall(cq), responder_(&ctx_), service_(service) {
-    service_.service_.RequestUpdateNote(
-        &ctx_, &request_, &responder_, cq_, cq_, this
-    );
+    service_->RequestUpdateNote(&ctx_, &request_, &responder_, cq_, cq_, this);
     status_ = PROCESS;
 }
 
@@ -61,13 +62,11 @@ void UpdateService::UpdateNoteServerCall::Proceed(const bool ok) {
 }
 
 UpdateService::GetNoteServerCall::GetNoteServerCall(
-    UpdateService &service,
+    Update::AsyncService *service,
     ServerCompletionQueue *cq
 )
     : CommonServerCall(cq), responder_(&ctx_), service_(service) {
-    service_.service_.RequestGetNote(
-        &ctx_, &request_, &responder_, cq_, cq_, this
-    );
+    service_->RequestGetNote(&ctx_, &request_, &responder_, cq_, cq_, this);
     status_ = PROCESS;
 }
 
@@ -255,13 +254,13 @@ void UpdateService::TryJoinProjectServerCall::Proceed(const bool ok = true) {
 
             responder_.Finish(response_, grpc::Status::OK, this);
             break;
+        }
+        case FINISH: {
+            std::cout << "[SERVER] : {try join project} : deleting call"
+                      << std::endl;
+            delete this;
+        }
     }
-    case FINISH: {
-        std::cout << "[SERVER] : {try join project} : deleting call"
-                  << std::endl;
-        delete this;
-    }
-}
 }
 
 UpdateService::TryLeaveProjectServerCall::TryLeaveProjectServerCall(
@@ -293,9 +292,7 @@ void UpdateService::TryLeaveProjectServerCall::Proceed(const bool ok) {
             std::cout << "[SERVER] : {try leave project} : get request, code="
                       << request_.code() << std::endl;
 
-            UpdateHandler::try_leave_project(
-                request_, response_
-            );
+            UpdateHandler::try_leave_project(request_, response_);
 
             response_.set_ok(1);
             responder_.Finish(response_, grpc::Status::OK, this);
@@ -304,6 +301,54 @@ void UpdateService::TryLeaveProjectServerCall::Proceed(const bool ok) {
             std::cout << "[SERVER] : {try leave project} : deleting call"
                       << std::endl;
             delete this;
+        }
+    }
+}
+
+UpdateService::CreateNoteServerCall::CreateNoteServerCall(
+    Update::AsyncService *service,
+    ServerCompletionQueue *cq
+)
+    : CommonServerCall(cq), responder_(&ctx_), service_(service) {
+    this->Proceed(true);
+}
+
+void UpdateService::CreateNoteServerCall::Proceed(const bool ok) {
+    if (!ok) {
+        delete this;
+        return;
+    }
+
+    switch (status_) {
+        case CREATE: {
+            status_ = PROCESS;
+            service_->RequestCreateNote(
+                &ctx_, &request_, &responder_, cq_, cq_, this
+            );
+            std::cout << "[SERVER] : {create note} : start listening"
+                      << std::endl;
+            break;
+        }
+        case PROCESS: {
+            status_ = FINISH;
+            new CreateNoteServerCall(service_, cq_);
+
+            std::cout << "[SERVER] : {create note} : get request, title="
+                      << request_.note_title() << std::endl;
+
+            CreateNoteResponse response;
+            const auto created_note =
+                NoteDao::initialize_note_for_user(request_.user().login());
+            response.mutable_note()->CopyFrom(created_note);
+
+            responder_.Finish(response, grpc::Status::OK, this);
+            break;
+        }
+        case FINISH: {
+            std::cout << "[SERVER] : {create note} : deleting call"
+                      << std::endl;
+            delete this;
+            break;
         }
     }
 }

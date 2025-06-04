@@ -192,6 +192,7 @@ UpdateRequests::CreateNoteClientCall::CreateNoteClientCall(
     const CreateNoteRequest &request,
     CompletionQueue *cq,
     const std::unique_ptr<Update::Stub> &stub
+
 )
     : responder_(stub->AsyncCreateNote(&context, request, cq)) {
     context.set_deadline(
@@ -206,6 +207,7 @@ void UpdateRequests::CreateNoteClientCall::Proceed(const bool ok) {
         std::cout << "[CLIENT WARNING]: RPC failed\n";
     }
     delete this;
+
 }
 
 bool UpdateRequests::try_update_note(Note *note) const {

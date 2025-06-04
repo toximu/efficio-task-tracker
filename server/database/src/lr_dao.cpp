@@ -68,7 +68,6 @@ int LRDao::try_register_user(
 
     const std::string check_query = "SELECT * FROM users WHERE login = $1";
 
-
     const pqxx::result check_result =
         transaction.exec_params(check_query, login);
 
@@ -121,12 +120,10 @@ bool LRDao::add_project_to_user(
     const std::string query =
         "UPDATE users SET projects = array_append(projects, $1) "
         "WHERE login = $2";
-    // pqxx::params params;
-    // params.append(project_code);
-    // params.append(user_login);
 
     const pqxx::result result =
         transaction.exec_params(query, project_code, user_login);
+
     transaction.commit();
     return result.affected_rows() > 0;
 }

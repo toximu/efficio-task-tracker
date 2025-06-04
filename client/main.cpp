@@ -21,9 +21,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    const auto channel =
-        CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
-    ClientImplementation client(channel);
+    auto client = ClientImplementation::get_instance();
 
     std::thread requests([&] {
         try {
@@ -35,7 +33,7 @@ int main(int argc, char *argv[]) {
     requests.detach();
 
     auto *app_window = new Ui::ApplicationWindow("EFFICIO");
-    auto *login_window = new LoginWindow(&client, app_window);
+    auto *login_window = new LoginWindow(app_window);
 
     app_window->setCentralWidget(login_window);
     const QRect screen_geometry =

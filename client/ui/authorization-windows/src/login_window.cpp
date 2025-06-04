@@ -18,8 +18,8 @@ const std::vector<QString> LoginWindow::THEMES = {
     Ui::login_window_blue_theme
 };
 
-LoginWindow::LoginWindow(ClientImplementation *client, QWidget *parent)
-    : QWidget(parent), ui(new Ui::LoginWindow), client_(client) {
+LoginWindow::LoginWindow(QWidget *parent)
+    : QWidget(parent), ui(new Ui::LoginWindow) {
     ui->setupUi(this);
 
     setFixedSize(380, 480);
@@ -48,7 +48,7 @@ LoginWindow::LoginWindow(ClientImplementation *client, QWidget *parent)
     );
 }
 
-void LoginWindow::handle_theme_changed(int theme) {
+void LoginWindow::handle_theme_changed(const int theme) {
     this->setStyleSheet(THEMES[theme]);
 }
 
@@ -73,7 +73,7 @@ void LoginWindow::on_switch_mode_clicked() {
         old->deleteLater();
     }
     Storage storage;
-    auto *registration_window = new RegistrationWindow(client_, app_window);
+    auto *registration_window = new RegistrationWindow(app_window);
 
     app_window->setCentralWidget(registration_window);
     QRect screenGeometry = QApplication::primaryScreen()->availableGeometry();
@@ -104,7 +104,8 @@ void LoginWindow::on_push_enter_clicked() {
                     this, "Ошибка",
                     "Длина пароля не должна превышать пятидесяти символов"
                 );
-            } else if (client_->try_authenticate_user(user)) {
+            } else if (ClientImplementation::get_instance()
+                           .try_authenticate_user(user)) {
                 QMessageBox::information(
                     this, "Вход", "Вы успешно вошли! Добро пожаловать :)"
                 );
