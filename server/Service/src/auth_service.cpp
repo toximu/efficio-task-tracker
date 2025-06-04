@@ -1,8 +1,10 @@
 #include "auth_service.h"
 #include "lr_dao.hpp"
+#include "project_dao.hpp"
 
-AuthService::AuthService(ServerCompletionQueue* cq) : cq_(cq) {
+using Efficio_proto::Storage;
 
+AuthService::AuthService(ServerCompletionQueue *cq) : cq_(cq) {
 }
 
 AuthService::TryAuthenticateUserServerCall::TryAuthenticateUserServerCall(
@@ -34,10 +36,14 @@ void AuthService::TryAuthenticateUserServerCall::Proceed(const bool ok) {
             );
 
             if (query_exit_code == 1) {
-                std::cout << "[SERVER]: GOOD AUTH REQUEST" << std::endl;
+                Storage user_storage;
+                ProjectDAO::get_all_user_projects(request_.user().login(), user_storage);
+
                 response.mutable_user()->CopyFrom(request_.user());
+                response.mutable_user()->mutable_storage()->CopyFrom(user_storage);
+                std::cout << "[SERVER]: WELCOME, " << response.mutable_user()->login() << "\n";
             } else {
-                std::cout << "[SERVER]: BAD AUTH REQUEST" << std::endl;
+                std::cout << "[SERVER]: SQL QUERY ERROR\n";
                 response.set_error_text(
                     "[SERVER ERROR]: Не удалось выполнить запрос в базу данных "
                     "на проверку "

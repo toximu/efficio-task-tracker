@@ -3,6 +3,71 @@
 #include "database_manager.hpp"
 #include "note_dao.hpp"
 
+bool ProjectDAO::get_all_user_projects(const std::string &login, Storage &storage) {
+    pqxx::connection &connection =
+        DatabaseManager::get_instance().get_connection();
+    pqxx::work transaction(connection);
+
+    const std::string projects_query =
+        "SELECT p.code, p.title, p.members "
+        "FROM projects p "
+        "JOIN users u ON p.code = ANY(u.projects) "
+        "WHERE u.login = " + transaction.quote(login);
+
+    const pqxx::result projects_result = transaction.exec(projects_query);
+
+    if (projects_result.empty()) {
+        transaction.commit();
+        return false;
+    }
+
+    for (const auto &project_row : projects_result) {
+        Project project;
+        project.set_code(project_row["code"].as<std::string>());
+        project.set_title(project_row["title"].as<std::string>());
+
+        if (!project_row["members"].is_null()) {
+            auto members_array = project_row["members"].as_array();
+            for (const auto &member : members_array) {
+                project.add_members(member.as<std::string>());
+            }
+        }
+
+        const std::string notes_query =
+            "SELECT id, title, content, date, tags "
+            "FROM notes "
+            "WHERE project_code = " + transaction.quote(project.code());
+
+        const pqxx::result notes_result = transaction.exec(notes_query);
+
+        for (const auto &note_row : notes_result) {
+            Note* note = project.add_notes();
+            note->set_id(note_row["id"].as<int>());
+            note->set_title(note_row["title"].as<std::string>());
+
+            if (!note_row["content"].is_null()) {
+                note->set_text(note_row["content"].as<std::string>());
+            }
+
+            if (!note_row["date"].is_null()) {
+                note->set_date(note_row["date"].as<std::string>());
+            }
+
+            if (!note_row["tags"].is_null()) {
+                auto tags_array = note_row["tags"].as_array();
+                for (const auto &tag : tags_array) {
+                    note->add_tags(tag.as<std::string>());
+                }
+            }
+        }
+
+        storage.mutable_projects()->Add(std::move(project));
+    }
+
+    transaction.commit();
+    return true;
+}
+
 bool ProjectDAO::get_project(const std::string &code, Project &project) {
     pqxx::connection &connection =
         DatabaseManager::get_instance().get_connection();

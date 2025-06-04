@@ -57,9 +57,9 @@ public:
         void Proceed(bool) override;
     };
 
-    explicit AuthService(ServerCompletionQueue* cq);
-
     Auth::AsyncService &get_service();
+
+    explicit AuthService(ServerCompletionQueue* cq);
 
     void run();
 };
