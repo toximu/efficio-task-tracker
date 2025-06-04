@@ -247,5 +247,6 @@ bool NoteEditDialog::try_save_note() const {
         new_tag->set_color(color_code_to_note_tag_colors(tag.color));
     }
 
-    return ClientImplementation::get_instance().try_update_note(note_);
+    // return ClientImplementation::get_instance().try_update_note(note_); Ilya
+    return true;
 }

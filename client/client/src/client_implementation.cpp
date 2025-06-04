@@ -21,7 +21,6 @@ ClientImplementation::ClientImplementation(
       auth_requests_(channel, &cq_) {
     complete_rpc_thread_ =
         std::thread(&ClientImplementation::CompleteRpc, this);
-
 }
 
 void ClientImplementation::CompleteRpc() {
@@ -62,15 +61,15 @@ bool ClientImplementation::try_register_user(User *user) {
     return auth_requests_.try_register_user(user);
 }
 
-bool ClientImplementation::try_update_note(Note *note) {
+bool ClientImplementation::try_update_note(Note *note) const {
     return update_requests_.try_update_note(note);
 }
 
-bool ClientImplementation::try_create_note(Note *note) {
+bool ClientImplementation::try_create_note(Note *note) const {
     return update_requests_.try_create_note(note);
 }
 
-bool ClientImplementation::try_fetch_note(Note *note) {
+bool ClientImplementation::try_fetch_note(Note *note) const {
     return update_requests_.try_fetch_note(note);
 }
 
@@ -89,7 +88,11 @@ bool ClientImplementation::get_project(
     return update_requests_.get_project(*project, code);
 }
 
-bool ClientImplementation::try_join_project(Project *project, const std::string &code,const User &user) {
+bool ClientImplementation::try_join_project(
+    Project *project,
+    const std::string &code,
+    const User &user
+) {
     return update_requests_.try_join_project(*project, code, user);
 }
 
@@ -99,5 +102,3 @@ bool ClientImplementation::try_leave_project(
 ) {
     return update_requests_.try_leave_project(code, user);
 }
-
-

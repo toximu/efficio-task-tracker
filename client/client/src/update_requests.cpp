@@ -21,9 +21,8 @@ using Efficio_proto::TryJoinProjectRequest;
 using Efficio_proto::TryJoinProjectResponse;
 using Efficio_proto::TryLeaveProjectRequest;
 using Efficio_proto::TryLeaveProjectResponse;
-using Efficio_proto::User;
 using Efficio_proto::Update;
-
+using Efficio_proto::User;
 
 bool UpdateRequests::get_project(Project &project, const std::string &code) {
     GetProjectRequest request;
@@ -57,11 +56,11 @@ bool UpdateRequests::get_project(Project &project, const std::string &code) {
 bool UpdateRequests::create_project(
     Project &project,
     const std::string &project_title,
-    const User& user
+    const User &user
 ) {
     CreateProjectRequest request;
     request.set_project_title(project_title);
-    User* copy_user = new User(user);
+    User *copy_user = new User(user);
     request.set_allocated_user(copy_user);
 
     CreateProjectResponse response;
@@ -86,11 +85,14 @@ bool UpdateRequests::create_project(
     return false;
 }
 
-bool UpdateRequests::try_leave_project(const std::string &code, const User &user) {
+bool UpdateRequests::try_leave_project(
+    const std::string &code,
+    const User &user
+) {
     TryLeaveProjectRequest request;
 
     request.set_code(code);
-    User* copy_user = new User(user);
+    User *copy_user = new User(user);
     request.set_allocated_user(copy_user);
 
     TryLeaveProjectResponse response;
@@ -115,7 +117,7 @@ bool UpdateRequests::try_join_project(
 ) {
     TryJoinProjectRequest request;
     request.set_code(code);
-    User* copy_user = new User(user);
+    User *copy_user = new User(user);
     request.set_allocated_user(copy_user);
     TryJoinProjectResponse response;
     ClientContext context;
@@ -188,6 +190,10 @@ GetNoteResponse UpdateRequests::GetNoteClientCall::get_reply() {
     return reply_;
 }
 
+CreateNoteResponse UpdateRequests::CreateNoteClientCall::get_reply() {
+    return reply_;
+}
+
 UpdateRequests::CreateNoteClientCall::CreateNoteClientCall(
     const CreateNoteRequest &request,
     CompletionQueue *cq,
@@ -207,7 +213,6 @@ void UpdateRequests::CreateNoteClientCall::Proceed(const bool ok) {
         std::cout << "[CLIENT WARNING]: RPC failed\n";
     }
     delete this;
-
 }
 
 bool UpdateRequests::try_update_note(Note *note) const {
@@ -259,7 +264,7 @@ bool UpdateRequests::try_fetch_note(Note *note) const {
 bool UpdateRequests::try_create_note(Note *note) const {
     const CreateNoteRequest request;
 
-    // const auto call = new CreateNoteClientCall(request, cq_, stub_);
+    const auto call = new CreateNoteClientCall(request, cq_, stub_);
 
     void *tag;
     bool ok = false;
@@ -267,4 +272,6 @@ bool UpdateRequests::try_create_note(Note *note) const {
         std::cout << "[CLIENT]: Completion queue failed\n";
         return false;
     }
+    *note = call->get_reply().note();
+    return true;
 }
