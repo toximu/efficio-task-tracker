@@ -5,11 +5,16 @@
 #include "note_edit_dialog.h"
 
 namespace Ui {
-NoteWidget::NoteWidget(QWidget *parent, const Note *model_note)
+NoteWidget::NoteWidget(
+    QWidget *parent,
+    const Note *model_note,
+    ClientImplementation *client
+)
     : QWidget(parent),
       model_note_(model_note),
       main_layout_(new QVBoxLayout(this)),
-      open_button_(new QPushButton("Открыть")) {
+      open_button_(new QPushButton("Открыть")),
+      client_(client) {
     this->setObjectName("NoteWidget");
     this->setMinimumWidth(100);
     this->setFixedHeight(100);
@@ -37,8 +42,7 @@ NoteWidget::NoteWidget(QWidget *parent, const Note *model_note)
 
 void NoteWidget::open_note_window() const {
     auto dialog = new ::NoteEditDialog(
-
-        const_cast<QWidget *>(qobject_cast<const QWidget *>(this)),
+        client_, const_cast<QWidget *>(qobject_cast<const QWidget *>(this)),
         const_cast<Note *>(model_note_)
     );
     dialog->setAttribute(Qt::WA_DeleteOnClose);

@@ -10,6 +10,7 @@
 #include <QWidget>
 #include <string>
 #include "bottombar.h"
+#include "client_implementation.h"
 #include "notelist.h"
 #include "projectlist.h"
 
@@ -18,6 +19,7 @@ using namespace Efficio_proto;
 namespace Ui {
 class MainWindow : public QWidget {
     Q_OBJECT
+    ClientImplementation *client_;
     std::string username;
     QVBoxLayout *main_layout_;
     BottomBar *top_bar_;
@@ -29,6 +31,7 @@ class MainWindow : public QWidget {
     QPushButton *new_note_button_;
     Storage *storage_;
 
+
     friend ProjectList;
 private slots:
     void create_project();
@@ -36,9 +39,10 @@ private slots:
 
 public:
     explicit MainWindow(
-        QWidget *parent = nullptr,
-        std::string username = "none",
-        Storage *storage = nullptr
+        QWidget *parent,
+        std::string username,
+        Storage *storage,
+        ClientImplementation *client
     );
 };
 }  // namespace Ui

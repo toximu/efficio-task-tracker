@@ -88,6 +88,8 @@ bool AuthRequests::try_authenticate_user(User *user) const {
         return false;
     }
 
+
+
     user->CopyFrom(call->get_reply().user());
     std::cout << "[CLIENT]: AUTHENTICATED USER - " << user->login() << "\n";
     return true;

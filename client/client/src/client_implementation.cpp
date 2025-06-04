@@ -28,16 +28,16 @@ void ClientImplementation::CompleteRpc() {
     bool ok = false;
 
     while (cq_.Next(&got_tag, &ok)) {
-        std::cout << "got smth" << std::endl;
+        std::cout << "[CLIENT] : GET CALL FROM CQ" << std::endl;
         CommonClientCall *call = static_cast<CommonClientCall *>(got_tag);
 
         assert(ok);
 
         if (call->status.ok()) {
-            std::cout << "start procceed" << std::endl;
+            std::cout << "[CLIENT] : START PROCEED" << std::endl;
             call->Proceed();
         } else {
-            std::cout << "RPC failed" << std::endl;
+            std::cout << "[CLIENT] : RPC FAILED" << std::endl;
         }
 
         delete call;

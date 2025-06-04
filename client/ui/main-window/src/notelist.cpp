@@ -8,8 +8,9 @@
 #include "projectitem.h"
 
 namespace Ui {
-NoteList::NoteList(QWidget *parent)
+NoteList::NoteList(QWidget *parent, ClientImplementation *client)
     : QWidget(parent),
+      client_(client),
       main_layout_(new QHBoxLayout(this)),
       vertical_layouts_(std::vector<QVBoxLayout *>()) {
     this->setAttribute(Qt::WA_StyledBackground);
@@ -31,7 +32,7 @@ void NoteList::add_note_widget(const Note *note) {
         );
     }
     vertical_layouts_[note_counter_ % 4]->addWidget(
-        new NoteWidget(this, note), 0, Qt::AlignTop
+        new NoteWidget(this, note, client_), 0, Qt::AlignTop
     );
     current_layout->addStretch();
     note_counter_++;

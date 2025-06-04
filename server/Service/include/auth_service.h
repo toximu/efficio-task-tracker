@@ -17,7 +17,7 @@ using Efficio_proto::AuthResponse;
 class AuthService final {
     Auth::AsyncService service_;
     ServerContext ctx_;
-    std::unique_ptr<ServerCompletionQueue> cq_;
+    ServerCompletionQueue* cq_;
     std::unique_ptr<grpc::Server> server_;
 
     class AuthServerOperation : public CommonServerCall {
@@ -56,6 +56,8 @@ public:
         );
         void Proceed(bool) override;
     };
+
+    explicit AuthService(ServerCompletionQueue* cq);
 
     Auth::AsyncService &get_service();
 

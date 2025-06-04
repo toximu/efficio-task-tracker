@@ -19,14 +19,20 @@
 using namespace Efficio_proto;
 
 namespace Ui {
-MainWindow::MainWindow(QWidget *parent, std::string username, Storage *storage)
+MainWindow::MainWindow(
+    QWidget *parent,
+    std::string username,
+    Storage *storage,
+    ClientImplementation *client
+)
     : QWidget(parent),
+      client_(client),
       username(username),
       main_layout_(new QVBoxLayout(this)),
       top_bar_(new BottomBar(this, username, "EFFICIO :: Таск-Трекер")),
       content_layout_(new QHBoxLayout(this)),
       project_list_(new ProjectList(this)),
-      note_list_(new NoteList(this)),
+      note_list_(new NoteList(this, client)),
       content_widget_(new QWidget(this)),
       new_project_button_(new QPushButton("Новый проект", this)),
       new_note_button_(new QPushButton("Новая заметка", this)),

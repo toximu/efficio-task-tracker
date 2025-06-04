@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
+#include "client_implementation.h"
 
 using namespace Efficio_proto;
 
@@ -17,11 +18,13 @@ class NoteWidget : public QWidget {
     QPushButton *open_button_;
     QLabel *title_label_;
     QLabel *text_label_;
+    ClientImplementation *client_;
 
 public:
     explicit NoteWidget(
-        QWidget *parent = nullptr,
-        const Note *model_note = nullptr
+        QWidget *parent,
+        const Note *model_note,
+        ClientImplementation *client
     );
 
 private slots:

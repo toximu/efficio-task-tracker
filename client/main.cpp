@@ -36,11 +36,12 @@ int main(int argc, char *argv[]) {
     requests.detach();
     auto *app_window = new Ui::ApplicationWindow("EFFICIO");
     Storage *storage = new Storage();
-    User usr;
-    usr.set_login("toximu");
-    usr.set_hashed_password("12345678");
-    client.try_authenticate_user(&usr);
-    Ui::MainWindow window(app_window, usr.login(), usr.mutable_storage());
+    User *usr = new User();
+    usr->set_login("toximu");
+    usr->set_hashed_password("12345678");
+    // client.try_authenticate_user(usr);
+    *usr->mutable_storage()->add_projects()->mutable_code() = "ML05B3";
+    Ui::MainWindow window(app_window, usr.login(), usr.mutable_storage(), &client);
     window.show();
 
     // auto *login_window = new LoginWindow(app_window);

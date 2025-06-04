@@ -1,6 +1,10 @@
 #include "auth_service.h"
 #include "lr_dao.hpp"
 
+AuthService::AuthService(ServerCompletionQueue* cq) : cq_(cq) {
+
+}
+
 AuthService::TryAuthenticateUserServerCall::TryAuthenticateUserServerCall(
     Auth::AsyncService *service,
     ServerCompletionQueue *cq
@@ -30,8 +34,10 @@ void AuthService::TryAuthenticateUserServerCall::Proceed(const bool ok) {
             );
 
             if (query_exit_code == 1) {
+                std::cout << "[SERVER]: GOOD AUTH REQUEST" << std::endl;
                 response.mutable_user()->CopyFrom(request_.user());
             } else {
+                std::cout << "[SERVER]: BAD AUTH REQUEST" << std::endl;
                 response.set_error_text(
                     "[SERVER ERROR]: Не удалось выполнить запрос в базу данных "
                     "на проверку "
@@ -104,6 +110,6 @@ Auth::AsyncService &AuthService::get_service() {
 }
 
 void AuthService::run() {
-    new TryAuthenticateUserServerCall(&service_, cq_.get());
-    new TryRegisterUserServerCall(&service_, cq_.get());
+    new TryAuthenticateUserServerCall(&service_, cq_);
+    new TryRegisterUserServerCall(&service_, cq_);
 }
