@@ -6,7 +6,8 @@
 #include <QTranslator>
 #include "applicationwindow.h"
 #include "client_implementation.h"
-#include "login_window.h"
+// #include "login_window.h"
+#include "mainwindow.h"
 
 int main(int argc, char *argv[]) {
     QApplication application(argc, argv);
@@ -21,7 +22,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    auto client = ClientImplementation::get_instance();
+    ClientImplementation client(grpc::CreateChannel(
+        "localhost:50051", grpc::InsecureChannelCredentials()
+    ));
 
     std::thread requests([&] {
         try {
@@ -31,17 +34,24 @@ int main(int argc, char *argv[]) {
         }
     });
     requests.detach();
-
     auto *app_window = new Ui::ApplicationWindow("EFFICIO");
-    auto *login_window = new LoginWindow(app_window);
+    Storage *storage = new Storage();
+    User usr;
+    usr.set_login("toximu");
+    usr.set_hashed_password("12345678");
+    client.try_authenticate_user(&usr);
+    Ui::MainWindow window(app_window, usr.login(), usr.mutable_storage());
+    window.show();
 
-    app_window->setCentralWidget(login_window);
-    const QRect screen_geometry =
-        QApplication::primaryScreen()->availableGeometry();
-    const int x = (screen_geometry.width() - login_window->width()) / 2;
-    const int y = (screen_geometry.height() - login_window->height()) / 2;
-    app_window->move(x, y);
-    app_window->show();
+    // auto *login_window = new LoginWindow(app_window);
+    //
+    // app_window->setCentralWidget(login_window);
+    // const QRect screen_geometry =
+    //     QApplication::primaryScreen()->availableGeometry();
+    // const int x = (screen_geometry.width() - login_window->width()) / 2;
+    // const int y = (screen_geometry.height() - login_window->height()) / 2;
+    // app_window->move(x, y);
+    // app_window->show();
 
     return QApplication::exec();
 }

@@ -21,8 +21,15 @@ using grpc::Channel;
 using grpc::ClientContext;
 using grpc::Status;
 
-NoteEditDialog::NoteEditDialog(QWidget *parent, Note *note)
-    : QDialog(parent), ui_(new Ui::NoteEditDialog), note_(note) {
+NoteEditDialog::NoteEditDialog(
+    ClientImplementation *client,
+    QWidget *parent,
+    Note *note
+)
+    : QDialog(parent),
+      client_(client),
+      ui_(new Ui::NoteEditDialog),
+      note_(note) {
     if (note_ == nullptr) {
         std::cerr << "Not a valid note!\n";
     }
@@ -247,6 +254,5 @@ bool NoteEditDialog::try_save_note() const {
         new_tag->set_color(color_code_to_note_tag_colors(tag.color));
     }
 
-    // return ClientImplementation::get_instance().try_update_note(note_); Ilya
-    return true;
+    return client_->try_update_note(note_);
 }
