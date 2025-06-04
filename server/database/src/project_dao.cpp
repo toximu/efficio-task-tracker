@@ -9,14 +9,15 @@ bool ProjectDAO::get_project(const std::string &code, Project &project) {
     pqxx::work transaction(connection);
 
     const std::string query =
-        "SELECT * FROM projects WHERE code = " + transaction.quote(code);
+        "SELECT * FROM projects WHERE code = $1";
 
-    const pqxx::result result = transaction.exec(query);
+    const pqxx::result result = transaction.exec_params(query, code);
 
     if (result.empty()) {
+        transaction.commit();
         return false;
     }
-
+    transaction.commit();
     const pqxx::row row = result[0];
 
     project.set_title(row["title"].as<std::string>());
@@ -144,7 +145,7 @@ bool ProjectDAO::code_available(const std::string &project_code) {
         "FROM projects "
         "WHERE code = $1 ";
     const pqxx::result result = transaction.exec_params(query, project_code);
-
+    transaction.commit();
     if (result.empty()) {
         return true;
     }

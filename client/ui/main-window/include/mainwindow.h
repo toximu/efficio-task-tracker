@@ -20,7 +20,7 @@ namespace Ui {
 class MainWindow : public QWidget {
     Q_OBJECT
     ClientImplementation *client_;
-    std::string username;
+    std::unique_ptr<User> user_;
     QVBoxLayout *main_layout_;
     BottomBar *top_bar_;
     QHBoxLayout *content_layout_;
@@ -29,7 +29,7 @@ class MainWindow : public QWidget {
     QWidget *content_widget_;
     QPushButton *new_project_button_;
     QPushButton *new_note_button_;
-    Storage *storage_;
+
 
 
     friend ProjectList;
@@ -40,8 +40,7 @@ private slots:
 public:
     explicit MainWindow(
         QWidget *parent,
-        std::string username,
-        Storage *storage,
+        std::unique_ptr<User> user,
         ClientImplementation *client
     );
 };

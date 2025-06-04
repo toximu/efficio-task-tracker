@@ -24,7 +24,7 @@ NoteList::NoteList(QWidget *parent, ClientImplementation *client)
     }
 }
 
-void NoteList::add_note_widget(const Note *note) {
+void NoteList::add_note_widget(Note *note) {
     auto current_layout = vertical_layouts_[note_counter_ % 4];
     if (current_layout->count() > 1) {
         current_layout->removeItem(
@@ -41,11 +41,10 @@ void NoteList::add_note_widget(const Note *note) {
 void NoteList::load_project_notes(QListWidgetItem *project) {
     ProjectItem *p = dynamic_cast<ProjectItem *>(project);
     assert(p != nullptr);
-    qDebug() << "Адрес проекта" << QString::fromStdString(p->project_->title())
-             << ":" << p->project_;
     this->clear_note_list();
+    client_->get_project(p->project_, p->project_->code());
     note_counter_ = 0;
-    for (const Note &note : p->project_->notes()) {
+    for (Note &note : *p->project_->mutable_notes()) {
         this->add_note_widget(&note);
     }
 }

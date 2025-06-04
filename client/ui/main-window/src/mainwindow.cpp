@@ -21,22 +21,20 @@ using namespace Efficio_proto;
 namespace Ui {
 MainWindow::MainWindow(
     QWidget *parent,
-    std::string username,
-    Storage *storage,
+    std::unique_ptr<User> user,
     ClientImplementation *client
 )
     : QWidget(parent),
       client_(client),
-      username(username),
+      user_(std::move(user)),
       main_layout_(new QVBoxLayout(this)),
-      top_bar_(new BottomBar(this, username, "EFFICIO :: Таск-Трекер")),
+      top_bar_(new BottomBar(this, user_->login(), "EFFICIO :: Таск-Трекер")),
       content_layout_(new QHBoxLayout(this)),
       project_list_(new ProjectList(this)),
       note_list_(new NoteList(this, client)),
       content_widget_(new QWidget(this)),
       new_project_button_(new QPushButton("Новый проект", this)),
-      new_note_button_(new QPushButton("Новая заметка", this)),
-      storage_(storage) {
+      new_note_button_(new QPushButton("Новая заметка", this)) {
     this->setObjectName("main-window");
     this->setAttribute(Qt::WA_StyledBackground);
     this->setMinimumSize(QSize(800, 600));
@@ -58,7 +56,7 @@ MainWindow::MainWindow(
     main_layout_->addWidget(content_widget_);
     this->setLayout(main_layout_);
 
-    this->project_list_->load_projects(storage);
+    this->project_list_->load_projects(user_->mutable_storage());
 
     connect(
         project_list_, &QListWidget::itemClicked, note_list_,
@@ -79,11 +77,10 @@ void MainWindow::create_project() {
         nullptr, "Название проекта:", "Введите название", QLineEdit::Normal, "",
         &ok
     );
-    // TODO: notificate server
-    // TODO: send request to server, get code
+
     if (ok) {
-        Project *project = storage_->add_projects();
-        project->set_title(name_of_project.toStdString());
+        Project *project = user_->mutable_storage()->add_projects();
+        client_->create_project(project, name_of_project.toStdString(), *user_);
         project_list_->add_project(project);
     }
 }
@@ -91,12 +88,10 @@ void MainWindow::create_project() {
 void MainWindow::add_note() {
     auto project_item =
         dynamic_cast<ProjectItem *>(project_list_->currentItem());
-    // TODO: notificate server
     if (project_item) {
         Note *note = project_item->project_->add_notes();
-        note->set_title("Пустая заметка");
-        note->set_allocated_text(new std::string(""));
-        note_list_->add_note_widget(note);
+        client_->try_create_note(note);
+        note_list_->add_note_widget(note);  // todo : and to project!
     } else {
         QMessageBox msg;
         msg.setText("Проект не выбран!");

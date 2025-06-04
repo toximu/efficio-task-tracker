@@ -26,23 +26,14 @@ int main(int argc, char *argv[]) {
         "localhost:50051", grpc::InsecureChannelCredentials()
     ));
 
-    std::thread requests([&] {
-        try {
-            client.CompleteRpc();
-        } catch (const std::exception &e) {
-            std::cout << "[CLIENT ERROR]: " << e.what() << std::endl;
-        }
-    });
-    requests.detach();
     auto *app_window = new Ui::ApplicationWindow("EFFICIO");
-    Storage *storage = new Storage();
-    User *usr = new User();
+    std::unique_ptr<User> usr = std::make_unique<User>();
     usr->set_login("toximu");
     usr->set_hashed_password("12345678");
-    // client.try_authenticate_user(usr);
-    *usr->mutable_storage()->add_projects()->mutable_code() = "ML05B3";
-    Ui::MainWindow window(app_window, usr.login(), usr.mutable_storage(), &client);
-    window.show();
+    client.try_authenticate_user(usr.get());
+    Ui::MainWindow window(app_window, std::move(usr), &client);
+    app_window->resize(800, 600);
+    app_window->show();
 
     // auto *login_window = new LoginWindow(app_window);
     //
@@ -53,6 +44,6 @@ int main(int argc, char *argv[]) {
     // const int y = (screen_geometry.height() - login_window->height()) / 2;
     // app_window->move(x, y);
     // app_window->show();
-
-    return QApplication::exec();
+    int exit_code = QApplication::exec();
+    client.complete_rpc_thread_.join();
 }

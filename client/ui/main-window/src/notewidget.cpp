@@ -7,7 +7,7 @@
 namespace Ui {
 NoteWidget::NoteWidget(
     QWidget *parent,
-    const Note *model_note,
+    Note *model_note,
     ClientImplementation *client
 )
     : QWidget(parent),
@@ -41,6 +41,7 @@ NoteWidget::NoteWidget(
 }
 
 void NoteWidget::open_note_window() const {
+    client_->try_fetch_note(model_note_);
     auto dialog = new ::NoteEditDialog(
         client_, const_cast<QWidget *>(qobject_cast<const QWidget *>(this)),
         const_cast<Note *>(model_note_)

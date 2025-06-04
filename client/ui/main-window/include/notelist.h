@@ -23,7 +23,7 @@ class NoteList : public QWidget {
     int note_counter_ = 0;
 
 public:
-    void add_note_widget(const Note *note);
+    void add_note_widget(Note *note);
     void clear_note_list();
     NoteList(QWidget *parent, ClientImplementation *client);
 

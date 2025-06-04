@@ -13,7 +13,7 @@ using namespace Efficio_proto;
 namespace Ui {
 class NoteWidget : public QWidget {
     Q_OBJECT
-    const Note *model_note_;
+    Note * const model_note_;
     QVBoxLayout *main_layout_;
     QPushButton *open_button_;
     QLabel *title_label_;
@@ -23,7 +23,7 @@ class NoteWidget : public QWidget {
 public:
     explicit NoteWidget(
         QWidget *parent,
-        const Note *model_note,
+        Note *model_note,
         ClientImplementation *client
     );
 

@@ -72,18 +72,20 @@ int LRDao::try_register_user(
         transaction.exec_params(check_query, login);
 
     if (!check_result.empty()) {
+        transaction.commit();
         return -1;
     }
-
+    transaction.commit();
     const std::string hashed_password = hash_password(password);
 
+    pqxx::work transaction_insert(connection);
     const std::string insert_query =
         "INSERT INTO users (login, password) VALUES ($1, $2)";
 
     const pqxx::result insert_result =
-        transaction.exec_params(insert_query, login, hashed_password);
+        transaction_insert.exec_params(insert_query, login, hashed_password);
 
-    transaction.commit();
+    transaction_insert.commit();
     return insert_result.affected_rows() > 0 ? 1 : 0;
 }
 
