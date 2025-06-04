@@ -1,8 +1,9 @@
 #include "server_implementation.h"
 #include <absl/time/time.h>
+#include <grpcpp/version_info.h>
 
 int main() {
-    absl::lts_20240116::UTCTimeZone();
+    std::cout << "gRPC version : " << GRPC_CPP_VERSION_STRING << std::endl;
 
     grpc::ServerBuilder builder;
     ServerImplementation server(50051, builder);

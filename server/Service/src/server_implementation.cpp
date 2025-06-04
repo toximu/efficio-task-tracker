@@ -7,9 +7,9 @@ ServerImplementation::ServerImplementation(
 )
     : cq_(builder.AddCompletionQueue()),
     update_service_(cq_.get()) {
-    builder.AddListeningPort(
-        "localhost:" + std::to_string(port), grpc::InsecureServerCredentials()
-    );
+    std::string server_address = "127.0.0.1:" + std::to_string(port);
+
+    builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
 
     builder.RegisterService(&update_service_.get_service());
     builder.RegisterService(&auth_service_.get_service());
