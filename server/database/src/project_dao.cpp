@@ -3,7 +3,10 @@
 #include "database_manager.hpp"
 #include "note_dao.hpp"
 
-bool ProjectDAO::get_all_user_projects(const std::string &login, Storage &storage) {
+bool ProjectDAO::get_all_user_projects(
+    const std::string &login,
+    Storage &storage
+) {
     pqxx::connection &connection =
         DatabaseManager::get_instance().get_connection();
     pqxx::work transaction(connection);
@@ -11,8 +14,9 @@ bool ProjectDAO::get_all_user_projects(const std::string &login, Storage &storag
     const std::string projects_query =
         "SELECT p.code, p.title, p.members "
         "FROM projects p "
-        "JOIN users u ON p.code = ANY(u.projects) "
-        "WHERE u.login = " + transaction.quote(login);
+        "JOIN users u ON p.code::text = ANY(u.projects::text[]) "
+        "WHERE u.login = " +
+        transaction.quote(login);
 
     const pqxx::result projects_result = transaction.exec(projects_query);
 
@@ -26,40 +30,27 @@ bool ProjectDAO::get_all_user_projects(const std::string &login, Storage &storag
         project.set_code(project_row["code"].as<std::string>());
         project.set_title(project_row["title"].as<std::string>());
 
-        // if (!project_row["members"].is_null()) {
-        //     auto members_array = project_row["members"].as<std::vector<std::string>>();
-        //     for (const auto &member : members_array) {
-        //         project.add_members(member);
-        //     }
-        // }
-        //
-        // const std::string notes_query =
-        //     "SELECT id, title, content, date, tags "
-        //     "FROM notes "
-        //     "WHERE project_code = " + transaction.quote(project.code());
-        //
-        // const pqxx::result notes_result = transaction.exec(notes_query);
-        //
-        // for (const auto &note_row : notes_result) {
-        //     Note* note = project.add_notes();
-        //     note->set_id(note_row["id"].as<int>());
-        //     note->set_title(note_row["title"].as<std::string>());
-        //
-        //     if (!note_row["content"].is_null()) {
-        //         note->set_text(note_row["content"].as<std::string>());
-        //     }
-        //
-        //     if (!note_row["date"].is_null()) {
-        //         note->set_date(note_row["date"].as<std::string>());
-        //     }
-        //
-        //     if (!note_row["tags"].is_null()) {
-        //         auto tags_array = note_row["tags"].as<std::vector<std::string>>();
-        //         for (const auto &tag : tags_array) {
-        //             *note->tags() = tag;
-        //         }
-        //     }
-        // }
+        if (!project_row["members"].is_null()) {
+            auto members_str = project_row["members"].as<std::string>();
+
+            if (!members_str.empty() && members_str.front() == '{' &&
+                members_str.back() == '}') {
+                members_str = members_str.substr(1, members_str.size() - 2);
+                std::istringstream iss(members_str);
+                std::string member;
+                while (std::getline(iss, member, ',')) {
+                    if (member.size() >= 2 && member.front() == '"' &&
+                        member.back() == '"') {
+                        member = member.substr(1, member.size() - 2);
+                    }
+
+                    std::erase_if(member, ::isspace);
+                    if (!member.empty()) {
+                        project.add_members(member);
+                    }
+                }
+            }
+        }
 
         storage.mutable_projects()->Add(std::move(project));
     }
@@ -73,8 +64,7 @@ bool ProjectDAO::get_project(const std::string &code, Project &project) {
         DatabaseManager::get_instance().get_connection();
     pqxx::work transaction(connection);
 
-    const std::string query =
-        "SELECT * FROM projects WHERE code = $1";
+    const std::string query = "SELECT * FROM projects WHERE code = $1";
 
     const pqxx::result result = transaction.exec_params(query, code);
 
