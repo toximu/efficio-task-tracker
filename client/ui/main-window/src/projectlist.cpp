@@ -7,7 +7,7 @@ namespace Ui {
 
 ProjectList::ProjectList(QWidget *parent) : QListWidget{parent} {
     this->setObjectName("ProjectList");
-    this->setFixedWidth(200);
+    this->setFixedWidth(300);
 }
 
 void ProjectList::add_project(Project *project) {

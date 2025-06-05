@@ -22,6 +22,8 @@ class NoteList : public QWidget {
 
     int note_counter_ = 0;
 
+    const std::size_t notes_per_row = 3;
+
 public:
     void add_note_widget(Note *note);
     void clear_note_list();

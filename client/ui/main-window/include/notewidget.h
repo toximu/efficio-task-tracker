@@ -17,7 +17,8 @@ class NoteWidget : public QWidget {
     QVBoxLayout *main_layout_;
     QPushButton *open_button_;
     QLabel *title_label_;
-    QLabel *text_label_;
+    QHBoxLayout *tags_layout_;
+    std::vector<QLabel *> tag_labels_;
     ClientImplementation *client_;
 
 public:
@@ -26,10 +27,12 @@ public:
         Note *model_note,
         ClientImplementation *client
     );
+private:
+    void update_tags();
 
 private slots:
 
-    void open_note_window() const;
+    void open_note_window() ;
 };
 }  // namespace Ui
 #endif  // NOTEWIDGET_H

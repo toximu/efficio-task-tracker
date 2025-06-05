@@ -13,7 +13,7 @@ DatabaseManager::DatabaseManager() {
         "user_id VARCHAR(50) REFERENCES users(login), "
         "members VARCHAR(50)[], "
         "date VARCHAR(50), "
-        "tags VARCHAR(50)[]"
+        "tags VARCHAR(50)[] "
         ")"
     );
 

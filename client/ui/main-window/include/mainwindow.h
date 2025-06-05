@@ -28,6 +28,7 @@ class MainWindow : public QWidget {
     NoteList *note_list_;
     QWidget *content_widget_;
     QPushButton *new_project_button_;
+    QPushButton *join_project_button_;
     QPushButton *new_note_button_;
 
 
@@ -35,6 +36,7 @@ class MainWindow : public QWidget {
     friend ProjectList;
 private slots:
     void create_project();
+    void add_project_by_code();
     void add_note();
 
 public:

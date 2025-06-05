@@ -26,40 +26,40 @@ bool ProjectDAO::get_all_user_projects(const std::string &login, Storage &storag
         project.set_code(project_row["code"].as<std::string>());
         project.set_title(project_row["title"].as<std::string>());
 
-        if (!project_row["members"].is_null()) {
-            auto members_array = project_row["members"].as_array();
-            for (const auto &member : members_array) {
-                project.add_members(member.as<std::string>());
-            }
-        }
-
-        const std::string notes_query =
-            "SELECT id, title, content, date, tags "
-            "FROM notes "
-            "WHERE project_code = " + transaction.quote(project.code());
-
-        const pqxx::result notes_result = transaction.exec(notes_query);
-
-        for (const auto &note_row : notes_result) {
-            Note* note = project.add_notes();
-            note->set_id(note_row["id"].as<int>());
-            note->set_title(note_row["title"].as<std::string>());
-
-            if (!note_row["content"].is_null()) {
-                note->set_text(note_row["content"].as<std::string>());
-            }
-
-            if (!note_row["date"].is_null()) {
-                note->set_date(note_row["date"].as<std::string>());
-            }
-
-            if (!note_row["tags"].is_null()) {
-                auto tags_array = note_row["tags"].as_array();
-                for (const auto &tag : tags_array) {
-                    note->add_tags(tag.as<std::string>());
-                }
-            }
-        }
+        // if (!project_row["members"].is_null()) {
+        //     auto members_array = project_row["members"].as<std::vector<std::string>>();
+        //     for (const auto &member : members_array) {
+        //         project.add_members(member);
+        //     }
+        // }
+        //
+        // const std::string notes_query =
+        //     "SELECT id, title, content, date, tags "
+        //     "FROM notes "
+        //     "WHERE project_code = " + transaction.quote(project.code());
+        //
+        // const pqxx::result notes_result = transaction.exec(notes_query);
+        //
+        // for (const auto &note_row : notes_result) {
+        //     Note* note = project.add_notes();
+        //     note->set_id(note_row["id"].as<int>());
+        //     note->set_title(note_row["title"].as<std::string>());
+        //
+        //     if (!note_row["content"].is_null()) {
+        //         note->set_text(note_row["content"].as<std::string>());
+        //     }
+        //
+        //     if (!note_row["date"].is_null()) {
+        //         note->set_date(note_row["date"].as<std::string>());
+        //     }
+        //
+        //     if (!note_row["tags"].is_null()) {
+        //         auto tags_array = note_row["tags"].as<std::vector<std::string>>();
+        //         for (const auto &tag : tags_array) {
+        //             *note->tags() = tag;
+        //         }
+        //     }
+        // }
 
         storage.mutable_projects()->Add(std::move(project));
     }

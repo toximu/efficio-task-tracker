@@ -65,8 +65,8 @@ bool ClientImplementation::try_update_note(Note *note) const {
     return update_requests_.try_update_note(note);
 }
 
-bool ClientImplementation::try_create_note(Note *note) const {
-    return update_requests_.try_create_note(note);
+bool ClientImplementation::try_create_note(Note *note, const std::string& project_code) const {
+    return update_requests_.try_create_note(note, project_code);
 }
 
 bool ClientImplementation::try_fetch_note(Note *note) const {

@@ -28,7 +28,7 @@ public:
         Note *note = nullptr
     );
     ~NoteEditDialog() override;
-
+    static QString create_tag_style_sheet(int color_code);
     private slots:
         void on_save_button_click();
     void on_join_button_click();
@@ -45,7 +45,7 @@ private:
 
     void clear_member_avatars();
     void update_tags_display();
-    static QString create_tag_style_sheet(int color_code);
+
 
     [[nodiscard]] bool try_save_note() const;
 

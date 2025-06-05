@@ -16,7 +16,8 @@ NoteList::NoteList(QWidget *parent, ClientImplementation *client)
     this->setAttribute(Qt::WA_StyledBackground);
     this->setObjectName("NoteList");
     this->setLayout(main_layout_);
-    vertical_layouts_.resize(4, nullptr);
+
+    vertical_layouts_.resize(notes_per_row, nullptr);
     for (auto &layout : vertical_layouts_) {
         layout = new QVBoxLayout(this);
 
@@ -25,13 +26,13 @@ NoteList::NoteList(QWidget *parent, ClientImplementation *client)
 }
 
 void NoteList::add_note_widget(Note *note) {
-    auto current_layout = vertical_layouts_[note_counter_ % 4];
+    auto current_layout = vertical_layouts_[note_counter_ % notes_per_row];
     if (current_layout->count() > 1) {
         current_layout->removeItem(
             current_layout->itemAt(current_layout->count() - 1)
         );
     }
-    vertical_layouts_[note_counter_ % 4]->addWidget(
+    vertical_layouts_[note_counter_ % notes_per_row]->addWidget(
         new NoteWidget(this, note, client_), 0, Qt::AlignTop
     );
     current_layout->addStretch();

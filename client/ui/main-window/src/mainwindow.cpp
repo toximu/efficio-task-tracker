@@ -33,7 +33,8 @@ MainWindow::MainWindow(
       project_list_(new ProjectList(this)),
       note_list_(new NoteList(this, client)),
       content_widget_(new QWidget(this)),
-      new_project_button_(new QPushButton("Новый проект", this)),
+      new_project_button_(new QPushButton("Создать", this)),
+      join_project_button_(new QPushButton("Добавить", this)),
       new_note_button_(new QPushButton("Новая заметка", this)) {
     this->setObjectName("main-window");
     this->setAttribute(Qt::WA_StyledBackground);
@@ -45,8 +46,13 @@ MainWindow::MainWindow(
     main_layout_->addWidget(content_widget_);
     content_widget_->setLayout(content_layout_);
     auto right_layout = new QVBoxLayout(content_widget_);
+
     right_layout->addWidget(project_list_);
-    right_layout->addWidget(new_project_button_);
+
+    auto project_button_layout = new QHBoxLayout(content_widget_);
+    project_button_layout->addWidget(new_project_button_);
+    project_button_layout->addWidget(join_project_button_);
+    right_layout->addLayout(project_button_layout);
     right_layout->addWidget(new_note_button_);
     QScrollArea *scrollArea = new QScrollArea(content_widget_);
     scrollArea->setWidgetResizable(true);
@@ -69,6 +75,10 @@ MainWindow::MainWindow(
         new_project_button_, &QPushButton::clicked, this,
         &Ui::MainWindow::create_project
     );
+    connect(
+        join_project_button_, &QPushButton::clicked, this,
+        &MainWindow::add_project_by_code
+    );
 }
 
 void MainWindow::create_project() {
@@ -85,12 +95,25 @@ void MainWindow::create_project() {
     }
 }
 
+void MainWindow::add_project_by_code() {
+    bool ok;
+    QString code = QInputDialog::getText(
+        nullptr, "Код", "Введите код:", QLineEdit::Normal, "", &ok
+    );
+
+    if (ok) {
+        Project *project = user_->mutable_storage()->add_projects();
+        client_->try_join_project(project,code.toStdString() , *user_);
+        project_list_->add_project(project);
+    }
+}
+
 void MainWindow::add_note() {
     auto project_item =
         dynamic_cast<ProjectItem *>(project_list_->currentItem());
     if (project_item) {
         Note *note = project_item->project_->add_notes();
-        client_->try_create_note(note);
+        client_->try_create_note(note, project_item->project_->code());
         note_list_->add_note_widget(note);  // todo : and to project!
     } else {
         QMessageBox msg;

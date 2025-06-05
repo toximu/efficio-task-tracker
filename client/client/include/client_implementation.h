@@ -28,7 +28,7 @@ public:
     bool try_register_user(User *user);
 
     bool try_update_note(Note *note) const;
-    bool try_create_note(Note *note) const;
+    bool try_create_note(Note *note, const std::string& project_code) const;
     bool try_fetch_note(Note *note) const;
 
     bool create_project(

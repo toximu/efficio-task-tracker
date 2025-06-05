@@ -122,20 +122,21 @@ void NoteEditDialog::setup_ui() {
 }
 
 void NoteEditDialog::on_save_button_click() {
-    if (try_save_note()) {
-        QMessageBox::information(
-            this, "Заметка сохранена",
-            QString("Заголовок: %1\nСодержимое: %2")
-                .arg(
-                    ui_->titleLineEdit->text(),
-                    ui_->descriptionTextEdit->toPlainText()
-                )
-        );
-    } else {
-        QMessageBox::information(
-            this, "Ошибка", "Не удалось сохранить заметку"
-        );
-    }
+    try_save_note();
+    // if () { \\ очень бесит когда много раз замтеку сохраняешь
+    //     QMessageBox::information(
+    //         this, "Заметка сохранена",
+    //         QString("Заголовок: %1\nСодержимое: %2")
+    //             .arg(
+    //                 ui_->titleLineEdit->text(),
+    //                 ui_->descriptionTextEdit->toPlainText()
+    //             )
+    //     );
+    // } else {
+    //     QMessageBox::information(
+    //         this, "Ошибка", "Не удалось сохранить заметку"
+    //     );
+    // }
 }
 
 void NoteEditDialog::on_join_button_click() {

@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
     usr->set_hashed_password("12345678");
     client.try_authenticate_user(usr.get());
     Ui::MainWindow window(app_window, std::move(usr), &client);
+    app_window->setCentralWidget(&window);
     app_window->resize(800, 600);
     app_window->show();
 
