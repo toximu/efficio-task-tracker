@@ -2,7 +2,9 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QWidget>
-// #include "../../../../cmake-build-just-run/client/ui/note-widget/NoteWidget_autogen/include/ui_note_edit_dialog.h"
+// #include
+// "../../../../cmake-build-just-run/client/ui/note-widget/NoteWidget_autogen/include/ui_note_edit_dialog.h"
+#include <QMainWindow>
 #include "note_edit_dialog.h"
 
 namespace Ui {
@@ -16,19 +18,22 @@ NoteWidget::NoteWidget(
       main_layout_(new QVBoxLayout(this)),
       open_button_(new QPushButton("Открыть")),
       tags_layout_(new QHBoxLayout(this)),
-        tag_labels_(),
+      tag_labels_(),
       client_(client) {
     this->setObjectName("NoteWidget");
     this->setMinimumWidth(100);
+
     this->setFixedHeight(110);
     title_label_ = new QLabel(model_note_->title().c_str(), this);
 
-    title_label_->setStyleSheet("color: rgb(33, 44, 50);");
+    title_label_->setStyleSheet(
+        "color: rgb(33, 44, 50);"
+    );
 
     main_layout_->addWidget(title_label_);
     main_layout_->addLayout(tags_layout_);
     update_tags();
-    title_label_->setWordWrap(false);
+    // title_label_->setWordWrap(true);
 
     main_layout_->addWidget(open_button_);
 
@@ -40,7 +45,7 @@ NoteWidget::NoteWidget(
 }
 
 void NoteWidget::open_note_window() {
-    // client_->try_fetch_note(model_note_); // todo dont work
+    client_->try_fetch_note(model_note_);
     auto dialog = new ::NoteEditDialog(
         client_, const_cast<QWidget *>(qobject_cast<const QWidget *>(this)),
         const_cast<Note *>(model_note_)
@@ -51,7 +56,6 @@ void NoteWidget::open_note_window() {
 
     title_label_->setText(model_note_->title().c_str());
     update_tags();
-    resize(sizeHint());
     main_layout_->update();
 }
 
@@ -72,6 +76,10 @@ void NoteWidget::update_tags() {
         tag_labels_.push_back(tag_label);
         tags_layout_->addWidget(tag_label);
     }
+}
+
+void NoteWidget::good_resize() {
+    setMaximumWidth(reinterpret_cast<QWidget *>(parent())->width() / 3);
 }
 
 }  // namespace Ui

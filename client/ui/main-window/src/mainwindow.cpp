@@ -114,7 +114,7 @@ void MainWindow::add_note() {
     if (project_item) {
         Note *note = project_item->project_->add_notes();
         client_->try_create_note(note, project_item->project_->code());
-        note_list_->add_note_widget(note);  // todo : and to project!
+        note_list_->add_note_widget(note);
     } else {
         QMessageBox msg;
         msg.setText("Проект не выбран!");

@@ -47,6 +47,7 @@ NoteEditDialog::~NoteEditDialog() {
 }
 
 void NoteEditDialog::init_basic_fields() {
+    ui_->titleLineEdit->setMaxLength(50);
     ui_->titleLineEdit->setText(QString::fromStdString(note_->title()));
     ui_->descriptionTextEdit->setText(QString::fromStdString(note_->text()));
 }

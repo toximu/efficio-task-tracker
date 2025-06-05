@@ -31,7 +31,7 @@ private:
     void update_tags();
 
 private slots:
-
+    void good_resize();
     void open_note_window() ;
 };
 }  // namespace Ui
