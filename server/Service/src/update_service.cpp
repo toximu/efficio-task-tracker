@@ -84,10 +84,17 @@ void UpdateService::GetNoteServerCall::Proceed(const bool ok) {
 
             const auto note = NoteDao::get_note(request_.id());
             response.mutable_note()->CopyFrom(note);
+
             std::cout << "[SERVER]: FETCH NOTE REQUEST id=" << request_.id()
-                      << ", title=" << response.mutable_note()->title()
-                      << ", first tag=" << response.note().tags()[0].text()
-                      << ":" << response.note().tags()[0].color() << std::endl;
+                      << ", title=" << response.note().title();
+
+            if (response.note().tags_size() > 0) {
+                std::cout << ", first tag=" << response.note().tags()[0].text()
+                          << ":" << response.note().tags()[0].color();
+            } else {
+                std::cout << ", no tags";
+            }
+            std::cout << std::endl;
 
             responder_.Finish(response, grpc::Status::OK, this);
             status_ = FINISH;
@@ -299,6 +306,7 @@ void UpdateService::CreateNoteServerCall::Proceed(const bool ok) {
             CreateNoteResponse response;
             const auto created_note =
                 NoteDao::initialize_note_for_user(request_.user().login());
+            ProjectDAO::add_note_to_project(request_.project_code(), created_note.id());
             response.mutable_note()->CopyFrom(created_note);
 
             responder_.Finish(response, grpc::Status::OK, this);

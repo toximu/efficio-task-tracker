@@ -48,6 +48,7 @@ void TagsDialog::setup_ui() {
         name_line_edits_[i]->setPlaceholderText(
             "Имя тега " + QString::number(i + 1)
         );
+        name_line_edits_[i]->setMaxLength(15);
         tag_layout->addWidget(name_line_edits_[i].get());
 
         main_layout->addLayout(tag_layout);

@@ -1,5 +1,11 @@
 #include "auth_service.h"
 #include "lr_dao.hpp"
+#include "project_dao.hpp"
+
+using Efficio_proto::Storage;
+
+AuthService::AuthService(ServerCompletionQueue *cq) : cq_(cq) {
+}
 
 AuthService::TryAuthenticateUserServerCall::TryAuthenticateUserServerCall(
     Auth::AsyncService *service,
@@ -31,7 +37,27 @@ void AuthService::TryAuthenticateUserServerCall::Proceed(const bool ok) {
 
             if (query_exit_code == 1) {
                 response.mutable_user()->CopyFrom(request_.user());
+                std::cout << "[SERVER]: WELCOME, "
+                          << response.mutable_user()->login() << "\n";
+
+                Storage user_storage;
+                bool have_projects = ProjectDAO::get_all_user_projects(
+                    request_.user().login(), user_storage
+                );
+
+                if (have_projects) {
+                    response.mutable_user()->mutable_storage()->CopyFrom(
+                        user_storage
+                    );
+                    std::cout << "[SERVER]: DOWNLOADED YOUR PROJECT: "
+                              << response.user().storage().projects()[0].code()
+                              << "\n";
+                } else {
+                    std::cout << "[SERVER]: YOU DONT HAVE ANY PROJECTS\n";
+                }
+
             } else {
+                std::cout << "[SERVER]: SQL QUERY ERROR\n";
                 response.set_error_text(
                     "[SERVER ERROR]: Не удалось выполнить запрос в базу данных "
                     "на проверку "
@@ -104,6 +130,6 @@ Auth::AsyncService &AuthService::get_service() {
 }
 
 void AuthService::run() {
-    new TryAuthenticateUserServerCall(&service_, cq_.get());
-    new TryRegisterUserServerCall(&service_, cq_.get());
+    new TryAuthenticateUserServerCall(&service_, cq_);
+    new TryRegisterUserServerCall(&service_, cq_);
 }

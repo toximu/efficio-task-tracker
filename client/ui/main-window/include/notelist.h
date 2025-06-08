@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include <vector>
+#include "client_implementation.h"
 
 using namespace Efficio_proto;
 
@@ -17,12 +18,16 @@ class NoteList : public QWidget {
 
     std::vector<QVBoxLayout *> vertical_layouts_;
 
+    ClientImplementation *client_;
+
     int note_counter_ = 0;
 
+    const std::size_t notes_per_row = 3;
+
 public:
-    void add_note_widget(const Note *note);
+    void add_note_widget(Note *note);
     void clear_note_list();
-    NoteList(QWidget *parent);
+    NoteList(QWidget *parent, ClientImplementation *client);
 
 public slots:
     void load_project_notes(QListWidgetItem *project);

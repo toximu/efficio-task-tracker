@@ -113,6 +113,7 @@ bool UpdateHandler::get_project(
     const GetProjectRequest &request,
     GetProjectResponse &response
 ) {
+
     Project *project = new Project();
     bool ok = ProjectDAO::get_project(request.code(), *project);
     if (!ok) {

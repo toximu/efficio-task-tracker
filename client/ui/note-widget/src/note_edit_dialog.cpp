@@ -21,8 +21,15 @@ using grpc::Channel;
 using grpc::ClientContext;
 using grpc::Status;
 
-NoteEditDialog::NoteEditDialog(QWidget *parent, Note *note)
-    : QDialog(parent), ui_(new Ui::NoteEditDialog), note_(note) {
+NoteEditDialog::NoteEditDialog(
+    ClientImplementation *client,
+    QWidget *parent,
+    Note *note
+)
+    : QDialog(parent),
+      client_(client),
+      ui_(new Ui::NoteEditDialog),
+      note_(note) {
     if (note_ == nullptr) {
         std::cerr << "Not a valid note!\n";
     }
@@ -40,6 +47,7 @@ NoteEditDialog::~NoteEditDialog() {
 }
 
 void NoteEditDialog::init_basic_fields() {
+    ui_->titleLineEdit->setMaxLength(50);
     ui_->titleLineEdit->setText(QString::fromStdString(note_->title()));
     ui_->descriptionTextEdit->setText(QString::fromStdString(note_->text()));
 }
@@ -115,20 +123,21 @@ void NoteEditDialog::setup_ui() {
 }
 
 void NoteEditDialog::on_save_button_click() {
-    if (try_save_note()) {
-        QMessageBox::information(
-            this, "Заметка сохранена",
-            QString("Заголовок: %1\nСодержимое: %2")
-                .arg(
-                    ui_->titleLineEdit->text(),
-                    ui_->descriptionTextEdit->toPlainText()
-                )
-        );
-    } else {
-        QMessageBox::information(
-            this, "Ошибка", "Не удалось сохранить заметку"
-        );
-    }
+    try_save_note();
+    // if () { \\ очень бесит когда много раз замтеку сохраняешь
+    //     QMessageBox::information(
+    //         this, "Заметка сохранена",
+    //         QString("Заголовок: %1\nСодержимое: %2")
+    //             .arg(
+    //                 ui_->titleLineEdit->text(),
+    //                 ui_->descriptionTextEdit->toPlainText()
+    //             )
+    //     );
+    // } else {
+    //     QMessageBox::information(
+    //         this, "Ошибка", "Не удалось сохранить заметку"
+    //     );
+    // }
 }
 
 void NoteEditDialog::on_join_button_click() {
@@ -247,6 +256,5 @@ bool NoteEditDialog::try_save_note() const {
         new_tag->set_color(color_code_to_note_tag_colors(tag.color));
     }
 
-    // return ClientImplementation::get_instance().try_update_note(note_); Ilya
-    return true;
+    return client_->try_update_note(note_);
 }

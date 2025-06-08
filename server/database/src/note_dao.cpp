@@ -52,6 +52,7 @@ Note NoteDao::initialize_note_for_user(const std::string &login) {
         transaction.exec_params(query, "Пустая заметка", "");
 
     if (result.empty()) {
+        transaction.commit();
         return {};
     }
 
@@ -115,12 +116,11 @@ Note NoteDao::get_note(const int note_id) {
     pqxx::work transaction(connection);
 
     const std::string query = "SELECT * FROM notes WHERE id = $1";
-    pqxx::params params;
-    params.append(note_id);
 
     const pqxx::result result = transaction.exec_params(query, note_id);
 
     if (result.empty()) {
+        transaction.commit();
         return {};
     }
 

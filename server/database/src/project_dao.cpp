@@ -3,20 +3,76 @@
 #include "database_manager.hpp"
 #include "note_dao.hpp"
 
+bool ProjectDAO::get_all_user_projects(
+    const std::string &login,
+    Storage &storage
+) {
+    pqxx::connection &connection =
+        DatabaseManager::get_instance().get_connection();
+    pqxx::work transaction(connection);
+
+    const std::string projects_query =
+        "SELECT p.code, p.title, p.members "
+        "FROM projects p "
+        "JOIN users u ON p.code::text = ANY(u.projects::text[]) "
+        "WHERE u.login = " +
+        transaction.quote(login);
+
+    const pqxx::result projects_result = transaction.exec(projects_query);
+
+    if (projects_result.empty()) {
+        transaction.commit();
+        return false;
+    }
+
+    for (const auto &project_row : projects_result) {
+        Project project;
+        project.set_code(project_row["code"].as<std::string>());
+        project.set_title(project_row["title"].as<std::string>());
+
+        // if (!project_row["members"].is_null()) {
+        //     auto members_str = project_row["members"].as<std::string>();
+        //
+        //     if (!members_str.empty() && members_str.front() == '{' &&
+        //         members_str.back() == '}') {
+        //         members_str = members_str.substr(1, members_str.size() - 2);
+        //         std::istringstream iss(members_str);
+        //         std::string member;
+        //         while (std::getline(iss, member, ',')) {
+        //             if (member.size() >= 2 && member.front() == '"' &&
+        //                 member.back() == '"') {
+        //                 member = member.substr(1, member.size() - 2);
+        //             }
+        //
+        //             std::erase_if(member, ::isspace);
+        //             if (!member.empty()) {
+        //                 project.add_members(member);
+        //             }
+        //         }
+        //     }
+        // }
+
+        storage.mutable_projects()->Add(std::move(project));
+    }
+
+    transaction.commit();
+    return true;
+}
+
 bool ProjectDAO::get_project(const std::string &code, Project &project) {
     pqxx::connection &connection =
         DatabaseManager::get_instance().get_connection();
     pqxx::work transaction(connection);
 
-    const std::string query =
-        "SELECT * FROM projects WHERE code = " + transaction.quote(code);
+    const std::string query = "SELECT * FROM projects WHERE code = $1";
 
-    const pqxx::result result = transaction.exec(query);
+    const pqxx::result result = transaction.exec_params(query, code);
 
     if (result.empty()) {
+        transaction.commit();
         return false;
     }
-
+    transaction.commit();
     const pqxx::row row = result[0];
 
     project.set_title(row["title"].as<std::string>());
@@ -144,7 +200,7 @@ bool ProjectDAO::code_available(const std::string &project_code) {
         "FROM projects "
         "WHERE code = $1 ";
     const pqxx::result result = transaction.exec_params(query, project_code);
-
+    transaction.commit();
     if (result.empty()) {
         return true;
     }
