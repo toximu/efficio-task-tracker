@@ -8,14 +8,11 @@
 #include "registration_window_style_sheet.h"
 #include <QDebug>
 
-RegistrationWindow::RegistrationWindow(QWidget *parent)
-    : QWidget(parent), ui(new Ui::RegistrationWindow) {
+RegistrationWindow::RegistrationWindow(ClientImplementation *client, QWidget *parent)
+    : QWidget(parent), ui(new Ui::RegistrationWindow),  client_(client) {
     ui->setupUi(this);
     setFixedSize(380, 480);
 
-    ui->create_login->setPlaceholderText(tr("Введите логин:"));
-    ui->create_password->setPlaceholderText(tr("Введите пароль:"));
-    ui->repeat_password->setPlaceholderText(tr("Повторите пароль:"));
     ui->create_password->setEchoMode(QLineEdit::Password);
     ui->repeat_password->setEchoMode(QLineEdit::Password);
 
@@ -37,31 +34,31 @@ RegistrationWindow::RegistrationWindow(QWidget *parent)
 
 void RegistrationWindow::handle_language_changed(std::string new_language) {
     if (new_language == "RU") {
-        ui->create_login->setPlaceholderText(tr("Введите логин:"));
-        ui->registration_label->setText(tr("Регистрация"));
-        ui->create_password->setPlaceholderText(tr("Введите пароль:"));
-        ui->repeat_password->setPlaceholderText(tr("Повторите пароль:"));
-        ui->switch_mode->setText(tr("Уже есть аккаунт? Войдите!"));
-        ui->switch_theme->setText(tr("RU"));
-        ui->push_registration->setText(tr("Зарегистрироваться"));
+        ui->create_login->setPlaceholderText("Введите логин:");
+        ui->registration_label->setText("Регистрация");
+        ui->create_password->setPlaceholderText("Введите пароль:");
+        ui->repeat_password->setPlaceholderText("Повторите пароль:");
+        ui->switch_mode->setText("Уже есть аккаунт? Войдите!");
+        ui->switch_theme->setText("RU");
+        ui->push_registration->setText("Зарегистрироваться");
     } 
     else if (new_language == "EN") {
-        ui->create_login->setPlaceholderText(tr("Enter login:"));
-        ui->registration_label->setText(tr("Registration"));
-        ui->create_password->setPlaceholderText(tr("Enter password:"));
-        ui->repeat_password->setPlaceholderText(tr("Repeat password:"));
-        ui->switch_mode->setText(tr("Already have an account? Login!"));
-        ui->switch_theme->setText(tr("EN"));
-        ui->push_registration->setText(tr("Register"));
+        ui->create_login->setPlaceholderText("Enter login:");
+        ui->registration_label->setText("Registration");
+        ui->create_password->setPlaceholderText("Enter password:");
+        ui->repeat_password->setPlaceholderText("Repeat password:");
+        ui->switch_mode->setText("Already have an account? Login!");
+        ui->switch_theme->setText("EN");
+        ui->push_registration->setText("Register");
     }
 }
 
 void RegistrationWindow::on_switch_language_clicked() {
-    if (ui->switch_theme->text() == tr("RU")) {
-        ui->switch_theme->setText(tr("EN"));
+    if (ui->switch_theme->text() == "RU") {
+        ui->switch_theme->setText("EN");
         LanguageManager::instance()->apply_language("EN");
     } else {
-        ui->switch_theme->setText(tr("RU"));
+        ui->switch_theme->setText("RU");
         LanguageManager::instance()->apply_language("RU");
     }
 }
@@ -74,7 +71,7 @@ void RegistrationWindow::on_switch_mode_clicked() {
             old->deleteLater();
         }
         
-        LoginWindow *login_window = new LoginWindow(app_window);
+        LoginWindow *login_window = new LoginWindow(client_, app_window);
         app_window->setCentralWidget(login_window);
         
         QRect screen_geometry = QApplication::primaryScreen()->availableGeometry();
@@ -185,8 +182,14 @@ void RegistrationWindow::on_push_registration_clicked() {
         if (!is_strong_and_valid_password(created_password)) {
             return;
         }
+        
+        auto user = new User();
 
-        int try_register_user = LRDao::try_register_user(created_login, created_password);
+        user->set_login(created_login.toStdString());
+        user->set_hashed_password(created_password.toStdString());
+
+        const int try_register_user = client_->try_register_user(user);
+
         switch (try_register_user) {
             case 0:
                 if (lang == "RU") {

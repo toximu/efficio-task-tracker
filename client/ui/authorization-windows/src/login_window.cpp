@@ -1,5 +1,4 @@
 #include "login_window.h"
-#include "applicationwindow.h"
 #include "lr_dao.hpp"
 #include "mainwindow.h"
 #include "registration_window.h"
@@ -7,17 +6,20 @@
 #include "serialization.hpp"
 #include "style_manager.h"
 #include "language_manager.h"
+#include "model-proto/model.pb.h"
+#include "client_implementation.h"
 #include <QMessageBox>
 #include <QScreen>
 #include <QDebug>
 
-LoginWindow::LoginWindow(QWidget *parent)
-    : QWidget(parent), ui(new Ui::LoginWindow) {
+using Efficio_proto::Storage;
+
+LoginWindow::LoginWindow(ClientImplementation *client, QWidget *parent)
+    : QWidget(parent), ui(new Ui::LoginWindow), client_(client) {
     ui->setupUi(this);
 
     setFixedSize(380, 480);
-    ui->input_login->setPlaceholderText(tr("Введите логин:"));
-    ui->input_password->setPlaceholderText(tr("Введите пароль:"));
+    
     ui->input_password->setEchoMode(QLineEdit::Password);
 
     connect(ui->switch_mode, &QPushButton::clicked, this,
@@ -77,41 +79,45 @@ void LoginWindow::on_push_enter_clicked() {
         QString password = ui->input_password->text();
         std::string lang = LanguageManager::instance()->current_language();
 
-        // if (login.isEmpty() || password.isEmpty()) {
-        //     if (lang == "RU") {
-        //         QMessageBox::warning(this, "Ошибка ввода данных", "Пожалуйста, заполните все поля!");
-        //     } else {
-        //         QMessageBox::warning(this, "Input Error", "Please fill in all the fields!");
-        //     }
-        //     return;
-        // }
+        if (login.isEmpty() || password.isEmpty()) {
+            if (lang == "RU") {
+                QMessageBox::warning(this, "Ошибка ввода данных", "Пожалуйста, заполните все поля!");
+            } else {
+                QMessageBox::warning(this, "Input Error", "Please fill in all the fields!");
+            }
+            return;
+        }
 
-        // if (login.size() > 50) {
-        //     if (lang == "RU") {
-        //         QMessageBox::warning(this, "Ошибка", "Длина логина не должна превышать пятидесяти символов");
-        //     } else {
-        //         QMessageBox::warning(this, "Error", "Login must not exceed fifty characters");
-        //     }
-        //     return;
-        // }
+        if (login.size() > 50) {
+            if (lang == "RU") {
+                QMessageBox::warning(this, "Ошибка", "Длина логина не должна превышать пятидесяти символов");
+            } else {
+                QMessageBox::warning(this, "Error", "Login must not exceed fifty characters");
+            }
+            return;
+        }
 
-        // if (password.size() > 50) {
-        //     if (lang == "RU") {
-        //         QMessageBox::warning(this, "Ошибка", "Длина пароля не должна превышать пятидесяти символов");
-        //     } else {
-        //         QMessageBox::warning(this, "Error", "Password must not exceed fifty characters");
-        //     }
-        //     return;
-        // }
+        if (password.size() > 50) {
+            if (lang == "RU") {
+                QMessageBox::warning(this, "Ошибка", "Длина пароля не должна превышать пятидесяти символов");
+            } else {
+                QMessageBox::warning(this, "Error", "Password must not exceed fifty characters");
+            }
+            return;
+        }
 
-        // if (!LRDao::validate_user(login, password)) {
-        //     if (lang == "RU") {
-        //         QMessageBox::warning(this, "Ошибка ввода данных", "Неверный логин или пароль!");
-        //     } else {
-        //         QMessageBox::warning(this, "Login Error", "Incorrect login or password!");
-        //     }
-        //     return;
-        // }
+        auto user = new User();
+        user->set_login(login.toStdString());
+        user->set_hashed_password(password.toStdString());
+
+        if (!client_->try_authenticate_user(user))  {
+            if (lang == "RU") {
+                QMessageBox::warning(this, "Ошибка ввода данных", "Неверный логин или пароль!");
+            } else {
+                QMessageBox::warning(this, "Login Error", "Incorrect login or password!");
+            }
+            return;
+        }
 
         if (lang == "RU") {
             QMessageBox::information(this, "Вход", "Вы успешно вошли. Добро пожаловать!");
@@ -146,9 +152,7 @@ void LoginWindow::switch_window(QMainWindow *app_window, QWidget *new_window, in
     }
     
     app_window->setCentralWidget(new_window);
-    if (width > 0 && height > 0) {
-        app_window->resize(width, height);
-    }
+    app_window->resize(width, height);
     
     QRect screen_geometry = QApplication::primaryScreen()->availableGeometry();
     app_window->move(
@@ -158,12 +162,7 @@ void LoginWindow::switch_window(QMainWindow *app_window, QWidget *new_window, in
     app_window->show();
 }
 
-void LoginWindow::switch_to_login_window(QMainWindow *app_window) {
-    LoginWindow *login_window = new LoginWindow(app_window);
-    switch_window(app_window, login_window, 380, 480);
-}
-
 void LoginWindow::switch_to_registration_window(QMainWindow *app_window) {
-    RegistrationWindow *registration_window = new RegistrationWindow(app_window);
+    RegistrationWindow *registration_window = new RegistrationWindow(client_, app_window);
     switch_window(app_window, registration_window, 380, 480);
 }
