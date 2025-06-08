@@ -30,6 +30,8 @@ git clone git@github.com:toximu/efficio-task-tracker.git
 sudo service postgresql start && sudo -u postgres psql
 ```
 
+> If you use fish shell, replace `service` with `systemctl`
+
 3. Create **efficio** user
 
 ```SQL
@@ -39,15 +41,7 @@ GRANT ALL PRIVILEGES ON DATABASE efficio TO efficio;
 \q
 ```
 
-4. Enter under **efficio** profile
-
-```bash
-psql -U efficio -d efficio -h localhost
-```
-
-> After that run the server on address **localhost** and **port** 5432 in your pgAdmin4
-
-5. Build and start app
+4. Build and start app
 
 ```bash
 mkdir -p build && cd build
@@ -55,6 +49,11 @@ cmake ..
 make
 ./EfficioTaskTracker -platform xcb
 ```
+
+## Current result
+
+<img src="https://github.com/user-attachments/assets/d96f5bbd-fe0d-4c7f-b438-cd2de27ec1b6" width="60%"/>
+
 
 ## Technologies Used
 - Qt 6.8.2

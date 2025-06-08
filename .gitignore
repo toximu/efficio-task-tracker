@@ -4,6 +4,7 @@ build-*
 */build-*
 release/
 debug/
+protobuf/
 *.exe
 *.dll
 *.so
@@ -12,6 +13,7 @@ debug/
 *.o
 *.obj
 *.app
+translations/*.qm
 
 moc_*.cpp
 ui_*.h
