@@ -1,18 +1,19 @@
 #pragma once
 
-#include <QWidget>
-#include <vector>
 #include <QMainWindow>
+#include <QWidget>
 #include <memory>
+#include <vector>
 
 QT_BEGIN_NAMESPACE
-    namespace Ui {
-        class LoginWindow;
-    }
+
+namespace Ui {
+class LoginWindow;
+}
+
 QT_END_NAMESPACE
 
-class LoginWindow : public QWidget
-{
+class LoginWindow : public QWidget {
     Q_OBJECT
 
 public:
@@ -29,7 +30,12 @@ private slots:
 private:
     std::shared_ptr<Ui::LoginWindow> ui;
     int counter_on_switch_theme_clicks = 0;
-    void switch_window(QMainWindow *app_window, QWidget *new_window, int width, int height);
+    void switch_window(
+        QMainWindow *app_window,
+        QWidget *new_window,
+        int width,
+        int height
+    );
     void switch_to_login_window(QMainWindow *app_window);
     void switch_to_registration_window(QMainWindow *app_window);
 };

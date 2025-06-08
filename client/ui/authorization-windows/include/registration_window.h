@@ -4,7 +4,7 @@
 #include <vector>
 
 namespace Ui {
-    class RegistrationWindow; 
+class RegistrationWindow;
 }
 
 class RegistrationWindow : public QWidget {
@@ -12,7 +12,7 @@ class RegistrationWindow : public QWidget {
 
 public:
     explicit RegistrationWindow(QWidget *parent = nullptr);
-    ~RegistrationWindow() override;  
+    ~RegistrationWindow() override;
 
     bool is_strong_and_valid_password(const QString &password);
     void handle_language_changed(std::string new_language);

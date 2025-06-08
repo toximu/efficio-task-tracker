@@ -20,7 +20,7 @@ public:
 
     struct Tag {
         bool is_checked;
-        QString color;
+        int color;
         QString name;
     };
 

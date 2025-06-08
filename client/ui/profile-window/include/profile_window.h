@@ -1,31 +1,39 @@
 #pragma once
 
 #include <QDialog>
-#include <QWidget>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QMessageBox>
-#include "style_manager.h"
+#include <QWidget>
 #include <vector>
+#include "client_implementation.h"
+#include "style_manager.h"
 
 QT_BEGIN_NAMESPACE
+
 namespace Ui {
 
 class ProfileWindow : public QDialog {
     Q_OBJECT
 
-    QVBoxLayout* main_layout;
-    QPushButton* logout_button;
-    QPushButton* delete_button;
-    QPushButton* stats_button;
-    QPushButton* settings_button;
+    QVBoxLayout *main_layout;
+    QPushButton *logout_button;
+    QPushButton *delete_button;
+    QPushButton *stats_button;
+    QPushButton *settings_button;
     QString current_username;
+    ClientImplementation *client_;
+    User *user_;
 
-    void setup_ui(QDialog* profile_window);
+    void setup_ui(QDialog *profile_window);
     void switch_window(QWidget *new_window);
 
 public:
-    explicit ProfileWindow(const QString& username, QWidget* parent = nullptr);
+    explicit ProfileWindow(
+        ClientImplementation *client,
+        User *user,
+        QWidget *parent = nullptr
+    );
     ~ProfileWindow() = default;
 
     static const std::vector<QString> THEMES;
@@ -45,5 +53,6 @@ private slots:
     void on_settings_clicked();
 };
 
-} // namespace Ui
+}  // namespace Ui
+
 QT_END_NAMESPACE

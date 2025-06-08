@@ -4,9 +4,9 @@
 #include <QLabel>
 #include <memory>
 #include <vector>
-#include "tags_dialog.h"
-#include "model-proto/model.pb.h"
 #include "client_implementation.h"
+#include "model-proto/model.pb.h"
+#include "tags_dialog.h"
 
 using Efficio_proto::Note;
 
@@ -22,6 +22,8 @@ class NoteEditDialog final : public QDialog {
     Q_OBJECT
 
 public:
+    static const std::vector<QString> THEMES;
+
     explicit NoteEditDialog(
         ClientImplementation *client,
         std::string project_name = "TODO",
@@ -29,7 +31,8 @@ public:
         Note *note = nullptr
     );
     ~NoteEditDialog() override;
-    static const std::vector<QString> THEMES;
+
+    static QString create_tag_style_sheet(int color_code);
     void handle_theme_changed(int theme);
     void handle_font_size_changed(std::string font_size);
     void handle_language_changed(std::string new_language);
@@ -50,7 +53,6 @@ private:
 
     void clear_member_avatars();
     void update_tags_display();
-    static QString create_tag_style_sheet(const QString &color);
 
     [[nodiscard]] bool try_save_note() const;
 
@@ -60,6 +62,7 @@ private:
     QList<TagsDialog::Tag> selected_tags_;
     Note *note_;
     std::string project_name_;
+    ClientImplementation *client_;
 };
 
 #endif  // NOTE_EDIT_DIALOG_H

@@ -3,15 +3,14 @@
 #include <QWidget>
 #include <string>
 
-LanguageManager* LanguageManager::m_instance = nullptr;
+LanguageManager *LanguageManager::m_instance = nullptr;
 
-LanguageManager::LanguageManager(QObject *parent) 
-    : QObject(parent) {
+LanguageManager::LanguageManager(QObject *parent) : QObject(parent) {
     std::string language = "RU";
     apply_language(language);
 }
 
-LanguageManager* LanguageManager::instance() {
+LanguageManager *LanguageManager::instance() {
     if (!m_instance) {
         m_instance = new LanguageManager();
     }

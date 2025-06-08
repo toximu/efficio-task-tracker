@@ -388,6 +388,6 @@ QString profile_window_blue_theme = R"(
     }
 )";
 
-} // namespace Ui
+}  // namespace Ui
 
-#endif // PROFILE_WINDOW_STYLE_HPP
+#endif  // PROFILE_WINDOW_STYLE_HPP

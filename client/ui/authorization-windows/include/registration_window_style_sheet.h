@@ -3,7 +3,7 @@
 #include "ui_registration_window.h"
 
 namespace Ui {
-    QString registration_window_light_autumn_theme = R"(
+QString registration_window_light_autumn_theme = R"(
         QWidget {
             background-color: #f5f5f5;
         }
