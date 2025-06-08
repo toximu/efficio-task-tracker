@@ -72,7 +72,7 @@ public:
 
     bool try_update_note(Note *note) const;
     bool try_fetch_note(Note *note) const;
-    bool try_create_note(Note *note, const std::string& project_code) const;
+    bool try_create_note(Note *note, const std::string &project_code) const;
     bool get_note(Note *note);
     bool create_note(Note *note);
 
@@ -83,7 +83,11 @@ public:
         const User &user
     );
     bool try_leave_project(const std::string &code, const User &user);
-    bool try_join_project(Project &project, const std::string &code, const User &user);
+    bool try_join_project(
+        Project &project,
+        const std::string &code,
+        const User &user
+    );
 
     explicit UpdateRequests(
         std::shared_ptr<Channel> channel,

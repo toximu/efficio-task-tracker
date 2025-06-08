@@ -27,6 +27,7 @@ public:
         const std::string &login,
         const std::string &project_code
     );
+    static bool try_delete_user(const std::string &login);
 
 private:
     static std::string hash_password(const std::string &password);

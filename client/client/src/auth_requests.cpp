@@ -61,6 +61,27 @@ AuthResponse AuthRequests::TryRegisterUserClientCall::get_reply() {
     return reply_;
 }
 
+AuthRequests::TryDeleteUserClientCall::TryDeleteUserClientCall(
+    const DeleteUserRequest &request,
+    CompletionQueue *cq,
+    Auth::Stub *stub
+)
+    : responder_(stub->AsyncTryDeleteUser(&context, request, cq)) {
+    responder_->Finish(&reply_, &status, this);
+    std::cout << "[CLIENT]: DELETE USER REQUEST SENT\n";
+}
+
+void AuthRequests::TryDeleteUserClientCall::Proceed(bool ok) {
+    if (!ok) {
+        std::cout << "[CLIENT WARNING]: DELETE RPC FAILED\n";
+    }
+    delete this;
+}
+
+DeleteUserResponse AuthRequests::TryDeleteUserClientCall::get_reply() {
+    return reply_;
+}
+
 AuthRequests::AuthRequests(
     const std::shared_ptr<Channel> &channel,
     CompletionQueue *cq
@@ -115,5 +136,28 @@ bool AuthRequests::try_register_user(User *user) const {
 
     user->CopyFrom(call->get_reply().user());
     std::cout << "[CLIENT]: REGISTERED USER - " << user->login() << "\n";
+    return true;
+}
+
+bool AuthRequests::try_delete_user(const User *user) const {
+    DeleteUserRequest request;
+    request.mutable_user()->set_login(user->login());
+
+    const auto call =
+        new TryDeleteUserClientCall(request, cq_.get(), stub_.get());
+
+    void *tag;
+    bool ok = false;
+    if (!cq_->Next(&tag, &ok)) {
+        std::cout << "[CLIENT]: Completion queue failed\n";
+        return false;
+    }
+
+    if (!ok || !call->get_reply().ok()) {
+        std::cout << "[CLIENT WARNING]: Deleting user failed\n";
+        return false;
+    }
+
+    std::cout << "[CLIENT]: USER DELETED\n";
     return true;
 }

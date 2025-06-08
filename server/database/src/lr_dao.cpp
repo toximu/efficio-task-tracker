@@ -191,3 +191,19 @@ bool LRDao::delete_project_from_user(
     }
     return true;
 }
+
+bool LRDao::try_delete_user(const std::string &login) {
+    auto &connection = DatabaseManager::get_instance().get_connection();
+    pqxx::work transaction(connection);
+
+    const std::string query = "DELETE FROM users WHERE login = $1";
+
+    const pqxx::result result = transaction.exec_params(query, login);
+    transaction.commit();
+
+    if (result.empty()) {
+        return false;
+    }
+
+    return true;
+}
