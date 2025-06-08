@@ -7,9 +7,11 @@
 #include "project.hpp"
 
 namespace Ui {
+
+class NoteWidget;
 class ProjectItem : public QListWidgetItem {
     project_storage_model::Project *project_;
-    friend NoteList;
+    friend class NoteList;
     friend class MainWindow;
 
 public:

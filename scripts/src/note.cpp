@@ -20,6 +20,10 @@ Note::Note(const int id, std::string title, std::string text)
     return text_;
 }
 
+[[nodiscard]] const std::string &Note::get_type() const {
+    return type_;
+}
+
 const std::string &Note::get_date() const {
     return date_;
 }
@@ -38,6 +42,10 @@ void Note::set_title(const std::string &title) {
 
 void Note::set_text(const std::string &text) {
     text_ = text;
+}
+
+void Note::set_type(const std::string &type) {
+    type_ = type;
 }
 
 void Note::add_tag(const std::string &tag, const std::string &color) {

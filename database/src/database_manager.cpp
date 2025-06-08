@@ -13,10 +13,12 @@ DatabaseManager::DatabaseManager() {
     database_.open();
 
     QSqlQuery query(database_);
+
     query.exec(
         "CREATE TABLE IF NOT EXISTS notes ("
         "id SERIAL PRIMARY KEY, "
         "title TEXT NOT NULL, "
+        "type TEXT NOT NULL, "
         "content TEXT, "
         "members VARCHAR(50)[], "
         "date VARCHAR(50), "

@@ -23,7 +23,7 @@ namespace Ui {
             font-size: 35px;
         }
 
-        QPushButton#switch_theme {
+        QPushButton#theme_button {
             background-color: #fea36b;
             width: 50px;
             height: 30px;
@@ -33,10 +33,10 @@ namespace Ui {
             border-radius: 7px;
         }
 
-        QPushButton#switch_theme:hover {
+        QPushButton#theme_button:hover {
             background-color:rgb(245, 148, 89);
         }
-        QPushButton#switch_theme:pressed {
+        QPushButton#theme_button:pressed {
             background-color:rgb(238, 122, 50);
         }
 

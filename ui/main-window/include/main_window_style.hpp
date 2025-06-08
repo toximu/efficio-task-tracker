@@ -103,7 +103,7 @@ QScrollArea {
 }
 
 #BottomBar {
-    background-color: rgb(33, 44, 50);
+    background-color: #212c32;
     border-radius: 8px;
     padding: 8px;
     outline: 0;
@@ -131,9 +131,47 @@ QScrollArea {
     font-size: 13px;
 }
 
-#NoteList {
-    border-radius : 8px;
+QTabWidget {
     background-color: white;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+QTabWidget::pane {
+    background-color: white;
+    border-radius: 8px;
+    margin-top: 5px;
+}
+
+QTabBar::tab {
+    color: rgb(33, 44, 50);
+    font-family: 'Arial';
+    font-size: 13px;
+    font-weight: bold;
+    background: #e0e0e0;
+    padding: 6px 8px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    margin-right: 2px;
+}
+
+QTabBar::tab:hover {
+    background: #e8e8e8;
+}
+
+QTabBar::tab:selected {
+    background: white;
+    border-bottom-color: white;
+}
+
+QTabBar::tab:pressed {
+    background: white;
+    border-bottom-color: white;
+}
+
+#NoteList {
+    background-color: white;
+    border-radius: 8px;
 }
 
 #NoteWidget {

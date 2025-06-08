@@ -20,11 +20,13 @@ public:
     [[nodiscard]] const std::string &get_title() const;
     [[nodiscard]] const std::string &get_text() const;
     [[nodiscard]] const std::string &get_date() const;
+    [[nodiscard]] const std::string &get_type() const;
     [[nodiscard]] const std::vector<Tag> &get_tags() const;
     [[nodiscard]] const std::unordered_set<std::string> &get_members() const;
 
     void set_title(const std::string &title);
     void set_text(const std::string &text);
+    void set_type(const std::string &type);
     void add_tag(const std::string &tag, const std::string &color = "#e7624b");
     void set_date(const std::string &date);
     void add_member(const std::string &member);
@@ -37,6 +39,7 @@ private:
     std::string title_;
     std::string text_;
     std::string date_;
+    std::string type_;
     std::vector<Tag> tags_;
     std::unordered_set<std::string> members_;
 };

@@ -13,6 +13,7 @@
 #include "projectlist.h"
 #include "storage.hpp"
 #include <vector>
+#include <QScrollArea>
 #include "profile_window.h"
 
 namespace Ui {
@@ -25,10 +26,14 @@ class MainWindow : public QWidget {
     std::string username;
     std::string font_size_ = "medium";
     QVBoxLayout *main_layout_;
+    QTabWidget* tab_widget_;
     BottomBar *top_bar_;
     QHBoxLayout *content_layout_;
     ProjectList *project_list_;
-    NoteList *note_list_;
+    NoteList *actual_notes_;
+    NoteList *overdue_notes_ ;
+    NoteList *completed_notes_;
+    NoteList *deleted_notes_;
     QWidget *content_widget_;
     QPushButton *new_project_button_;
     QPushButton *new_note_button_;
@@ -55,6 +60,7 @@ public:
     void handle_theme_changed(int theme);
     void handle_language_changed(std::string new_language);
     void handle_font_size_changed(std::string font_size_);
+    QScrollArea* create_scroll_area(NoteList* note_list);
 };
 }  // namespace Ui
 #endif  // MAINWINDOW_H

@@ -9,7 +9,6 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
-#include <QScrollArea>
 #include <string>
 #include <QScreen>
 #include <QString>
@@ -51,34 +50,68 @@ MainWindow::MainWindow(
       top_bar_(new BottomBar(this, username, "EFFICIO :: Task-Tracker")),
       content_layout_(new QHBoxLayout(this)),
       project_list_(new ProjectList(this)),
-      note_list_(new NoteList(this)),
+      actual_notes_(new NoteList(this, "actual")),
+      overdue_notes_(new NoteList(this, "overdue")),
+      completed_notes_(new NoteList(this, "completed")),
+      deleted_notes_(new NoteList(this, "deleted")),
       content_widget_(new QWidget(this)),
       new_project_button_(new QPushButton("Новый проект", this)),
       new_note_button_(new QPushButton("Новая заметка", this)),
-      storage_(storage) {
+      storage_(storage),
+      tab_widget_(new QTabWidget(this)) {
     this->setObjectName("main-window");
     this->setAttribute(Qt::WA_StyledBackground);
+
+    tab_widget_->addTab(create_scroll_area(actual_notes_), "Актуальные");
+    tab_widget_->addTab(create_scroll_area(overdue_notes_), "Просроченные");
+    tab_widget_->addTab(create_scroll_area(completed_notes_), "Выполненные");
+    tab_widget_->addTab(create_scroll_area(deleted_notes_), "Удаленные");
+    
+    tab_widget_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    
+    actual_notes_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    overdue_notes_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    completed_notes_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    deleted_notes_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
     main_layout_->addWidget(top_bar_, Qt::AlignTop);
     main_layout_->setAlignment(Qt::AlignCenter);
-    main_layout_->addWidget(content_widget_);
-    content_widget_->setLayout(content_layout_);
-    auto right_layout = new QVBoxLayout(content_widget_);
+
+
+    QWidget* right_panel = new QWidget(this);
+    QVBoxLayout* right_layout = new QVBoxLayout(right_panel);
+    //right_layout->setContentsMargins(0, 34, 0, 0); // Верхний отступ 10px
     right_layout->addWidget(project_list_);
     right_layout->addWidget(new_project_button_);
     right_layout->addWidget(new_note_button_);
-    QScrollArea* scrollArea = new QScrollArea(content_widget_);
-    scrollArea->setWidgetResizable(true);
-    scrollArea->setWidget(note_list_);
-    content_layout_->addWidget(scrollArea, Qt::AlignRight);
-    content_layout_->addLayout(right_layout);
-    main_layout_->addWidget(content_widget_);
-    this->setLayout(main_layout_);
-    this->project_list_->load_projects(storage);
+    right_panel->setFixedWidth(210);
+    tab_widget_->tabBar()->setExpanding(true);
+    
+    content_layout_->addWidget(tab_widget_);
+    content_layout_->addWidget(right_panel);
+
+    main_layout_->addWidget(top_bar_);
+    main_layout_->addLayout(content_layout_);
+
+    project_list_->load_projects(storage);
 
     connect(
-        project_list_, &QListWidget::itemClicked, note_list_,
+        project_list_, &QListWidget::itemClicked, actual_notes_,
         &NoteList::load_project_notes
     );
+    connect(
+        project_list_, &QListWidget::itemClicked, overdue_notes_,
+        &NoteList::load_project_notes
+    );
+    connect(
+        project_list_, &QListWidget::itemClicked, completed_notes_,
+        &NoteList::load_project_notes
+    );
+    connect(
+        project_list_, &QListWidget::itemClicked, deleted_notes_,
+        &NoteList::load_project_notes
+    );
+
     connect(
         new_note_button_, &QPushButton::clicked, this, &Ui::MainWindow::add_note
     );
@@ -106,6 +139,14 @@ MainWindow::MainWindow(
     handle_language_changed(LanguageManager::instance()->current_language());
 }
 
+QScrollArea* MainWindow::create_scroll_area(NoteList* note_list) {
+    QScrollArea* scrollArea = new QScrollArea();
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidget(note_list);
+    scrollArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+    return scrollArea;
+}
 
 void MainWindow::handle_language_changed(std::string new_language) {
     if (new_language == "RU") {
@@ -211,7 +252,7 @@ void MainWindow::add_note() {
             );
             auto &note =
                 project_item->project_->add_note({id, "Пустая заметка", ""});
-            note_list_->add_note_widget(&note);
+            actual_notes_->add_note_widget(&note, project_list_->currentItem());
         }
     } else {
         QMessageBox msg;
@@ -222,7 +263,6 @@ void MainWindow::add_note() {
         }
         msg.exec();
     }
-    handle_font_size_changed(StyleManager::instance()->current_font_size());
 }
 
 }  // namespace Ui
