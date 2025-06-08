@@ -1,44 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(EfficioTaskTracker LANGUAGES CXX)
+project(test-server)
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
+#add_compile_options(-fsanitize=address,undefined,leak)
+#add_link_options(-fsanitize=address,undefined,leak)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-find_package(Qt6 COMPONENTS Widgets Core Gui Sql REQUIRED)
-
-add_subdirectory(scripts)
-add_subdirectory(database)
-add_subdirectory(ui/profile-window)
-add_subdirectory(ui/main-window)
-add_subdirectory(ui/authorization-windows)
-add_subdirectory(ui/note-widget)
-add_subdirectory(ui/style-manager)
-add_subdirectory(ui/settings-window)
-add_subdirectory(ui/analytics-window)
-add_subdirectory(ui/language-manager)
+add_subdirectory(server)
 add_subdirectory(proto)
-add_executable(EfficioTaskTracker main.cpp)
-
-target_link_libraries(EfficioTaskTracker PRIVATE
-        Qt6::Widgets
-        Qt6::Core
-        Qt6::Gui
-        Qt6::Sql
-        model-proto
-        efficio-rpc
-        Database
-        Scripts
-        StyleManager
-        LanguageManager
-        AuthorizationWindows
-        ProfileWindow
-        MainWindow
-        NoteWidget
-        SettingsWindow
-        AnalyticsWindow
-)
+add_subdirectory(client)
