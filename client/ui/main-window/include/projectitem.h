@@ -1,23 +1,21 @@
 #ifndef PROJECTITEM_H
 #define PROJECTITEM_H
 
+#include <model-proto/model.pb.h>
 #include <QListWidget>
-#include <QObject>
 #include "notelist.h"
-#include "project.hpp"
+
+using namespace Efficio_proto;
 
 namespace Ui {
-
-class NoteWidget;
-
 class ProjectItem : public QListWidgetItem {
-    project_storage_model::Project *project_;
+    Project *project_;
     friend class NoteList;
     friend class MainWindow;
     friend class NoteWidget;
 
 public:
-    ProjectItem(QListWidget *listview, project_storage_model::Project *project);
+    ProjectItem(QListWidget *listview, Project *project);
 };
 }  // namespace Ui
 #endif  // PROJECTITEM_H

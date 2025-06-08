@@ -1,15 +1,16 @@
 #ifndef NOTELIST_H
 #define NOTELIST_H
-#include <QListWidgetItem>
-#include <QVBoxLayout>
-#include <QWidget>
+
 #include <vector>
-#include "note.hpp"
+#include "client_implementation.h"
+#include "model-proto/model.pb.h"
 #include "notewidget.h"
 #include "projectitem.h"
 
+using Efficio_proto::Note;
+
 namespace Ui {
-class NoteList : public QWidget {
+class NoteList final : public QWidget {
     friend class MainWindow;
     Q_OBJECT
 
@@ -18,15 +19,17 @@ class NoteList : public QWidget {
     std::vector<QVBoxLayout *> vertical_layouts_;
 
     int note_counter_ = 0;
-    const std::string type_;
+    Note::Type type_;
+    ClientImplementation *client_;
 
 public:
-    void add_note_widget(
-        const project_storage_model::Note *note,
-        QListWidgetItem *p
-    );
+    void add_note_widget(const Note *note, QListWidgetItem *p);
     void clear_note_list();
-    NoteList(QWidget *parent, const std::string type_);
+    NoteList(
+        ClientImplementation *client,
+        QWidget *parent,
+        Note::Type::States type
+    );
 
 public slots:
     void load_project_notes(QListWidgetItem *project);

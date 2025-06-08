@@ -4,18 +4,22 @@
 #include <QPushButton>
 #include <QWidget>
 #include "language_manager.h"
-#include "note.hpp"
+#include "model-proto/model.pb.h"
 #include "note_edit_dialog.h"
 #include "style_manager.h"
 
+using Efficio_proto::Note;
+
 namespace Ui {
 NoteWidget::NoteWidget(
+    ClientImplementation *client,
     QWidget *parent,
     const Note *model_note,
-    const std::string type,
+    const Note::Type &type,
     QListWidgetItem *p
 )
-    : QWidget(parent),
+    : client_(client),
+      QWidget(parent),
       model_note_(model_note),
       main_layout_(new QVBoxLayout(this)),
       open_button_(new QPushButton(tr("Открыть"))),
@@ -27,26 +31,22 @@ NoteWidget::NoteWidget(
     this->setFixedHeight(100);
 
     title_label_ =
-        new QLabel(QString::fromStdString(model_note_->get_title()), this);
-    text_label_ =
-        new QLabel(QString::fromStdString(model_note_->get_text()), this);
+        new QLabel(QString::fromStdString(model_note_->title()), this);
 
     title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 15px;");
-    text_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 15px;");
 
     main_layout_->addWidget(title_label_);
-    main_layout_->addWidget(text_label_);
+    main_layout_->addLayout(tags_layout_);
+    update_tags();
 
-    text_label_->setWordWrap(false);
-    title_label_->setWordWrap(false);
-    text_label_->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    // title_label_->setWordWrap(false);
 
     QHBoxLayout *buttons_layout = new QHBoxLayout;
 
     buttons_layout->addWidget(open_button_);
     buttons_layout->addWidget(delete_button_);
 
-    if (type_ == "deleted") {
+    if (type_.value() == Note::Type::deleted) {
         delete_button_->setText("Восстановить");
     }
 
@@ -78,7 +78,7 @@ void NoteWidget::handle_language_changed(std::string new_language) {
         if (title_label_->text() == "Empty note") {
             title_label_->setText("Пустая заметка");
         }
-        if (type_ == "deleted") {
+        if (type_.value() == Note::Type::deleted) {
             delete_button_->setText("Восстановить");
         } else {
             delete_button_->setText("Удалить");
@@ -88,7 +88,7 @@ void NoteWidget::handle_language_changed(std::string new_language) {
         if (title_label_->text() == "Пустая заметка") {
             title_label_->setText("Empty note");
         }
-        if (type_ == "deleted") {
+        if (type_.value() == Note::Type::deleted) {
             delete_button_->setText("Восстановить");
         } else {
             delete_button_->setText("Удалить");
@@ -109,33 +109,56 @@ void NoteWidget::handle_font_size_changed(std::string font_size_) {
 
 void NoteWidget::open_note_window() const {
     auto dialog = new ::NoteEditDialog(
-        dynamic_cast<ProjectItem *>(project_)->project_->get_name(),
+        client_, dynamic_cast<ProjectItem *>(project_)->project_->title(),
         const_cast<QWidget *>(qobject_cast<const QWidget *>(this)),
         const_cast<Note *>(model_note_)
     );
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->exec();
-    title_label_->setText(QString::fromStdString(model_note_->get_title()));
+    title_label_->setText(QString::fromStdString(model_note_->title()));
     main_layout_->update();
 }
 
-void NoteWidget::change_type(std::string new_type) {
-    type_ = new_type;
+void NoteWidget::change_type(Note::Type::States new_type) {
+    type_.set_value(new_type);
     handle_language_changed(LanguageManager::instance()->current_language());
     main_layout_->update();
     emit change_type_requested(this->project_);
 }
 
 void NoteWidget::delete_note() {
-    if (type_ == "deleted") {
-        this->change_type("actual");
+    if (type_.value() == Note::Type::deleted) {
+        this->change_type(Note::Type::actual);
     } else {
-        this->change_type("deleted");
+        this->change_type(Note::Type::deleted);
     }
 }
 
 QListWidgetItem *NoteWidget::get_project() const {
     return this->project_;
+}
+
+void NoteWidget::update_tags() {
+    for (auto tag : tag_labels_) {
+        tags_layout_->removeWidget(tag);
+        delete tag;
+    }
+    tag_labels_.clear();
+
+    for (auto tag : model_note_->tags()) {
+        QLabel *tag_label = new QLabel(this);
+        tag_label->setText(tag.text().c_str());
+        tag_label->setStyleSheet(
+            ::NoteEditDialog::create_tag_style_sheet(tag.color())
+        );
+        tag_label->resize(tag_label->sizeHint());
+        tag_labels_.push_back(tag_label);
+        tags_layout_->addWidget(tag_label);
+    }
+}
+
+void NoteWidget::good_resize() {
+    setMaximumWidth(reinterpret_cast<QWidget *>(parent())->width() / 3);
 }
 
 }  // namespace Ui

@@ -1,23 +1,22 @@
 #include "projectlist.h"
 #include <QListWidget>
 #include "mainwindow.h"
-#include "project.hpp"
 #include "projectitem.h"
 
 namespace Ui {
 
 ProjectList::ProjectList(QWidget *parent) : QListWidget{parent} {
     this->setObjectName("ProjectList");
-    this->setFixedWidth(200);
+    this->setFixedWidth(300);
 }
 
-void ProjectList::add_project(project_storage_model::Project *project) {
+void ProjectList::add_project(Project *project) {
     this->addItem(new ProjectItem(static_cast<QListWidget *>(this), project));
 }
 
-void ProjectList::load_projects(project_storage_model::Storage *storage) {
-    for (project_storage_model::Project &pr : storage->get_projects()) {
-        add_project(&pr);
+void ProjectList::load_projects(Storage *storage) {
+    for (Project &project : *storage->mutable_projects()) {
+        add_project(&project);
     }
 }
 

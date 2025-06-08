@@ -1,11 +1,11 @@
 #pragma once
 
-#include <QMainWindow>
-#include <QWidget>
-#include <memory>
 #include <QLineEdit>
+#include <QMainWindow>
 #include <QMessageBox>
 #include <QVBoxLayout>
+#include <QWidget>
+#include <memory>
 #include "client_implementation.h"
 #include "database_manager.hpp"
 
@@ -37,6 +37,13 @@ private slots:
 private:
     Ui::LoginWindow *ui;
     ClientImplementation *client_;
-    void switch_window(QMainWindow *app_window, QWidget *new_window, int width, int height);
+    int counter_on_switch_theme_clicks = 0;
+    void switch_window(
+        QMainWindow *app_window,
+        QWidget *new_window,
+        int width,
+        int height
+    );
     void switch_to_registration_window(QMainWindow *app_window);
+    void switch_to_login_window(QMainWindow *app_window);
 };

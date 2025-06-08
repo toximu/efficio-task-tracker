@@ -46,10 +46,10 @@ MainWindow::MainWindow(
       top_bar_(new BottomBar(this, user_->login(), "EFFICIO :: Таск-Трекер")),
       content_layout_(new QHBoxLayout(this)),
       project_list_(new ProjectList(this)),
-      actual_notes_(new NoteList(this, "actual")),
-      overdue_notes_(new NoteList(this, "overdue")),
-      completed_notes_(new NoteList(this, "completed")),
-      deleted_notes_(new NoteList(this, "deleted")),
+      actual_notes_(new NoteList(client_, this, Note::Type::actual)),
+      overdue_notes_(new NoteList(client_, this, Note::Type::overdue)),
+      completed_notes_(new NoteList(client_, this, Note::Type::completed)),
+      deleted_notes_(new NoteList(client_, this, Note::Type::deleted)),
       content_widget_(new QWidget(this)),
       new_project_button_(new QPushButton("Новый проект", this)),
       new_note_button_(new QPushButton("Новая заметка", this)),
@@ -217,6 +217,20 @@ void MainWindow::on_profile_button_click() {
     new_profile_window->activateWindow();
 }
 
+void MainWindow::create_project() {
+    bool ok;
+    QString name_of_project = QInputDialog::getText(
+        nullptr, "Название проекта:", "Введите название", QLineEdit::Normal, "",
+        &ok
+    );
+
+    if (ok) {
+        Project *project = user_->mutable_storage()->add_projects();
+        client_->create_project(project, name_of_project.toStdString(), *user_);
+        project_list_->add_project(project);
+    }
+}
+
 void MainWindow::add_project_by_code() {
     bool ok;
     QString code = QInputDialog::getText(
@@ -236,7 +250,7 @@ void MainWindow::add_note() {
     if (project_item) {
         Note *note = project_item->project_->add_notes();
         client_->try_create_note(note, project_item->project_->code());
-        actual_notes_->add_note_widget(note);
+        actual_notes_->add_note_widget(note, project_list_->currentItem());
     } else {
         QMessageBox msg;
         if (LanguageManager::instance()->current_language() == "RU") {

@@ -1,15 +1,14 @@
 #include "registration_window.h"
-#include <QDebug>
-#include <QMessageBox>
 #include <QScreen>
 #include "language_manager.h"
 #include "login_window.h"
-#include "lr_dao.hpp"
 #include "registration_window_style_sheet.h"
-#include "style_manager.h"
 
-RegistrationWindow::RegistrationWindow(ClientImplementation *client, QWidget *parent)
-    : QWidget(parent), ui(new Ui::RegistrationWindow),  client_(client) {
+RegistrationWindow::RegistrationWindow(
+    ClientImplementation *client,
+    QWidget *parent
+)
+    : QWidget(parent), ui(new Ui::RegistrationWindow), client_(client) {
     ui->setupUi(this);
     setFixedSize(380, 480);
 
@@ -48,8 +47,7 @@ void RegistrationWindow::handle_language_changed(std::string new_language) {
         ui->switch_mode->setText("Уже есть аккаунт? Войдите!");
         ui->switch_theme->setText("RU");
         ui->push_registration->setText("Зарегистрироваться");
-    } 
-    else if (new_language == "EN") {
+    } else if (new_language == "EN") {
         ui->create_login->setPlaceholderText("Enter login:");
         ui->registration_label->setText("Registration");
         ui->create_password->setPlaceholderText("Enter password:");
@@ -78,7 +76,7 @@ void RegistrationWindow::on_switch_mode_clicked() {
         if (QWidget *old = app_window->centralWidget()) {
             old->deleteLater();
         }
-        
+
         LoginWindow *login_window = new LoginWindow(client_, app_window);
         app_window->setCentralWidget(login_window);
 
@@ -230,7 +228,7 @@ void RegistrationWindow::on_push_registration_clicked() {
         if (!is_strong_and_valid_password(created_password)) {
             return;
         }
-        
+
         auto user = new User();
 
         user->set_login(created_login.toStdString());

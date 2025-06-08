@@ -14,12 +14,22 @@ message Note {
     string text = 1;
     colors color = 2;
   }
+  message Type {
+    enum States {
+      actual = 0;
+      overdue = 1;
+      deleted = 2;
+      completed = 3;
+    }
+    States value = 1;
+  }
   int32 id = 1;
   string title = 2;
   optional string text = 3;
   repeated tag tags = 4;
   repeated string members = 5;
   optional string date = 6;
+  Type type = 7;
 }
 
 message Project {

@@ -1,6 +1,6 @@
-#include "server_implementation.h"
 #include <absl/time/time.h>
 #include <grpcpp/version_info.h>
+#include "server_implementation.h"
 
 int main() {
     std::cout << "gRPC version : " << GRPC_CPP_VERSION_STRING << std::endl;
