@@ -1,9 +1,7 @@
 #include "profile_window.h"
-#include <QScreen>
 #include "analytics_window.h"
 #include "database_manager.hpp"
 #include "language_manager.h"
-#include "lr_dao.hpp"
 #include "profile_window_style_sheet.h"
 #include "settings_window.h"
 
@@ -146,8 +144,7 @@ void ProfileWindow::on_stats_clicked() {
 }
 
 void ProfileWindow::on_settings_clicked() {
-    SettingsWindow *new_settings_window =
-        new SettingsWindow(this->parentWidget());
+    auto new_settings_window = new SettingsWindow(this->parentWidget());
     this->switch_window(new_settings_window);
 }
 

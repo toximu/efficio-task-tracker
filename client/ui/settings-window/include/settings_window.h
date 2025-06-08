@@ -14,7 +14,7 @@ class SettingsWindow : public QDialog {
     Q_OBJECT
 
 public:
-    explicit SettingsWindow(QWidget *parent = nullptr);
+    explicit SettingsWindow(QWidget *parent);
     void handle_theme_changed(int theme_);
     void handle_font_size_changed(std::string font_size_);
     void handle_language_changed(std::string new_language);

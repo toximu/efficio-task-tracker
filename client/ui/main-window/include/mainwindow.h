@@ -2,11 +2,6 @@
 #define MAINWINDOW_H
 
 #include <model-proto/model.pb.h>
-#include <QHBoxLayout>
-#include <QListWidget>
-#include <QMainWindow>
-#include <QObject>
-#include <QPushButton>
 #include <QScrollArea>
 #include <QWidget>
 #include <string>

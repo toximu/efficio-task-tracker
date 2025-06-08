@@ -2,7 +2,6 @@
 #include <QHBoxLayout>
 #include <QObject>
 #include <QWidget>
-#include <utility>
 #include <vector>
 #include "client_implementation.h"
 #include "model-proto/model.pb.h"

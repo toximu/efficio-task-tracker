@@ -35,8 +35,8 @@ target_link_libraries(EfficioTaskTracker PRIVATE
         AuthorizationWindows
         StyleManager
         AnalyticsWindow
-        SettingsWindow
         ProfileWindow
+        SettingsWindow
         LanguageManager
         model-proto
 )

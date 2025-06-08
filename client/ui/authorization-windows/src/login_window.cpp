@@ -4,11 +4,9 @@
 #include "client_implementation.h"
 #include "language_manager.h"
 #include "login_window_style_sheet.h"
-#include "lr_dao.hpp"
 #include "mainwindow.h"
 #include "model-proto/model.pb.h"
 #include "registration_window.h"
-#include "style_manager.h"
 
 using Efficio_proto::Storage;
 

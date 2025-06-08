@@ -1,50 +1,56 @@
 #include <bits/std_thread.h>
 #include <grpcpp/create_channel.h>
 #include <QApplication>
-#include <QLocale>
+#include <QLibraryInfo>
 #include <QScreen>
 #include <QTranslator>
-#include "applicationwindow.h"
 #include "client_implementation.h"
-// #include "login_window.h"
-#include "mainwindow.h"
+#include "language_manager.h"
+#include "login_window.h"
+#include "style_manager.h"
 
 int main(int argc, char *argv[]) {
     QApplication application(argc, argv);
 
-    QTranslator translator;
-    const QStringList ui_languages = QLocale::system().uiLanguages();
-    for (const QString &locale : ui_languages) {
-        const QString base_name = "MainWindow_" + QLocale(locale).name();
-        if (translator.load(":/i18n/" + base_name)) {
-            QApplication::installTranslator(&translator);
-            break;
-        }
+    application.setApplicationName("EFFICIO");
+    application.setApplicationDisplayName("EFFICIO");
+    application.setOrganizationName("EFFICIO");
+    application.setWindowIcon(QIcon(":/icons/app_icon.png"));
+
+    QTranslator appTranslator;
+    QTranslator qtTranslator;
+
+    const QSettings settings;
+    const QString language =
+        settings.value("Language", QLocale::system().name()).toString();
+
+    if (appTranslator.load(":/translations/app_" + language + ".qm")) {
+        application.installTranslator(&appTranslator);
     }
 
-    ClientImplementation client(grpc::CreateChannel(
-        "localhost:50051", grpc::InsecureChannelCredentials()
-    ));
+    if (qtTranslator.load(
+            "qt_" + language, QLibraryInfo::path(QLibraryInfo::TranslationsPath)
+        )) {
+        application.installTranslator(&qtTranslator);
+    }
 
-    auto *app_window = new Ui::ApplicationWindow("EFFICIO");
-    std::unique_ptr<User> usr = std::make_unique<User>();
-    usr->set_login("toximu");
-    usr->set_hashed_password("12345678");
-    client.try_authenticate_user(usr.get());
-    Ui::MainWindow window(app_window, std::move(usr), &client);
-    app_window->setCentralWidget(&window);
-    app_window->resize(800, 600);
+    ClientImplementation client(
+        CreateChannel("localhost:50051", grpc::InsecureChannelCredentials())
+    );
+
+    const auto app_window = new QMainWindow();
+    app_window->setWindowTitle("EFFICIO");
+    auto *login_window = new LoginWindow(&client, app_window);
+
+    app_window->setCentralWidget(login_window);
+    const QRect screen_geometry =
+        QApplication::primaryScreen()->availableGeometry();
+    const int x = (screen_geometry.width() - login_window->width()) / 2;
+    const int y = (screen_geometry.height() - login_window->height()) / 2;
+    app_window->move(x, y);
     app_window->show();
 
-    // auto *login_window = new LoginWindow(app_window);
-    //
-    // app_window->setCentralWidget(login_window);
-    // const QRect screen_geometry =
-    //     QApplication::primaryScreen()->availableGeometry();
-    // const int x = (screen_geometry.width() - login_window->width()) / 2;
-    // const int y = (screen_geometry.height() - login_window->height()) / 2;
-    // app_window->move(x, y);
-    // app_window->show();
-    int exit_code = QApplication::exec();
     client.complete_rpc_thread_.join();
+
+    return application.exec();
 }

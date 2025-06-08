@@ -1,8 +1,6 @@
 #pragma once
 
-#include <QDialog>
 #include <QMessageBox>
-#include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
 #include <vector>
@@ -34,7 +32,7 @@ public:
         User *user,
         QWidget *parent = nullptr
     );
-    ~ProfileWindow() = default;
+    ~ProfileWindow() override = default;
 
     static const std::vector<QString> THEMES;
     void handle_theme_changed(int theme);

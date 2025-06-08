@@ -25,6 +25,7 @@ add_library(ProfileWindow STATIC ${SOURCES} ${HEADERS} ${UI_FILES})
 target_include_directories(ProfileWindow
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../settings-window/include>
     $<INSTALL_INTERFACE:include>
 )
 
