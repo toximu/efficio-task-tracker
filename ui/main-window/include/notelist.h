@@ -7,6 +7,7 @@
 #include "note.hpp"
 #include "notewidget.h"
 #include "projectitem.h"
+
 namespace Ui {
 class NoteList : public QWidget {
     friend class MainWindow;
@@ -20,7 +21,10 @@ class NoteList : public QWidget {
     const std::string type_;
 
 public:
-    void add_note_widget(const project_storage_model::Note *note, QListWidgetItem *p);
+    void add_note_widget(
+        const project_storage_model::Note *note,
+        QListWidgetItem *p
+    );
     void clear_note_list();
     NoteList(QWidget *parent, const std::string type_);
 

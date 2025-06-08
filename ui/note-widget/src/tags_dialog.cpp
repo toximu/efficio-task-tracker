@@ -2,16 +2,13 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include "tags_dialog_styles.h"
-#include "style_manager.h"
 #include "language_manager.h"
-
+#include "style_manager.h"
+#include "tags_dialog_styles.h"
 
 const std::vector<QString> TagsDialog::THEMES = {
-    Ui::tags_dialog_light_autumn_theme,
-    Ui::tags_dialog_dark_autumn_theme,
-    Ui::tags_dialog_dark_purple_theme,
-    Ui::tags_dialog_light_purple_theme,
+    Ui::tags_dialog_light_autumn_theme, Ui::tags_dialog_dark_autumn_theme,
+    Ui::tags_dialog_dark_purple_theme, Ui::tags_dialog_light_purple_theme,
     Ui::tags_dialog_blue_theme
 };
 
@@ -35,12 +32,12 @@ TagsDialog::TagsDialog(const QList<Tag> &initial_tags, QWidget *parent)
     setModal(true);
     setFixedSize(DIALOG_SIZE.first, DIALOG_SIZE.second);
     handle_theme_changed(StyleManager::instance()->current_theme());
-    connect(LanguageManager::instance(), &LanguageManager::language_changed,
-            this, &TagsDialog::handle_language_changed
+    connect(
+        LanguageManager::instance(), &LanguageManager::language_changed, this,
+        &TagsDialog::handle_language_changed
     );
     handle_language_changed(LanguageManager::instance()->current_language());
 }
-
 
 void TagsDialog::handle_language_changed(std::string new_language) {
     if (new_language == "RU") {
@@ -48,7 +45,9 @@ void TagsDialog::handle_language_changed(std::string new_language) {
         ok_button_->setText(tr("OK"));
         cancel_button_->setText(tr("Отмена"));
 
-        const QStringList colors = {"Красный", "Синий", "Розовый", "Зеленый", "Желтый"};
+        const QStringList colors = {
+            "Красный", "Синий", "Розовый", "Зеленый", "Желтый"
+        };
         for (int i = 0; i < MAX_TAGS_COUNT; ++i) {
             if (color_combo_boxes_[i]) {
                 color_combo_boxes_[i]->setItemText(0, colors[0]);
@@ -58,7 +57,9 @@ void TagsDialog::handle_language_changed(std::string new_language) {
                 color_combo_boxes_[i]->setItemText(4, colors[4]);
             }
             if (name_line_edits_[i]) {
-                name_line_edits_[i]->setPlaceholderText("Имя тега " + QString::number(i + 1));
+                name_line_edits_[i]->setPlaceholderText(
+                    "Имя тега " + QString::number(i + 1)
+                );
             }
         }
     } else if (new_language == "EN") {
@@ -76,12 +77,13 @@ void TagsDialog::handle_language_changed(std::string new_language) {
                 color_combo_boxes_[i]->setItemText(4, colors[4]);
             }
             if (name_line_edits_[i]) {
-                name_line_edits_[i]->setPlaceholderText("Tag name " + QString::number(i + 1));
+                name_line_edits_[i]->setPlaceholderText(
+                    "Tag name " + QString::number(i + 1)
+                );
             }
         }
     }
 }
-
 
 void TagsDialog::setup_ui() {
     auto *main_layout = new QVBoxLayout(this);
@@ -126,8 +128,10 @@ void TagsDialog::setup_ui() {
     connect(
         cancel_button_.get(), &QPushButton::clicked, this, &TagsDialog::reject
     );
-    connect(StyleManager::instance(), &StyleManager::theme_changed,
-            this, &TagsDialog::handle_theme_changed);
+    connect(
+        StyleManager::instance(), &StyleManager::theme_changed, this,
+        &TagsDialog::handle_theme_changed
+    );
 }
 
 void TagsDialog::handle_theme_changed(int theme) {

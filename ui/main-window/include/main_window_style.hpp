@@ -428,7 +428,6 @@ QString main_window_dark_autumn_theme = R"(
     }
     )";
 
-
 QString main_window_light_purple_theme = R"(
 #main-window {
     background: #9882B9;

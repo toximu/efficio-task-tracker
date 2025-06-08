@@ -4,9 +4,9 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QString>
 #include <QWidget>
 #include <string>
-#include <QString>
 
 namespace Ui {
 class BottomBar : public QWidget {
@@ -15,18 +15,18 @@ class BottomBar : public QWidget {
 public:
     BottomBar(
         QWidget *parent,
-        const std::string& username,
+        const std::string &username,
         QString project_name
     );
-    
+
 signals:
-    void profile_button_clicked();  
+    void profile_button_clicked();
 
 private:
     QHBoxLayout *main_layout_;
     QLabel *project_name_;
     QLabel *username_;
-    QPushButton *profile_button_;  
+    QPushButton *profile_button_;
 };
 }  // namespace Ui
 

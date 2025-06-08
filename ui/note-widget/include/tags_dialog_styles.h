@@ -546,6 +546,6 @@ QString tags_dialog_blue_theme = R"(
         color: #07142B;
     }
 )";
-}
+}  // namespace Ui
 
 #endif  // TAGS_DIALOG_STYLES_H

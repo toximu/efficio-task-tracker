@@ -9,10 +9,12 @@
 namespace Ui {
 
 class NoteWidget;
+
 class ProjectItem : public QListWidgetItem {
     project_storage_model::Project *project_;
     friend class NoteList;
     friend class MainWindow;
+    friend class NoteWidget;
 
 public:
     ProjectItem(QListWidget *listview, project_storage_model::Project *project);

@@ -45,7 +45,6 @@
           <family>Arial</family>
           <pointsize>10</pointsize>
           <bold>false</bold>
-          <underline>true</underline>
          </font>
         </property>
         <property name="text">

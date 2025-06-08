@@ -6,10 +6,9 @@
 #include <QDialog>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QString>
 #include <memory>
 #include <vector>
-#include <QString>
-
 
 class TagsDialog final : public QDialog {
     Q_OBJECT
