@@ -4,11 +4,11 @@
 #include <QLabel>
 #include <memory>
 #include <vector>
-#include "note.hpp"
-#include "note_dao.hpp"
 #include "tags_dialog.h"
+#include "model-proto/model.pb.h"
+#include "client_implementation.h"
 
-using namespace project_storage_model;
+using Efficio_proto::Note;
 
 QT_BEGIN_NAMESPACE
 
@@ -23,9 +23,10 @@ class NoteEditDialog final : public QDialog {
 
 public:
     explicit NoteEditDialog(
+        ClientImplementation *client,
         std::string project_name = "TODO",
         QWidget *parent = nullptr,
-        Note *note = new Note(0, "NULL", "NULL")
+        Note *note = nullptr
     );
     ~NoteEditDialog() override;
     static const std::vector<QString> THEMES;

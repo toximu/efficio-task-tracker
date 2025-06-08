@@ -1,5 +1,4 @@
 #include "tags_dialog.h"
-#include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include "language_manager.h"
@@ -28,15 +27,36 @@ TagsDialog::TagsDialog(const QList<Tag> &initial_tags, QWidget *parent)
         name_line_edits_[i]->setText(name);
     }
 
-    setWindowTitle("Добавить теги");
     setModal(true);
     setFixedSize(DIALOG_SIZE.first, DIALOG_SIZE.second);
-    handle_theme_changed(StyleManager::instance()->current_theme());
+    connect(
+        StyleManager::instance(), &StyleManager::theme_changed, this,
+        &TagsDialog::handle_theme_changed
+    );
     connect(
         LanguageManager::instance(), &LanguageManager::language_changed, this,
         &TagsDialog::handle_language_changed
     );
+
+    handle_theme_changed(StyleManager::instance()->current_theme());
     handle_language_changed(LanguageManager::instance()->current_language());
+}
+
+QString TagsDialog::get_color_by_code(const int code) {
+    switch (code) {
+        case 0:
+            return "#e7624b";
+        case 1:
+            return "#165d7b";
+        case 2:
+            return "#bd6dab";
+        case 3:
+            return "#00b16b";
+        case 4:
+            return "#e69f00";
+        default:
+            return "ffffff";
+    }
 }
 
 void TagsDialog::handle_language_changed(std::string new_language) {
@@ -96,11 +116,11 @@ void TagsDialog::setup_ui() {
         tag_layout->addWidget(check_boxes_[i].get());
 
         color_combo_boxes_[i] = std::make_unique<QComboBox>(this);
-        color_combo_boxes_[i]->addItem("Красный", "#e7624b");
-        color_combo_boxes_[i]->addItem("Синий", "#165d7b");
-        color_combo_boxes_[i]->addItem("Розовый", "#bd6dab");
-        color_combo_boxes_[i]->addItem("Зеленый", "#00b16b");
-        color_combo_boxes_[i]->addItem("Желтый", "#e69f00");
+        color_combo_boxes_[i]->addItem("Красный", 0);
+        color_combo_boxes_[i]->addItem("Синий", 1);
+        color_combo_boxes_[i]->addItem("Розовый", 2);
+        color_combo_boxes_[i]->addItem("Зеленый", 3);
+        color_combo_boxes_[i]->addItem("Желтый", 4);
         tag_layout->addWidget(color_combo_boxes_[i].get());
 
         name_line_edits_[i] = std::make_unique<QLineEdit>(this);

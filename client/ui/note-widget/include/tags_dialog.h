@@ -15,8 +15,6 @@ class TagsDialog final : public QDialog {
 
 public:
     const static std::vector<QString> THEMES;
-    void handle_theme_changed(int theme);
-    void handle_language_changed(std::string new_language);
     const int MAX_TAGS_COUNT = 5;
     const std::pair<int, int> DIALOG_SIZE = std::make_pair(300, 250);
 
@@ -31,7 +29,10 @@ public:
         QWidget *parent = nullptr
     );
 
+    static QString get_color_by_code(int code);
     [[nodiscard]] QList<Tag> get_selected_tags() const;
+    void handle_theme_changed(int theme);
+    void handle_language_changed(std::string new_language);
 
 private:
     void setup_ui();
