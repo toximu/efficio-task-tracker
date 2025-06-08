@@ -154,7 +154,7 @@ void TagsDialog::setup_ui() {
     );
 }
 
-void TagsDialog::handle_theme_changed(int theme) {
+void TagsDialog::handle_theme_changed(const int theme) {
     this->setStyleSheet(THEMES[theme]);
 }
 
@@ -165,7 +165,7 @@ QList<TagsDialog::Tag> TagsDialog::get_selected_tags() const {
             !name_line_edits_[i]->text().isEmpty()) {
             Tag tag;
             tag.is_checked = true;
-            tag.color = color_combo_boxes_[i]->currentData().toString();
+            tag.color = color_combo_boxes_[i]->currentData().toInt();
             tag.name = name_line_edits_[i]->text();
             tags.append(tag);
         }

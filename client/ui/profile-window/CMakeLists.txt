@@ -39,4 +39,5 @@ target_link_libraries(ProfileWindow PRIVATE
     AuthorizationWindows
     SettingsWindow
     AnalyticsWindow
+    Client
 )

@@ -2,7 +2,6 @@
 #include "lr_dao.hpp"
 #include "mainwindow.h"
 #include "registration_window.h"
-#include "login_window_style_sheet.h"
 #include "serialization.hpp"
 #include "style_manager.h"
 #include "language_manager.h"
@@ -22,15 +21,22 @@ LoginWindow::LoginWindow(ClientImplementation *client, QWidget *parent)
     
     ui->input_password->setEchoMode(QLineEdit::Password);
 
-    connect(ui->switch_mode, &QPushButton::clicked, this,
-        &LoginWindow::on_switch_mode_clicked);
-    connect(ui->push_enter, &QPushButton::clicked, this,
-        &LoginWindow::on_push_enter_clicked);
-    connect(LanguageManager::instance(), &LanguageManager::language_changed,
-            this, &LoginWindow::handle_language_changed
+    connect(
+        ui->switch_mode, &QPushButton::clicked, this,
+        &LoginWindow::on_switch_mode_clicked
     );
-    connect(ui->switch_theme, &QPushButton::clicked, this,
-        &LoginWindow::on_switch_language_clicked, Qt::UniqueConnection); 
+    connect(
+        ui->push_enter, &QPushButton::clicked, this,
+        &LoginWindow::on_push_enter_clicked
+    );
+    connect(
+        LanguageManager::instance(), &LanguageManager::language_changed, this,
+        &LoginWindow::handle_language_changed
+    );
+    connect(
+        ui->switch_theme, &QPushButton::clicked, this,
+        &LoginWindow::on_switch_language_clicked, Qt::UniqueConnection
+    );
     handle_language_changed(LanguageManager::instance()->current_language());
     setStyleSheet(Ui::login_window_light_autumn_theme);
 }
@@ -43,8 +49,7 @@ void LoginWindow::handle_language_changed(std::string new_language) {
         ui->switch_mode->setText(tr("Еще нет аккаунта? Зарегестрируйтесь!"));
         ui->switch_theme->setText(tr("RU"));
         ui->push_enter->setText(tr("Войти"));
-    } 
-    else if (new_language == "EN") {
+    } else if (new_language == "EN") {
         ui->input_login->setPlaceholderText(tr("Enter login:"));
         ui->enter_label->setText(tr("Enter"));
         ui->input_password->setPlaceholderText(tr("Enter password:"));
@@ -67,12 +72,15 @@ void LoginWindow::on_switch_language_clicked() {
 LoginWindow::~LoginWindow() = default;
 
 void LoginWindow::on_switch_mode_clicked() {
-    if (QMainWindow *app_window = qobject_cast<QMainWindow*>(this->parentWidget())) {
-        RegistrationWindow *registration_window = new RegistrationWindow(app_window);
+    if (QMainWindow *app_window =
+            qobject_cast<QMainWindow *>(this->parentWidget())) {
+        RegistrationWindow *registration_window =
+            new RegistrationWindow(app_window);
         switch_window(app_window, registration_window, 380, 480);
         this->close();
     }
 }
+
 void LoginWindow::on_push_enter_clicked() {
     if ((this->counter_on_switch_theme_clicks++) % 2) {
         QString login = ui->input_login->text().trimmed();
@@ -120,37 +128,53 @@ void LoginWindow::on_push_enter_clicked() {
         }
 
         if (lang == "RU") {
-            QMessageBox::information(this, "Вход", "Вы успешно вошли. Добро пожаловать!");
+            QMessageBox::information(
+                this, "Вход", "Вы успешно вошли. Добро пожаловать!"
+            );
         } else {
-            QMessageBox::information(this, "Login", "You have successfully logged in. Welcome!");
+            QMessageBox::information(
+                this, "Login", "You have successfully logged in. Welcome!"
+            );
         }
 
-        if (QMainWindow *app_window = qobject_cast<QMainWindow*>(this->parentWidget())) {
+        if (QMainWindow *app_window =
+                qobject_cast<QMainWindow *>(this->parentWidget())) {
             this->deleteLater();
-            project_storage_model::Storage *storage = new project_storage_model::Storage();
+            project_storage_model::Storage *storage =
+                new project_storage_model::Storage();
             Serialization::get_storage(*storage, login.toStdString());
 
-            Ui::MainWindow *main_window = new Ui::MainWindow(app_window, login.toStdString(), storage);
-    
-            connect(main_window, &Ui::MainWindow::logout_requested, app_window, [app_window, this]() {
-                switch_to_login_window(app_window);
-            });
-            
-            connect(main_window, &Ui::MainWindow::delete_account_requested, app_window, [app_window, this]() {
-                switch_to_registration_window(app_window);
-            });
-            
+            Ui::MainWindow *main_window =
+                new Ui::MainWindow(app_window, login.toStdString(), storage);
+
+            connect(
+                main_window, &Ui::MainWindow::logout_requested, app_window,
+                [app_window, this]() { switch_to_login_window(app_window); }
+            );
+
+            connect(
+                main_window, &Ui::MainWindow::delete_account_requested,
+                app_window,
+                [app_window, this]() {
+                    switch_to_registration_window(app_window);
+                }
+            );
+
             switch_window(app_window, main_window, 800, 600);
         }
     }
 }
 
-
-void LoginWindow::switch_window(QMainWindow *app_window, QWidget *new_window, int width, int height) {
+void LoginWindow::switch_window(
+    QMainWindow *app_window,
+    QWidget *new_window,
+    int width,
+    int height
+) {
     if (QWidget *old = app_window->centralWidget()) {
         old->deleteLater();
     }
-    
+
     app_window->setCentralWidget(new_window);
     app_window->resize(width, height);
     

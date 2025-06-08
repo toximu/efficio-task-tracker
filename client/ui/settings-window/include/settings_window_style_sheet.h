@@ -3,7 +3,7 @@
 #include <QString>
 
 namespace Ui {
-    QString settings_window_light_autumn_theme = R"(
+QString settings_window_light_autumn_theme = R"(
         QWidget {
             background-color: white;
         }
@@ -80,7 +80,7 @@ namespace Ui {
         }        
     )";
 
-    QString settings_window_dark_autumn_theme = R"(
+QString settings_window_dark_autumn_theme = R"(
         QWidget {
             background-color: #202020;
         }
@@ -155,7 +155,7 @@ namespace Ui {
         }    
     )";
 
-    QString settings_window_light_purple_theme = R"(
+QString settings_window_light_purple_theme = R"(
         QWidget {
             background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
                 stop:0 #9882B9, stop:0.5 rgb(176, 157, 205), stop:1 rgb(125, 109, 148));
@@ -231,7 +231,7 @@ namespace Ui {
         }
     )";
 
-    QString settings_window_dark_purple_theme = R"(
+QString settings_window_dark_purple_theme = R"(
         QWidget {
             background-color: rgb(9, 6, 10);
         }
@@ -306,7 +306,7 @@ namespace Ui {
         }
     )";
 
-    QString settings_window_blue_theme = R"(
+QString settings_window_blue_theme = R"(
         QWidget {
             background: #173C4C;
         }
@@ -382,4 +382,4 @@ namespace Ui {
         }
     )";
 
-} // namespace Ui
+}  // namespace Ui

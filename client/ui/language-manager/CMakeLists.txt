@@ -28,5 +28,5 @@ target_include_directories(LanguageManager
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(LanguageManager PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Sql Database Scripts)
+target_link_libraries(LanguageManager PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Sql Database)
 

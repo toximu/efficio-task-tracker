@@ -375,6 +375,6 @@ QAbstractAxis {
 }
 )";
 
-} // namespace Ui
+}  // namespace Ui
 
-#endif // ANALYTICS_WINDOW_STYLE_SHEET_H
+#endif  // ANALYTICS_WINDOW_STYLE_SHEET_H

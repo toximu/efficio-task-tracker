@@ -1,8 +1,7 @@
 #pragma once
 
-#include <QWidget>
-#include <vector>
 #include <QMainWindow>
+#include <QWidget>
 #include <memory>
 #include <QLineEdit>
 #include <QMessageBox>
@@ -11,13 +10,14 @@
 #include "database_manager.hpp"
 
 QT_BEGIN_NAMESPACE
-    namespace Ui {
-        class LoginWindow;
-    }
+
+namespace Ui {
+class LoginWindow;
+}
+
 QT_END_NAMESPACE
 
-class LoginWindow : public QWidget
-{
+class LoginWindow : public QWidget {
     Q_OBJECT
 
 public:

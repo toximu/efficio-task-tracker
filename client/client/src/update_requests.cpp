@@ -261,7 +261,10 @@ bool UpdateRequests::try_fetch_note(Note *note) const {
     return true;
 }
 
-bool UpdateRequests::try_create_note(Note *note, const std::string& project_code) const {
+bool UpdateRequests::try_create_note(
+    Note *note,
+    const std::string &project_code
+) const {
     CreateNoteRequest request;
     request.set_project_code(project_code);
     const auto call = new CreateNoteClientCall(request, cq_, stub_);

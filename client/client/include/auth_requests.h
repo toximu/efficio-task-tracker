@@ -8,7 +8,10 @@
 using Efficio_proto::Auth;
 using Efficio_proto::AuthRequest;
 using Efficio_proto::AuthResponse;
+using Efficio_proto::DeleteUserRequest;
+using Efficio_proto::DeleteUserResponse;
 using Efficio_proto::User;
+
 using grpc::Channel;
 using grpc::ClientAsyncResponseReader;
 using grpc::CompletionQueue;
@@ -22,6 +25,7 @@ public:
 
     bool try_authenticate_user(User *user) const;
     bool try_register_user(User *user) const;
+    bool try_delete_user(const User *user) const;
 
 private:
     class TryAuthenticateUserClientCall : public CommonClientCall {
@@ -56,6 +60,24 @@ private:
         ClientContext context;
         Status status;
         std::unique_ptr<ClientAsyncResponseReader<AuthResponse>> responder_;
+    };
+
+    class TryDeleteUserClientCall : public CommonClientCall {
+    public:
+        TryDeleteUserClientCall(
+            const DeleteUserRequest &request,
+            CompletionQueue *cq,
+            Auth::Stub *stub
+        );
+        void Proceed(bool ok) override;
+        DeleteUserResponse get_reply();
+
+    private:
+        DeleteUserResponse reply_;
+        ClientContext context;
+        Status status;
+        std::unique_ptr<ClientAsyncResponseReader<DeleteUserResponse>>
+            responder_;
     };
 
     std::unique_ptr<Auth::Stub> stub_;

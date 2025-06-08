@@ -18,6 +18,7 @@ service Update {
 service Auth {
   rpc TryAuthenticateUser (AuthRequest) returns (AuthResponse) {}
   rpc TryRegisterUser (AuthRequest) returns (AuthResponse) {}
+  rpc TryDeleteUser (DeleteUserRequest) returns (DeleteUserResponse) {}
 }
 
 message UpdateNoteRequest {
@@ -119,4 +120,12 @@ message AuthResponse {
     User user = 1;
     string error_text = 2;
   }
+}
+
+message DeleteUserRequest {
+  User user = 1;
+}
+
+message DeleteUserResponse {
+  bool ok = 1;
 }

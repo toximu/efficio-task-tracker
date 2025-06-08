@@ -33,11 +33,12 @@ target_link_libraries(MainWindow PRIVATE
         Qt6::Core
         Qt6::Gui
         Qt6::Sql
-        Scripts
         Database
         NoteWidget
         StyleManager
         ProfileWindow
         AuthorizationWindows
         LanguageManager
+        Client
+        model-proto
 )

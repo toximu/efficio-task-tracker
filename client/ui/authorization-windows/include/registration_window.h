@@ -4,7 +4,7 @@
 #include <vector>
 
 namespace Ui {
-    class RegistrationWindow; 
+class RegistrationWindow;
 }
 
 class RegistrationWindow : public QWidget {

@@ -306,7 +306,9 @@ void UpdateService::CreateNoteServerCall::Proceed(const bool ok) {
             CreateNoteResponse response;
             const auto created_note =
                 NoteDao::initialize_note_for_user(request_.user().login());
-            ProjectDAO::add_note_to_project(request_.project_code(), created_note.id());
+            ProjectDAO::add_note_to_project(
+                request_.project_code(), created_note.id()
+            );
             response.mutable_note()->CopyFrom(created_note);
 
             responder_.Finish(response, grpc::Status::OK, this);

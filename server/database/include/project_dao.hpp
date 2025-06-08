@@ -38,7 +38,8 @@ class ProjectDAO {
 
 public:
     ProjectDAO() = default;
-    static bool get_all_user_projects(const std::string& login, Storage &storage);
+    static bool
+    get_all_user_projects(const std::string &login, Storage &storage);
     static bool get_project(const std::string &project_code, Project &project);
     static bool insert_project(Project &project);
     static bool add_member_to_project(

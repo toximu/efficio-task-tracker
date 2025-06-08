@@ -1,12 +1,12 @@
 #include "registration_window.h"
+#include <QDebug>
 #include <QMessageBox>
 #include <QScreen>
-#include "lr_dao.hpp"
-#include "login_window.h"
-#include "style_manager.h"
 #include "language_manager.h"
+#include "login_window.h"
+#include "lr_dao.hpp"
 #include "registration_window_style_sheet.h"
-#include <QDebug>
+#include "style_manager.h"
 
 RegistrationWindow::RegistrationWindow(ClientImplementation *client, QWidget *parent)
     : QWidget(parent), ui(new Ui::RegistrationWindow),  client_(client) {
@@ -18,15 +18,22 @@ RegistrationWindow::RegistrationWindow(ClientImplementation *client, QWidget *pa
 
     setAttribute(Qt::WA_StyledBackground, true);
 
-    connect(ui->push_registration, &QPushButton::clicked, this,
-        &RegistrationWindow::on_push_registration_clicked, Qt::UniqueConnection);
-    connect(ui->switch_mode, &QPushButton::clicked, this,
-        &RegistrationWindow::on_switch_mode_clicked, Qt::UniqueConnection);    
-    connect(ui->switch_theme, &QPushButton::clicked, this,
-        &RegistrationWindow::on_switch_language_clicked, Qt::UniqueConnection); 
+    connect(
+        ui->push_registration, &QPushButton::clicked, this,
+        &RegistrationWindow::on_push_registration_clicked, Qt::UniqueConnection
+    );
+    connect(
+        ui->switch_mode, &QPushButton::clicked, this,
+        &RegistrationWindow::on_switch_mode_clicked, Qt::UniqueConnection
+    );
+    connect(
+        ui->switch_theme, &QPushButton::clicked, this,
+        &RegistrationWindow::on_switch_language_clicked, Qt::UniqueConnection
+    );
 
-    connect(LanguageManager::instance(), &LanguageManager::language_changed,
-            this, &RegistrationWindow::handle_language_changed
+    connect(
+        LanguageManager::instance(), &LanguageManager::language_changed, this,
+        &RegistrationWindow::handle_language_changed
     );
     handle_language_changed(LanguageManager::instance()->current_language());
     this->setStyleSheet(Ui::registration_window_light_autumn_theme);
@@ -66,20 +73,22 @@ void RegistrationWindow::on_switch_language_clicked() {
 RegistrationWindow::~RegistrationWindow() = default;
 
 void RegistrationWindow::on_switch_mode_clicked() {
-    if (QMainWindow *app_window = qobject_cast<QMainWindow*>(this->parentWidget())) {
+    if (QMainWindow *app_window =
+            qobject_cast<QMainWindow *>(this->parentWidget())) {
         if (QWidget *old = app_window->centralWidget()) {
             old->deleteLater();
         }
         
         LoginWindow *login_window = new LoginWindow(client_, app_window);
         app_window->setCentralWidget(login_window);
-        
-        QRect screen_geometry = QApplication::primaryScreen()->availableGeometry();
+
+        QRect screen_geometry =
+            QApplication::primaryScreen()->availableGeometry();
         app_window->move(
             (screen_geometry.width() - login_window->width()) / 2,
             (screen_geometry.height() - login_window->height()) / 2
         );
-        
+
         this->close();
     }
 }
@@ -89,9 +98,15 @@ bool RegistrationWindow::is_strong_and_valid_password(const QString &password) {
 
     if (password.length() < 8) {
         if (lang == "RU") {
-            QMessageBox::warning(nullptr, "Ошибка: недостаточно надежный пароль", "Пароль должен содержать не менее восьми символов");
+            QMessageBox::warning(
+                nullptr, "Ошибка: недостаточно надежный пароль",
+                "Пароль должен содержать не менее восьми символов"
+            );
         } else {
-            QMessageBox::warning(nullptr, "Error: Weak Password", "Password must be at least 8 characters long");
+            QMessageBox::warning(
+                nullptr, "Error: Weak Password",
+                "Password must be at least 8 characters long"
+            );
         }
         return false;
     }
@@ -102,9 +117,15 @@ bool RegistrationWindow::is_strong_and_valid_password(const QString &password) {
     for (const QChar &ch : password) {
         if (!ch.isLetter() && !ch.isDigit()) {
             if (lang == "RU") {
-                QMessageBox::warning(nullptr, "Ошибка", "Пароль должен содержать только символы латиницы и цифры");
+                QMessageBox::warning(
+                    nullptr, "Ошибка",
+                    "Пароль должен содержать только символы латиницы и цифры"
+                );
             } else {
-                QMessageBox::warning(nullptr, "Error", "Password must contain only Latin letters and digits");
+                QMessageBox::warning(
+                    nullptr, "Error",
+                    "Password must contain only Latin letters and digits"
+                );
             }
             return false;
         } else if (ch.isLetter()) {
@@ -116,18 +137,30 @@ bool RegistrationWindow::is_strong_and_valid_password(const QString &password) {
 
     if (!has_latin_letter) {
         if (lang == "RU") {
-            QMessageBox::warning(nullptr, "Ошибка: недостаточно надежный пароль", "Пароль должен содержать хотя бы одну букву");
+            QMessageBox::warning(
+                nullptr, "Ошибка: недостаточно надежный пароль",
+                "Пароль должен содержать хотя бы одну букву"
+            );
         } else {
-            QMessageBox::warning(nullptr, "Error: Weak Password", "Password must contain at least one letter");
+            QMessageBox::warning(
+                nullptr, "Error: Weak Password",
+                "Password must contain at least one letter"
+            );
         }
         return false;
     }
 
     if (!has_digit) {
         if (lang == "RU") {
-            QMessageBox::warning(nullptr, "Ошибка: недостаточно надежный пароль", "Пароль должен содержать хотя бы одну цифру");
+            QMessageBox::warning(
+                nullptr, "Ошибка: недостаточно надежный пароль",
+                "Пароль должен содержать хотя бы одну цифру"
+            );
         } else {
-            QMessageBox::warning(nullptr, "Error: Weak Password", "Password must contain at least one digit");
+            QMessageBox::warning(
+                nullptr, "Error: Weak Password",
+                "Password must contain at least one digit"
+            );
         }
         return false;
     }
@@ -143,11 +176,16 @@ void RegistrationWindow::on_push_registration_clicked() {
 
         std::string lang = LanguageManager::instance()->current_language();
 
-        if (created_login.isEmpty() || created_password.isEmpty() || repeated_password.isEmpty()) {
+        if (created_login.isEmpty() || created_password.isEmpty() ||
+            repeated_password.isEmpty()) {
             if (lang == "RU") {
-                QMessageBox::warning(this, "Ошибка", "Пожалуйста, заполните все поля.");
+                QMessageBox::warning(
+                    this, "Ошибка", "Пожалуйста, заполните все поля."
+                );
             } else {
-                QMessageBox::warning(this, "Error", "Please fill in all the fields.");
+                QMessageBox::warning(
+                    this, "Error", "Please fill in all the fields."
+                );
             }
             return;
         }
@@ -163,18 +201,28 @@ void RegistrationWindow::on_push_registration_clicked() {
 
         if (created_login.size() > 50) {
             if (lang == "RU") {
-                QMessageBox::warning(this, "Ошибка", "Длина логина не должна превышать пятидесяти символов");
+                QMessageBox::warning(
+                    this, "Ошибка",
+                    "Длина логина не должна превышать пятидесяти символов"
+                );
             } else {
-                QMessageBox::warning(this, "Error", "Login must not exceed fifty characters.");
+                QMessageBox::warning(
+                    this, "Error", "Login must not exceed fifty characters."
+                );
             }
             return;
         }
 
         if (created_password.size() > 50) {
             if (lang == "RU") {
-                QMessageBox::warning(this, "Ошибка", "Длина пароля не должна превышать пятидесяти символов");
+                QMessageBox::warning(
+                    this, "Ошибка",
+                    "Длина пароля не должна превышать пятидесяти символов"
+                );
             } else {
-                QMessageBox::warning(this, "Error", "Password must not exceed fifty characters.");
+                QMessageBox::warning(
+                    this, "Error", "Password must not exceed fifty characters."
+                );
             }
             return;
         }
@@ -193,23 +241,44 @@ void RegistrationWindow::on_push_registration_clicked() {
         switch (try_register_user) {
             case 0:
                 if (lang == "RU") {
-                    QMessageBox::warning(this, "Ошибка", "Извините, внутренняя ошибка с базами данных.");
+                    QMessageBox::warning(
+                        this, "Ошибка",
+                        "Извините, внутренняя ошибка с базами данных."
+                    );
                 } else {
-                    QMessageBox::warning(this, "Error", "Sorry, an internal database error occurred.");
+                    QMessageBox::warning(
+                        this, "Error",
+                        "Sorry, an internal database error occurred."
+                    );
                 }
                 break;
             case -1:
                 if (lang == "RU") {
-                    QMessageBox::warning(this, "Ошибка", "Пользователь с таким именем уже существует. Пожалуйста, придумайте другое!");
+                    QMessageBox::warning(
+                        this, "Ошибка",
+                        "Пользователь с таким именем уже существует. "
+                        "Пожалуйста, придумайте другое!"
+                    );
                 } else {
-                    QMessageBox::warning(this, "Error", "A user with this name already exists. Please choose a different one!");
+                    QMessageBox::warning(
+                        this, "Error",
+                        "A user with this name already exists. Please choose a "
+                        "different one!"
+                    );
                 }
                 break;
             default:
                 if (lang == "RU") {
-                    QMessageBox::information(this, "Регистрация", "Вы успешно зарегистрировались! Пожалуйста, выполните вход.");
+                    QMessageBox::information(
+                        this, "Регистрация",
+                        "Вы успешно зарегистрировались! Пожалуйста, выполните "
+                        "вход."
+                    );
                 } else {
-                    QMessageBox::information(this, "Registration", "You have successfully registered! Please log in.");
+                    QMessageBox::information(
+                        this, "Registration",
+                        "You have successfully registered! Please log in."
+                    );
                 }
                 on_switch_mode_clicked();
                 break;

@@ -125,6 +125,49 @@ void AuthService::TryRegisterUserServerCall::Proceed(const bool ok) {
     }
 }
 
+AuthService::TryDeleteUserServerCall::TryDeleteUserServerCall(
+    Auth::AsyncService *service,
+    ServerCompletionQueue *cq
+)
+    : CommonServerCall(cq), responder_(&ctx_), service_(service) {
+    service_->RequestTryDeleteUser(
+        &ctx_, &request_, &responder_, cq_, cq_, this
+    );
+    status_ = PROCESS;
+}
+
+void AuthService::TryDeleteUserServerCall::Proceed(const bool ok) {
+    if (!ok) {
+        delete this;
+        return;
+    }
+
+    switch (status_) {
+        case PROCESS: {
+            std::cout << "[SERVER]: GOT DELETE USER REQUEST\n";
+            new TryDeleteUserServerCall(service_, cq_);
+
+            DeleteUserResponse response;
+
+            if (LRDao::try_delete_user(request_.user().login())) {
+                std::cout << "[SERVER]: DELETE USER SUCCESSFULLY\n";
+                response.set_ok(true);
+            } else {
+                std::cout << "[SERVER]: DELETE USER FAILED\n";
+                response.set_ok(false);
+            }
+
+            status_ = FINISH;
+            responder_.Finish(response, grpc::Status::OK, this);
+            break;
+        }
+        case FINISH: {
+            delete this;
+            break;
+        }
+    }
+}
+
 Auth::AsyncService &AuthService::get_service() {
     return service_;
 }

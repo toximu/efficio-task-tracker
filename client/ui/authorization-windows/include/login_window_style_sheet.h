@@ -3,7 +3,7 @@
 #include "ui_login_window.h"
 
 namespace Ui {
-    QString login_window_light_autumn_theme = R"(
+QString login_window_light_autumn_theme = R"(
         QWidget {
             background-color: #f5f5f5;
         }
@@ -71,5 +71,5 @@ namespace Ui {
             background-color:rgb(3, 58, 54);
             color: #f5f5f5;
         }
-    )";    
+    )";
 }  // namespace Ui

@@ -13,7 +13,8 @@ DatabaseManager::DatabaseManager() {
         "user_id VARCHAR(50) REFERENCES users(login), "
         "members VARCHAR(50)[], "
         "date VARCHAR(50), "
-        "tags VARCHAR(50)[] "
+        "tags VARCHAR(50)[], "
+        "type VARCHAR(15) "
         ")"
     );
 
@@ -22,7 +23,10 @@ DatabaseManager::DatabaseManager() {
         "login VARCHAR(50) PRIMARY KEY, "
         "password VARCHAR(50) NOT NULL, "
         "token VARCHAR(100), "
-        "projects VARCHAR(6)[]"
+        "projects VARCHAR(6)[], "
+        "font_size VARCHAR(10), "
+        "language VARCHAR(2), "
+        "theme INT "
         ")"
     );
 

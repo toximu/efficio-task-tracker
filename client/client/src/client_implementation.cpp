@@ -61,11 +61,18 @@ bool ClientImplementation::try_register_user(User *user) {
     return auth_requests_.try_register_user(user);
 }
 
+bool ClientImplementation::try_delete_user(const User *user) const {
+    return auth_requests_.try_delete_user(user);
+}
+
 bool ClientImplementation::try_update_note(Note *note) const {
     return update_requests_.try_update_note(note);
 }
 
-bool ClientImplementation::try_create_note(Note *note, const std::string& project_code) const {
+bool ClientImplementation::try_create_note(
+    Note *note,
+    const std::string &project_code
+) const {
     return update_requests_.try_create_note(note, project_code);
 }
 

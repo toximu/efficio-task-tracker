@@ -3,15 +3,14 @@
 #include <QWidget>
 #include <string>
 
-StyleManager* StyleManager::m_instance = nullptr;
+StyleManager *StyleManager::m_instance = nullptr;
 
-StyleManager::StyleManager(QObject *parent) 
-    : QObject(parent) {
+StyleManager::StyleManager(QObject *parent) : QObject(parent) {
     current_theme_ = 0;
     emit theme_changed(this->current_theme_);
 }
 
-StyleManager* StyleManager::instance() {
+StyleManager *StyleManager::instance() {
     if (!m_instance) {
         m_instance = new StyleManager();
     }

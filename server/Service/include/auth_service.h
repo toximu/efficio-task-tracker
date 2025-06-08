@@ -14,10 +14,13 @@ using Efficio_proto::Auth;
 using Efficio_proto::AuthRequest;
 using Efficio_proto::AuthResponse;
 
+using Efficio_proto::DeleteUserRequest;
+using Efficio_proto::DeleteUserResponse;
+
 class AuthService final {
     Auth::AsyncService service_;
     ServerContext ctx_;
-    ServerCompletionQueue* cq_;
+    ServerCompletionQueue *cq_;
     std::unique_ptr<grpc::Server> server_;
 
     class AuthServerOperation : public CommonServerCall {
@@ -57,9 +60,24 @@ public:
         void Proceed(bool) override;
     };
 
+    class TryDeleteUserServerCall final : public CommonServerCall {
+        DeleteUserRequest request_;
+        ServerAsyncResponseWriter<DeleteUserResponse> responder_;
+        Auth::AsyncService *service_;
+
+    public:
+        explicit TryDeleteUserServerCall(
+            Auth::AsyncService *service,
+            ServerCompletionQueue *cq
+        );
+
+        ~TryDeleteUserServerCall() override = default;
+        void Proceed(bool) override;
+    };
+
     Auth::AsyncService &get_service();
 
-    explicit AuthService(ServerCompletionQueue* cq);
+    explicit AuthService(ServerCompletionQueue *cq);
 
     void run();
 };

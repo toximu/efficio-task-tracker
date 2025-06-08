@@ -1,14 +1,14 @@
 #ifndef SETTINGS_WINDOW_H
 #define SETTINGS_WINDOW_H
 
+#include <QApplication>
+#include <QButtonGroup>
 #include <QDialog>
-#include <QPushButton>
+#include <QHBoxLayout>
 #include <QLabel>
+#include <QPushButton>
 #include <QRadioButton>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QButtonGroup>
-#include <QApplication>
 
 class SettingsWindow : public QDialog {
     Q_OBJECT
@@ -30,7 +30,7 @@ private slots:
 private:
     void update_ui_text();
 
-    QVBoxLayout* main_layout;
+    QVBoxLayout *main_layout;
     QPushButton *language_button;
     QPushButton *theme_button;
     QLabel *title_label;
@@ -40,4 +40,4 @@ private:
     QRadioButton *large_font_radio;
 };
 
-#endif // SETTINGS_WINDOW_H
+#endif  // SETTINGS_WINDOW_H
