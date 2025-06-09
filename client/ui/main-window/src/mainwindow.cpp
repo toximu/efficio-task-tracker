@@ -249,7 +249,10 @@ void MainWindow::add_note() {
         dynamic_cast<ProjectItem *>(project_list_->currentItem());
     if (project_item) {
         Note *note = project_item->project_->add_notes();
-        client_->try_create_note(note, project_item->project_->code());
+        auto status =
+            client_->try_create_note(note, project_item->project_->code());
+        std::cout << "[CLIENT]: NOTE CREATED - "
+                  << (status == 1 ? "TRUE" : "FALSE") << std::endl;
         actual_notes_->add_note_widget(note, project_list_->currentItem());
     } else {
         QMessageBox msg;

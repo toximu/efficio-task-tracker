@@ -29,7 +29,8 @@ int main(int argc, char *argv[]) {
     // }
 
     // if (qtTranslator.load(
-    //         "qt_" + language, QLibraryInfo::path(QLibraryInfo::TranslationsPath)
+    //         "qt_" + language,
+    //         QLibraryInfo::path(QLibraryInfo::TranslationsPath)
     //     )) {
     //     application.installTranslator(&qtTranslator);
     // }
@@ -49,7 +50,6 @@ int main(int argc, char *argv[]) {
     const int y = (screen_geometry.height() - login_window->height()) / 2;
     app_window->move(x, y);
     app_window->show();
-
 
     QApplication::exec();
     client.complete_rpc_thread_.join();

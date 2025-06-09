@@ -72,7 +72,11 @@ NoteWidget::NoteWidget(
     handle_font_size_changed(StyleManager::instance()->current_font_size());
 }
 
-void NoteWidget::handle_language_changed(std::string new_language) {
+void NoteWidget::good_resize() {
+    setMaximumWidth(reinterpret_cast<QWidget *>(parent())->width() / 3);
+}
+
+void NoteWidget::handle_language_changed(const std::string &new_language) {
     if (new_language == "RU") {
         open_button_->setText(tr("Открыть"));
         if (title_label_->text() == "Empty note") {
@@ -96,7 +100,7 @@ void NoteWidget::handle_language_changed(std::string new_language) {
     }
 }
 
-void NoteWidget::handle_font_size_changed(std::string font_size_) {
+void NoteWidget::handle_font_size_changed(const std::string &font_size_) {
     QString font_rule;
     if (font_size_ == "small") {
         title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 13px;");
@@ -155,10 +159,6 @@ void NoteWidget::update_tags() {
         tag_labels_.push_back(tag_label);
         tags_layout_->addWidget(tag_label);
     }
-}
-
-void NoteWidget::good_resize() {
-    setMaximumWidth(reinterpret_cast<QWidget *>(parent())->width() / 3);
 }
 
 }  // namespace Ui

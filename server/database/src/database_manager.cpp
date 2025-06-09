@@ -6,19 +6,6 @@ DatabaseManager::DatabaseManager() {
     pqxx::work transaction(*connection_);
 
     transaction.exec(
-        "CREATE TABLE IF NOT EXISTS notes ("
-        "id SERIAL PRIMARY KEY, "
-        "title TEXT NOT NULL, "
-        "content TEXT, "
-        "user_id VARCHAR(50) REFERENCES users(login), "
-        "members VARCHAR(50)[], "
-        "date VARCHAR(50), "
-        "tags VARCHAR(50)[], "
-        "type VARCHAR(15) "
-        ")"
-    );
-
-    transaction.exec(
         "CREATE TABLE IF NOT EXISTS users ("
         "login VARCHAR(50) PRIMARY KEY, "
         "password VARCHAR(50) NOT NULL, "
@@ -36,6 +23,19 @@ DatabaseManager::DatabaseManager() {
         "title VARCHAR(50) NOT NULL, "
         "notes INT[], "
         "members VARCHAR(50)[]"
+        ")"
+    );
+
+    transaction.exec(
+        "CREATE TABLE IF NOT EXISTS notes ("
+        "id SERIAL PRIMARY KEY, "
+        "title TEXT NOT NULL, "
+        "content TEXT, "
+        "user_id VARCHAR(50) REFERENCES users(login), "
+        "members VARCHAR(50)[], "
+        "date VARCHAR(50), "
+        "tags VARCHAR(50)[], "
+        "type VARCHAR(15) "
         ")"
     );
 

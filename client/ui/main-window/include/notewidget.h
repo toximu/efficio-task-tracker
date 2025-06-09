@@ -36,8 +36,8 @@ public:
     );
     Note::Type type_;
     QListWidgetItem *project_;
-    void handle_font_size_changed(std::string font_size_);
-    void handle_language_changed(std::string new_language);
+    void handle_font_size_changed(const std::string &font_size_);
+    void handle_language_changed(const std::string &new_language);
     QListWidgetItem *get_project() const;
 
 private slots:

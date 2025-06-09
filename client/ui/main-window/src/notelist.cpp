@@ -37,8 +37,10 @@ void NoteList::add_note_widget(const Note *note, QListWidgetItem *project) {
             current_layout->itemAt(current_layout->count() - 1)
         );
     }
+    std::cout << "[CLIENT]: PREPARING...\n";
     auto *new_note = new NoteWidget(client_, this, note, this->type_, project);
     vertical_layouts_[note_counter_ % 3]->addWidget(new_note, 0, Qt::AlignTop);
+    std::cout << "[CLIENT]: SUCCESS!\n";
     connect(
         new_note, &NoteWidget::change_type_requested, this,
         &NoteList::load_project_notes
