@@ -86,10 +86,10 @@ MainWindow::MainWindow(
     right_layout->addWidget(project_list_);
     right_layout->addWidget(new_project_button_);
     right_layout->addWidget(new_note_button_);
-    right_panel->setFixedWidth(210);
+
     tab_widget_->tabBar()->setExpanding(true);
 
-    content_layout_->addWidget(tab_widget_);
+    content_layout_->addWidget(tab_widget_, Qt::AlignRight);
     content_layout_->addWidget(right_panel);
 
     main_layout_->addWidget(top_bar_);
