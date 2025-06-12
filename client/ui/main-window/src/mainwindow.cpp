@@ -51,7 +51,7 @@ MainWindow::MainWindow(
       completed_notes_(new NoteList(client_, this, Note::Type::completed)),
       deleted_notes_(new NoteList(client_, this, Note::Type::deleted)),
       content_widget_(new QWidget(this)),
-      new_project_button_(new QPushButton("Новый проект", this)),
+      new_project_button_(new QPushButton("Создать", this)),
       new_note_button_(new QPushButton("Новая заметка", this)),
       join_project_button_(new QPushButton("Добавить", this)),
       tab_widget_(new QTabWidget(this)) {
@@ -83,8 +83,11 @@ MainWindow::MainWindow(
 
     QWidget *right_panel = new QWidget(this);
     QVBoxLayout *right_layout = new QVBoxLayout(right_panel);
+    QHBoxLayout *project_buttons_layout = new QHBoxLayout(right_panel);
     right_layout->addWidget(project_list_);
-    right_layout->addWidget(new_project_button_);
+    project_buttons_layout->addWidget(new_project_button_);
+    project_buttons_layout->addWidget(join_project_button_);
+    right_layout->addLayout(project_buttons_layout);
     right_layout->addWidget(new_note_button_);
 
     tab_widget_->tabBar()->setExpanding(true);
@@ -122,6 +125,10 @@ MainWindow::MainWindow(
         &Ui::MainWindow::create_project
     );
     connect(
+        join_project_button_, &QPushButton::clicked, this,
+        &Ui::MainWindow::add_project_by_code
+    );
+    connect(
         top_bar_, &Ui::BottomBar::profile_button_clicked, this,
         &MainWindow::on_profile_button_click
     );
@@ -153,9 +160,11 @@ QScrollArea *MainWindow::create_scroll_area(NoteList *note_list) {
 
 void MainWindow::handle_language_changed(std::string new_language) {
     if (new_language == "RU") {
-        new_project_button_->setText("Новый проект");
+        join_project_button_->setText("Присоеденится");
+        new_project_button_->setText("Создать");
         new_note_button_->setText("Новая заметка");
     } else if (new_language == "EN") {
+        join_project_button_->setText("Join");
         new_project_button_->setText("New project");
         new_note_button_->setText("New note");
     }
@@ -238,9 +247,14 @@ void MainWindow::add_project_by_code() {
     );
 
     if (ok) {
-        Project *project = user_->mutable_storage()->add_projects();
-        client_->try_join_project(project, code.toStdString(), *user_);
-        project_list_->add_project(project);
+        Project *try_project = new Project();
+        if (client_->try_join_project(
+                try_project, code.toStdString(), *user_
+            )) {
+            Project *project = user_->mutable_storage()->add_projects();
+            *project = std::move(*try_project);
+            project_list_->add_project(project);
+        }
     }
 }
 
