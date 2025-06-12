@@ -38,6 +38,7 @@ class MainWindow : public QWidget {
 private slots:
     void create_project();
     void add_project_by_code();
+    void leave_project(ProjectItem *project_item);
     void add_note();
     void on_profile_button_click();
 signals:

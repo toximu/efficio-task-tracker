@@ -13,7 +13,9 @@ class ProjectItem : public QListWidgetItem {
     friend class NoteList;
     friend class MainWindow;
     friend class NoteWidget;
-
+    friend class ProjectList;
+private slots:
+    void showContextMenu(const QPoint &pos);
 public:
     ProjectItem(QListWidget *listview, Project *project);
 };

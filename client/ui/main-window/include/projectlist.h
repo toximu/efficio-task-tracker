@@ -4,6 +4,7 @@
 #include <model-proto/model.pb.h>
 #include <QListWidget>
 #include <QWidget>
+#include "projectitem.h"
 
 using namespace Efficio_proto;
 
@@ -13,9 +14,13 @@ class ProjectList : public QListWidget {
     friend class MainWindow;
     void add_project(Project *project);
     void load_projects(Storage *storage);
-
+private slots:
+    void showContextMenu(const QPoint &pos);
 public:
     explicit ProjectList(QWidget *parent = nullptr);
+signals:
+    void leave_project(ProjectItem *project_item);
+
 
 signals:
 };

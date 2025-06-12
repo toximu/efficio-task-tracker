@@ -180,7 +180,7 @@ bool LRDao::delete_project_from_user(
     pqxx::work transaction(connection);
     const std::string query =
         "UPDATE users SET projects = array_remove(projects, $1) WHERE "
-        "login = $2"
+        "login = $2 "
         "RETURNING 1";
 
     const pqxx::result result =

@@ -116,6 +116,10 @@ MainWindow::MainWindow(
         project_list_, &QListWidget::itemClicked, deleted_notes_,
         &NoteList::load_project_notes
     );
+    connect(
+        project_list_, &ProjectList::leave_project, this,
+        &MainWindow::leave_project
+    );
 
     connect(
         new_note_button_, &QPushButton::clicked, this, &Ui::MainWindow::add_note
@@ -256,6 +260,11 @@ void MainWindow::add_project_by_code() {
             project_list_->add_project(project);
         }
     }
+}
+
+void MainWindow::leave_project(ProjectItem *project_item) {
+    client_->try_leave_project(project_item->project_->code(), *user_);
+    delete project_item;
 }
 
 void MainWindow::add_note() {

@@ -263,6 +263,7 @@ void UpdateService::TryLeaveProjectServerCall::Proceed(const bool ok) {
 
             response_.set_ok(1);
             responder_.Finish(response_, grpc::Status::OK, this);
+            break;
         }
         case FINISH: {
             std::cout << "[SERVER] : {try leave project} : deleting call"
