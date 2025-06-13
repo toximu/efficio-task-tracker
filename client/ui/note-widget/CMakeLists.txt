@@ -37,4 +37,4 @@ target_include_directories(NoteWidget
         $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(NoteWidget PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Sql Database LanguageManager model-proto StyleManager Client)
+target_link_libraries(NoteWidget Client Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Sql Database LanguageManager model-proto StyleManager)

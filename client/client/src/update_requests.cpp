@@ -219,7 +219,7 @@ bool UpdateRequests::try_update_note(Note *note) const {
     UpdateNoteRequest request;
     request.mutable_note()->CopyFrom(*note);
 
-    const auto call = new UpdateNoteClientCall(request, cq_, stub_);
+    const auto call = new UpdateNoteClientCall(request, cq_.get(), stub_);
 
     void *tag;
     bool ok = false;
@@ -242,7 +242,7 @@ bool UpdateRequests::try_fetch_note(Note *note) const {
     GetNoteRequest request;
     request.set_id(note->id());
 
-    const auto call = new GetNoteClientCall(request, cq_, stub_);
+    const auto call = new GetNoteClientCall(request, cq_.get(), stub_);
 
     void *tag;
     bool ok = false;
@@ -267,7 +267,7 @@ bool UpdateRequests::try_create_note(
 ) const {
     CreateNoteRequest request;
     request.set_project_code(project_code);
-    const auto call = new CreateNoteClientCall(request, cq_, stub_);
+    const auto call = new CreateNoteClientCall(request, cq_.get(), stub_);
 
     void *tag;
     bool ok = false;

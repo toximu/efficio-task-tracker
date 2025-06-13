@@ -84,7 +84,7 @@ DeleteUserResponse AuthRequests::TryDeleteUserClientCall::get_reply() {
 
 AuthRequests::AuthRequests(
     const std::shared_ptr<Channel> &channel,
-    CompletionQueue *cq
+    const std::shared_ptr<CompletionQueue> &cq
 )
     : stub_(Auth::NewStub(channel)), cq_(cq) {
 }

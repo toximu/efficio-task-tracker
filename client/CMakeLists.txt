@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 COMPONENTS Widgets Core Gui Sql REQUIRED)
 
+add_subdirectory(client)
 add_subdirectory(ui/main-window)
 add_subdirectory(ui/note-widget)
 add_subdirectory(ui/authorization-windows)
@@ -19,7 +20,7 @@ add_subdirectory(ui/language-manager)
 add_subdirectory(ui/profile-window)
 add_subdirectory(ui/settings-window)
 add_subdirectory(ui/analytics-window)
-add_subdirectory(client)
+
 add_executable(EfficioTaskTracker main.cpp)
 
 target_link_libraries(EfficioTaskTracker PRIVATE

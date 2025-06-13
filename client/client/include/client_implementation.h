@@ -11,14 +11,15 @@ using grpc::Channel;
 using grpc::CompletionQueue;
 
 class ClientImplementation {
-    CompletionQueue cq_;
+    std::shared_ptr<CompletionQueue> cq_;
     std::shared_ptr<Channel> channel_;
     UpdateRequests update_requests_;
     AuthRequests auth_requests_;
+    std::thread complete_rpc_thread_;
 
 public:
     explicit ClientImplementation(const std::shared_ptr<Channel> &channel);
-    std::thread complete_rpc_thread_;
+    ~ClientImplementation();
 
     void CompleteRpc();
     std::shared_ptr<Channel> get_channel();
@@ -44,6 +45,7 @@ public:
         const User &user
     );
     bool try_leave_project(const std::string &code, const User &user);
+
 };
 
 #endif  // CLIENTIMPLEMENTATION_H
