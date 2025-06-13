@@ -6,9 +6,11 @@ using Efficio_proto::Project;
 using grpc::Channel;
 
 int main() {
-    ClientImplementation client(grpc::CreateChannel(
-        "localhost:50051", grpc::InsecureChannelCredentials()
-    ));
+    ClientImplementation client(
+        grpc::CreateChannel(
+            "localhost:50051", grpc::InsecureChannelCredentials()
+        )
+    );
 
     User user;
     user.set_login("toximu");

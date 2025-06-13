@@ -20,7 +20,8 @@ add_subdirectory(ui/profile-window)
 add_subdirectory(ui/settings-window)
 add_subdirectory(ui/analytics-window)
 add_subdirectory(client)
-add_executable(EfficioTaskTracker main.cpp)
+add_executable(EfficioTaskTracker main.cpp
+        main.cpp)
 
 target_link_libraries(EfficioTaskTracker PRIVATE
         model-proto

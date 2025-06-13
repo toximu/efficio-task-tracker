@@ -104,7 +104,7 @@ bool AuthRequests::try_authenticate_user(User *user) const {
         return false;
     }
 
-    if (!ok) {
+    if (!ok || call->get_reply().has_error_text()) {
         std::cout << "[CLIENT WARNING]: Authentication failed\n";
         return false;
     }

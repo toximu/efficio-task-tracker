@@ -119,7 +119,8 @@ void ProfileWindow::on_logout_clicked() {
 void ProfileWindow::on_delete_account_clicked() {
     QMessageBox::StandardButton reply = QMessageBox::question(
         this, tr("Удаление аккаунта"),
-        tr("Вы уверены, что хотите удалить аккаунт? Все данные будут потеряны!"
+        tr(
+            "Вы уверены, что хотите удалить аккаунт? Все данные будут потеряны!"
         ),
         QMessageBox::Yes | QMessageBox::No
     );

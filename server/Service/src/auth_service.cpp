@@ -57,7 +57,7 @@ void AuthService::TryAuthenticateUserServerCall::Proceed(const bool ok) {
                 }
 
             } else {
-                std::cout << "[SERVER]: SQL QUERY ERROR\n";
+                std::cout << "[SERVER]: SQL QUERY ERROR OR USER NOT FOUND\n";
                 response.set_error_text(
                     "[SERVER ERROR]: Не удалось выполнить запрос в базу данных "
                     "на проверку "
