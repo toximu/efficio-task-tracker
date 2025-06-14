@@ -33,12 +33,18 @@ class MainWindow : public QWidget {
     QPushButton *new_project_button_;
     QPushButton *join_project_button_;
     QPushButton *new_note_button_;
+    int actual_notes_amount_;
+    int overdue_notes_amount_;
+    int completed_notes_amount_;
+    int deleted_notes_amount_;
 
     friend ProjectList;
 private slots:
     void create_project();
     void add_project_by_code();
     void leave_project(ProjectItem *project_item);
+    void update_notes_amount(int& notes_amount_, int loaded_amount, int type);
+    void update_note_lists(QListWidgetItem *project, Note::Type::States old_type, Note::Type::States new_type);
     void add_note();
     void on_profile_button_click();
 signals:

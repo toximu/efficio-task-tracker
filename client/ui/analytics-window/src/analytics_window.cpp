@@ -114,13 +114,13 @@ void AnalyticsWindow::handle_language_changed(std::string new_language) {
         chart->setTitle("Статистика заметок");
         completed_slice->setLabel("Завершенные");
         expired_slice->setLabel("Просроченные");
-        created_slice->setLabel("Созданные");
+        created_slice->setLabel("Актуальные");
         setWindowTitle("Аналитическая панель");
     } else if (new_language == "EN") {
         chart->setTitle("Notes Statistics");
         completed_slice->setLabel("Completed");
         expired_slice->setLabel("Expired");
-        created_slice->setLabel("Created");
+        created_slice->setLabel("Actual");
         setWindowTitle("Analytics Panel");
     }
     for (QPieSlice *slice : series->slices()) {

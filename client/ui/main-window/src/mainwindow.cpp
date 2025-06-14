@@ -63,21 +63,6 @@ MainWindow::MainWindow(
     tab_widget_->addTab(create_scroll_area(completed_notes_), "Выполненные");
     tab_widget_->addTab(create_scroll_area(deleted_notes_), "Удаленные");
 
-    tab_widget_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-    actual_notes_->setSizePolicy(
-        QSizePolicy::Expanding, QSizePolicy::Expanding
-    );
-    overdue_notes_->setSizePolicy(
-        QSizePolicy::Expanding, QSizePolicy::Expanding
-    );
-    completed_notes_->setSizePolicy(
-        QSizePolicy::Expanding, QSizePolicy::Expanding
-    );
-    deleted_notes_->setSizePolicy(
-        QSizePolicy::Expanding, QSizePolicy::Expanding
-    );
-
     main_layout_->addWidget(top_bar_, Qt::AlignTop);
     main_layout_->setAlignment(Qt::AlignCenter);
 
@@ -116,6 +101,24 @@ MainWindow::MainWindow(
         project_list_, &QListWidget::itemClicked, deleted_notes_,
         &NoteList::load_project_notes
     );
+
+    connect(
+        actual_notes_, &NoteList::change_note_type_requested, this, 
+        update_note_lists
+    );
+    connect(
+        overdue_notes_, &NoteList::change_note_type_requested, this, 
+        update_note_lists
+    );
+    connect(
+        completed_notes_, &NoteList::change_note_type_requested, this, 
+        update_note_lists
+    );
+    connect(
+        deleted_notes_, &NoteList::change_note_type_requested, this, 
+        update_note_lists
+    );
+
     connect(
         project_list_, &ProjectList::leave_project, this,
         &MainWindow::leave_project
@@ -153,6 +156,7 @@ MainWindow::MainWindow(
     handle_language_changed(LanguageManager::instance()->current_language());
 }
 
+
 QScrollArea *MainWindow::create_scroll_area(NoteList *note_list) {
     QScrollArea *scrollArea = new QScrollArea();
     scrollArea->setWidgetResizable(true);
@@ -164,13 +168,21 @@ QScrollArea *MainWindow::create_scroll_area(NoteList *note_list) {
 
 void MainWindow::handle_language_changed(std::string new_language) {
     if (new_language == "RU") {
-        join_project_button_->setText("Присоеденится");
+        join_project_button_->setText("Присоединиться");
         new_project_button_->setText("Создать");
-        new_note_button_->setText("Новая заметка");
+        new_note_button_->setText("Новая заметка");        
+        tab_widget_->setTabText(0, "Актуальные");    
+        tab_widget_->setTabText(1, "Просроченные");  
+        tab_widget_->setTabText(2, "Выполненные");   
+        tab_widget_->setTabText(3, "Удаленные"); 
     } else if (new_language == "EN") {
         join_project_button_->setText("Join");
         new_project_button_->setText("New project");
         new_note_button_->setText("New note");
+        tab_widget_->setTabText(0, "Actual");
+        tab_widget_->setTabText(1, "Overdue");
+        tab_widget_->setTabText(2, "Completed");
+        tab_widget_->setTabText(3, "Deleted");
     }
 }
 
@@ -212,7 +224,12 @@ void MainWindow::handle_font_size_changed(std::string font_size_) {
 void MainWindow::on_profile_button_click() {
     this->setEnabled(false);
     ProfileWindow *new_profile_window =
-        new ProfileWindow(client_, user_.get(), this->parentWidget());
+        new ProfileWindow(
+            client_, user_.get(), this->parentWidget(),
+            actual_notes_amount_,
+            overdue_notes_amount_,
+            completed_notes_amount_
+        );
     new_profile_window->setAttribute(Qt::WA_DeleteOnClose);
     connect(
         new_profile_window, &ProfileWindow::logout_requested, this,
@@ -267,6 +284,44 @@ void MainWindow::leave_project(ProjectItem *project_item) {
     delete project_item;
 }
 
+void MainWindow::update_notes_amount(int& notes_amount_, int loaded_amount, int type) {
+    if(notes_amount_ == 0){
+        notes_amount_ = loaded_amount;
+    } else {
+        notes_amount_+=type;
+    }
+}
+
+
+void MainWindow::update_note_lists(QListWidgetItem *project, Note::Type::States old_type, Note::Type::States new_type) {
+    if(old_type == Note::Types::actual){
+        update_notes_amount(actual_notes_amount_, this->actual_notes_->load_project_notes(project), -1);
+    }
+    if(old_type == Note::Types::overdue){
+        update_notes_amount(overdue_notes_amount_, this->overdue_notes_->load_project_notes(project), -1);
+    }
+    if(old_type == Note::Types::completed){
+        update_notes_amount(completed_notes_amount_, this->completed_notes_->load_project_notes(project), -1);
+    }
+    if(old_type == Note::Types::deleted){
+        update_notes_amount(deleted_notes_amount_, this->deleted_notes_->load_project_notes(project), -1);
+    }
+
+    if(new_type == Note::Types::actual){
+        update_notes_amount(actual_notes_amount_, this->actual_notes_->load_project_notes(project), 1);
+    }
+    if(new_type == Note::Types::overdue){
+        update_notes_amount(overdue_notes_amount_, this->overdue_notes_->load_project_notes(project), 1);
+    }
+    if(new_type == Note::Types::completed){
+        update_notes_amount(completed_notes_amount_, this->completed_notes_->load_project_notes(project), 1);
+    }
+    if(new_type == Note::Types::deleted){
+        update_notes_amount(deleted_notes_amount_, this->deleted_notes_->load_project_notes(project), 1);
+    }
+}
+
+
 void MainWindow::add_note() {
     auto project_item =
         dynamic_cast<ProjectItem *>(project_list_->currentItem());
@@ -276,7 +331,7 @@ void MainWindow::add_note() {
             client_->try_create_note(note, project_item->project_->code());
         std::cout << "[CLIENT]: NOTE CREATED - "
                   << (status == 1 ? "TRUE" : "FALSE") << std::endl;
-        actual_notes_->add_note_widget(note, project_list_->currentItem());
+        actual_notes_->add_note_widget(note);
     } else {
         QMessageBox msg;
         if (LanguageManager::instance()->current_language() == "RU") {

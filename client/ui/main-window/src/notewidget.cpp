@@ -124,10 +124,12 @@ void NoteWidget::open_note_window() const {
 }
 
 void NoteWidget::change_type(Note::Type::States new_type) {
+    auto old_type = type_.type().value();
     type_.set_value(new_type);
+    note.type() = new_type;
     handle_language_changed(LanguageManager::instance()->current_language());
     main_layout_->update();
-    emit change_type_requested(this->project_);
+    emit change_type_requested(this->project_, old_type, new_type);
 }
 
 void NoteWidget::delete_note() {

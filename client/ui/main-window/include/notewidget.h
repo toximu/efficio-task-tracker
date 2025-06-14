@@ -46,7 +46,7 @@ private slots:
     void delete_note();
     void change_type(Note::Type::States new_type);
 signals:
-    void change_type_requested(QListWidgetItem *project);
+    void change_type_requested(QListWidgetItem *project, Note::Type old_type, Note::Type type_);
 };
 }  // namespace Ui
 #endif  // NOTEWIDGET_H

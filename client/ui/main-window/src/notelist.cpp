@@ -30,7 +30,7 @@ NoteList::NoteList(
     }
 }
 
-void NoteList::add_note_widget(const Note *note, QListWidgetItem *project) {
+void NoteList::add_note_widget(const Note *note, QListWidgetItem *p) {
     const auto current_layout = vertical_layouts_[note_counter_ % 3];
     if (current_layout->count() > 1) {
         current_layout->removeItem(
@@ -38,21 +38,25 @@ void NoteList::add_note_widget(const Note *note, QListWidgetItem *project) {
         );
     }
     std::cout << "[CLIENT]: PREPARING...\n";
-    auto *new_note = new NoteWidget(client_, this, note, this->type_, project);
+    auto *new_note = new NoteWidget(client_, this, note, this->type_, p);
     vertical_layouts_[note_counter_ % 3]->addWidget(new_note, 0, Qt::AlignTop);
     std::cout << "[CLIENT]: SUCCESS!\n";
     connect(
         new_note, &NoteWidget::change_type_requested, this,
-        &NoteList::load_project_notes
+        &NoteList::change_note_type_requested
     );
     current_layout->addStretch();
     note_counter_++;
 }
 
-void NoteList::load_project_notes(QListWidgetItem *project) {
+void NoteList::change_note_type_requested(QListWidgetItem *project) {
+    emit change_note_type_requested(project);
+}
+
+
+int NoteList::load_project_notes(QListWidgetItem *project) {
     auto *p = dynamic_cast<ProjectItem *>(project);
     this->clear_note_list();
-    note_counter_ = 0;
     for (const auto &note : p->project_->notes()) {
         if (note.type().value() == this->type_.value()) {
             this->add_note_widget(&note, project);

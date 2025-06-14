@@ -17,8 +17,6 @@ class NoteList final : public QWidget {
     QHBoxLayout *main_layout_;
 
     std::vector<QVBoxLayout *> vertical_layouts_;
-
-    int note_counter_ = 0;
     Note::Type type_;
     ClientImplementation *client_;
 
@@ -30,9 +28,12 @@ public:
         QWidget *parent,
         Note::Type::States type
     );
-
+    void NoteList::change_note_type_requested(QListWidgetItem *project);
+    
 public slots:
-    void load_project_notes(QListWidgetItem *project);
+    int load_project_notes(QListWidgetItem *project);
+signals:
+    void change_note_type_requested(QListWidgetItem *project);
 };
 }  // namespace Ui
 #endif  // NOTELIST_H
