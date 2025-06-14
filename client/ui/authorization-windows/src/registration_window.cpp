@@ -241,19 +241,6 @@ void RegistrationWindow::on_push_registration_clicked() {
                 if (lang == "RU") {
                     QMessageBox::warning(
                         this, "Ошибка",
-                        "Извините, внутренняя ошибка с базами данных."
-                    );
-                } else {
-                    QMessageBox::warning(
-                        this, "Error",
-                        "Sorry, an internal database error occurred."
-                    );
-                }
-                break;
-            case -1:
-                if (lang == "RU") {
-                    QMessageBox::warning(
-                        this, "Ошибка",
                         "Пользователь с таким именем уже существует. "
                         "Пожалуйста, придумайте другое!"
                     );

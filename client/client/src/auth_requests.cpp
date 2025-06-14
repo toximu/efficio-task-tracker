@@ -129,7 +129,7 @@ bool AuthRequests::try_register_user(User *user) const {
         return false;
     }
 
-    if (!ok) {
+    if (!ok || call->get_reply().has_error_text()) {
         std::cout << "[CLIENT WARNING]: Registration failed\n";
         return false;
     }

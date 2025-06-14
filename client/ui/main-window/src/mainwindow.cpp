@@ -358,7 +358,8 @@ void MainWindow::add_note() {
             client_->try_create_note(note, project_item->project_->code());
         std::cout << "[CLIENT]: NOTE CREATED - "
                   << (status == 1 ? "TRUE" : "FALSE") << std::endl;
-        actual_notes_->add_note_widget(note, project_list_->currentItem());
+        actual_notes_->load_project_notes(project_list_->currentItem());
+        actual_notes_amount_++;
     } else {
         QMessageBox msg;
         if (LanguageManager::instance()->current_language() == "RU") {
