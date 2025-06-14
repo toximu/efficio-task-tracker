@@ -13,7 +13,6 @@
 #include "note_edit_dialog_styles.h"
 #include "style_manager.h"
 #include "tags_dialog.h"
-#include "client_implementation.h"
 
 const std::vector<QString> NoteEditDialog::THEMES = {
     Ui::note_edit_dialog_light_autumn_theme,
