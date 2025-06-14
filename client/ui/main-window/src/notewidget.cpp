@@ -37,7 +37,7 @@ NoteWidget::NoteWidget(
     title_label_ =
         new QLabel(QString::fromStdString(model_note_->title()), this);
 
-    title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 15px;");
+    title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 13px;");
 
     main_layout_->addWidget(title_label_);
     main_layout_->addLayout(tags_layout_);
@@ -51,35 +51,41 @@ NoteWidget::NoteWidget(
     buttons_layout->addWidget(delete_button_);
 
     if (type_.value() == Note::Type::completed) {
+        buttons_layout->addWidget(complete_button_);
         complete_button_->setStyleSheet(
             "QPushButton {"
-            "   border-radius: 12px;"
-            "   border: 1px solid #089083;"
+            "   border-radius: 7px;"
+            "   min-width: 13px; "
+            "   min-height: 13px; "
+            "   max-width: 13px; "
+            "   max-height: 13px; "
+            "   border: 2px solid #089083;"
             "   background-color: #089083;"
             "}"
             "QPushButton:hover {"
-            "   background-color: #5CBF60;"
+            "   background-color: #089083;"
             "}"
         );
-        buttons_layout->addWidget(complete_button_);
     } else if (type_.value() == Note::Type::actual) {
+        buttons_layout->addWidget(complete_button_);
         complete_button_->setStyleSheet(
             "QPushButton {"
-            "   border-radius: 12px;"
-            "   border-radius: 12px;"
-            "   border: 1px solid #089083;"
+            "   border-radius: 7px;"
+            "   min-width: 13px; "
+            "   min-height: 13px; "
+            "   max-width: 13px; "
+            "   max-height: 13px; "
+            "   border: 2px solid #089083;"
             "   background-color: transparent;"
             "}"
             "QPushButton:hover {"
-            "   background-color: #f0f0f0;"
+            "   background-color: #089083; "
             "}"
         );
-        buttons_layout->addWidget(complete_button_);
     } else if (type_.value() == Note::Type::deleted) {
         delete_button_->setText("Восстановить");
     }
 
-    complete_button_->setFixedSize(20, 20);
     QPixmap checkIcon(16, 16);
     checkIcon.fill(Qt::transparent);
     QPainter painter(&checkIcon);
@@ -149,7 +155,7 @@ void NoteWidget::handle_font_size_changed(const std::string &font_size_) {
     if (font_size_ == "small") {
         title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 13px;");
     } else if (font_size_ == "medium") {
-        title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 15px;");
+        title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 13px;");
     } else if (font_size_ == "big") {
         title_label_->setStyleSheet("color: rgb(33, 44, 50); font-size: 17px;");
     }
@@ -178,23 +184,31 @@ void NoteWidget::change_type(Note::Type::States new_type) {
     if (type_.value() == Note::Type::completed) {
         complete_button_->setStyleSheet(
             "QPushButton {"
-            "   border-radius: 12px;"
-            "   border: 1px solid #cccccc;"
-            "   background-color: #4CAF50;"
+            "   border-radius: 7px;"
+            "   min-width: 13px; "
+            "   min-height: 13px; "
+            "   max-width: 13px; "
+            "   max-height: 13px; "
+            "   border: 2px solid #089083;"
+            "   background-color: #089083;"
             "}"
             "QPushButton:hover {"
-            "   background-color: #5CBF60;"
+            "   background-color: #089083;"
             "}"
         );
     } else if (type_.value() == Note::Type::actual) {
         complete_button_->setStyleSheet(
             "QPushButton {"
-            "   border-radius: 12px;"
-            "   border: 1px solid #cccccc;"
+            "   border-radius: 7px;"
+            "   min-width: 13px; "
+            "   min-height: 13px; "
+            "   max-width: 13px; "
+            "   max-height: 13px; "
+            "   border: 2px solid #089083;"
             "   background-color: transparent;"
             "}"
             "QPushButton:hover {"
-            "   background-color: #f0f0f0;"
+            "   background-color: #089083;"
             "}"
         );
     }
