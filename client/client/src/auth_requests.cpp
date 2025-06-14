@@ -134,6 +134,11 @@ bool AuthRequests::try_register_user(User *user) const {
         return false;
     }
 
+    if (call->get_reply().has_error_text()) {
+        std::cout << call->get_reply().error_text() << "\n";
+        return false;
+    }
+
     user->CopyFrom(call->get_reply().user());
     std::cout << "[CLIENT]: REGISTERED USER - " << user->login() << "\n";
     return true;
