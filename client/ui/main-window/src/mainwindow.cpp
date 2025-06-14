@@ -257,6 +257,9 @@ void MainWindow::add_project_by_code() {
 
 void MainWindow::leave_project(ProjectItem *project_item) {
     client_->try_leave_project(project_item->project_->code(), *user_);
+    actual_notes_->clear_note_list();
+    completed_notes_->clear_note_list();
+    deleted_notes_->clear_note_list();
     delete project_item;
 }
 
