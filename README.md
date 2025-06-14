@@ -24,13 +24,7 @@
 git clone git@github.com:toximu/efficio-task-tracker.git
 ```
 
-2. Start **PostgreSQL** service
-
-```bash
-sudo service postgresql start && sudo -u postgres psql
-```
-
-3. Create **efficio** user
+2. Create **efficio** user
 
 ```SQL
 CREATE USER efficio WITH PASSWORD 'admin';
@@ -39,28 +33,49 @@ GRANT ALL PRIVILEGES ON DATABASE efficio TO efficio;
 \q
 ```
 
-4. Enter under **efficio** profile
-
-```bash
-psql -U efficio -d efficio -h localhost
-```
-
-> After that run the server on address **localhost** and **port** 5432 in your pgAdmin4
-
-5. Build and start app
+3. Build
 
 ```bash
 mkdir -p build && cd build
 cmake ..
 make
-./EfficioTaskTracker -platform xcb
 ```
+
+4. Run the server and client in different terminal windows
+
+```bash
+build/server/Server
+build/client/EfficioTaskTracker
+```
+
+## Recent problems
+
+### 1) libpqxx not installed
+
+```shell
+CMake Error at server/service/CMakelists.txt:8 (find_package):
+  By not providing "Findlibpqxx.cmake" in CMAKE_MODULE_PATH this project has
+  asked CMake to find a package configuration file provided by "libpqxx", 
+  but CMake did not find one.
+```
+
+1) Clone [libpqxx repository](https://github.com/jtv/libpqxx) into `server/`
+2) `cd libpqxx/` then build and install it
+
+```shell
+cmake .
+cmake --build .
+cmake --install .
+```
+
+Now try to build **EFFICIO** one more time
 
 ## Technologies Used
 - Qt 6.8.2
 - PostgreSQL 17.4
 - CMake 3.28.3
-- VcXsrv server (XLaunch)
+- gRPC 1.72.0
+- pqxx 7.9.2-1
 
 ## License
 
