@@ -16,11 +16,11 @@ class ProjectList : public QListWidget {
     void load_projects(Storage *storage);
 private slots:
     void showContextMenu(const QPoint &pos);
+
 public:
     explicit ProjectList(QWidget *parent = nullptr);
 signals:
     void leave_project(ProjectItem *project_item);
-
 
 signals:
 };

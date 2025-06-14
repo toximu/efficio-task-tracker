@@ -7,9 +7,11 @@
 #include <QMessageBox>
 #include <QPainter>
 #include <QPixmap>
+#include <QRandomGenerator>
 #include <utility>
 #include "./ui_note_edit_dialog.h"
 #include "language_manager.h"
+#include "member_selection_dialog.h"
 #include "note_edit_dialog_styles.h"
 #include "style_manager.h"
 #include "tags_dialog.h"
@@ -297,15 +299,66 @@ void NoteEditDialog::clear_member_avatars() {
 }
 
 void NoteEditDialog::on_add_members_button_click() {
-    if (LanguageManager::instance()->current_language() == "RU") {
-        QMessageBox::information(
-            this, "Ошибка", "Другие участники не найдены."
-        );
-    } else {
-        QMessageBox::information(
-            this, "Error", "No other participants were found."
-        );
-    }
+    // try {
+    //     std::vector<std::string> project_members =
+    //     client_->get_project_members();
+    //
+    //     std::vector<std::string> available_members;
+    //     for (const auto& member : project_members) {
+    //         if (std::find(current_members_.begin(), current_members_.end(),
+    //         member) == current_members_.end()) {
+    //             available_members.push_back(member);
+    //         }
+    //     }
+    //
+    //     if (available_members.empty()) {
+    //         show_message(tr("No other participants available"));
+    //         return;
+    //     }
+    //
+    //     MemberSelectionDialog dialog(available_members, this);
+    //     if (dialog.exec() == QDialog::Accepted) {
+    //         auto selected = dialog.get_selected_members();
+    //
+    //         for (const auto& member : selected) {
+    //             add_member_ui(member);
+    //             current_members_.push_back(member);
+    //         }
+    //     }
+    // } catch (const std::exception& e) {
+    //     QMessageBox::critical(this, "Error",
+    //     QString::fromStdString(e.what()));
+    // }
+}
+
+void NoteEditDialog::add_member_ui(const std::string &username) {
+    QLabel *avatar = new QLabel(this);
+
+    QColor color = generate_color_from_string(username);
+    QPixmap pixmap(32, 32);
+    pixmap.fill(Qt::transparent);
+
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setBrush(color);
+    painter.setPen(Qt::NoPen);
+    painter.drawEllipse(0, 0, 32, 32);
+
+    avatar->setPixmap(pixmap);
+    avatar->setToolTip(QString::fromStdString(username));
+
+    ui_->avatarsLayout->addWidget(avatar);
+}
+
+QColor NoteEditDialog::generate_color_from_string(
+    const std::string &str
+) const {
+    uint hash = qHash(QString::fromStdString(str));
+    QRandomGenerator generator(hash);
+    return QColor::fromHsv(
+        generator.bounded(360), 150 + generator.bounded(80),
+        200 + generator.bounded(55)
+    );
 }
 
 void NoteEditDialog::on_add_tags_button_click() {
@@ -353,7 +406,11 @@ Efficio_proto::Note_tag_colors color_code_to_note_tag_colors(
 bool NoteEditDialog::try_save_note() const {
     note_->set_title(ui_->titleLineEdit->text().toStdString());
     note_->set_text(ui_->descriptionTextEdit->toPlainText().toStdString());
-    note_->set_date(ui_->dateEdit->date().toString("yyyy-MM-dd").toStdString());
+    if (ui_->dateLabel->isVisible()) {
+        note_->set_date(
+            ui_->dateEdit->date().toString("yyyy-MM-dd").toStdString()
+        );
+    }
 
     note_->clear_members();
     if (!member_avatars_.empty()) {

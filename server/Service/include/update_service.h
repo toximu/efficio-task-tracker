@@ -15,6 +15,8 @@ using Efficio_proto::CreateProjectRequest;
 using Efficio_proto::CreateProjectResponse;
 using Efficio_proto::GetNoteRequest;
 using Efficio_proto::GetNoteResponse;
+using Efficio_proto::GetProjectMembersRequest;
+using Efficio_proto::GetProjectMembersResponse;
 using Efficio_proto::GetProjectRequest;
 using Efficio_proto::GetProjectResponse;
 using Efficio_proto::TryJoinProjectRequest;
@@ -68,6 +70,20 @@ public:
 
     public:
         explicit GetProjectServerCall(
+            Update::AsyncService *service,
+            ServerCompletionQueue *cq
+        );
+        void Proceed(bool) override;
+    };
+
+    class GetProjectMembersServerCall final : public CommonServerCall {
+        GetProjectMembersRequest request_;
+        GetProjectMembersResponse response_;
+        ServerAsyncResponseWriter<GetProjectMembersResponse> responder_;
+        Update::AsyncService *service_;
+
+    public:
+        explicit GetProjectMembersServerCall(
             Update::AsyncService *service,
             ServerCompletionQueue *cq
         );

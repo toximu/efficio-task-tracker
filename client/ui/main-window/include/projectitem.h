@@ -16,6 +16,7 @@ class ProjectItem : public QListWidgetItem {
     friend class ProjectList;
 private slots:
     void showContextMenu(const QPoint &pos);
+
 public:
     ProjectItem(QListWidget *listview, Project *project);
 };

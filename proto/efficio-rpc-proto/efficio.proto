@@ -13,6 +13,7 @@ service Update {
   rpc TryJoinProject (TryJoinProjectRequest) returns (TryJoinProjectResponse) {}
   rpc TryLeaveProject (TryLeaveProjectRequest) returns (TryLeaveProjectResponse) {}
   rpc UpdateProject (UpdateProjectRequest) returns (UpdateProjectResponse) {}
+  rpc GetProjectMembers (GetProjectMembersRequest) returns (GetProjectMembersResponse) {}
 }
 
 service Auth {
@@ -128,4 +129,19 @@ message DeleteUserRequest {
 
 message DeleteUserResponse {
   bool ok = 1;
+}
+
+message GetProjectMembersRequest {
+  string project_code = 1;
+}
+
+message GetProjectMembersResponse {
+  oneof response {
+    MembersList members = 1;
+    string error = 2;
+  }
+}
+
+message MembersList {
+  repeated string logins = 1;
 }

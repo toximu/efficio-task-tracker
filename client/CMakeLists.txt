@@ -21,7 +21,11 @@ add_subdirectory(ui/profile-window)
 add_subdirectory(ui/settings-window)
 add_subdirectory(ui/analytics-window)
 
-add_executable(EfficioTaskTracker main.cpp)
+add_subdirectory(client)
+add_executable(EfficioTaskTracker main.cpp
+        ui/note-widget/src/member_selection_dialog.cpp
+        ui/note-widget/include/member_selection_dialog.h)
+
 
 target_link_libraries(EfficioTaskTracker PRIVATE
         model-proto

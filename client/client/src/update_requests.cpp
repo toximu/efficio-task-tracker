@@ -15,6 +15,8 @@ using Efficio_proto::CreateProjectRequest;
 using Efficio_proto::CreateProjectResponse;
 using Efficio_proto::GetNoteRequest;
 using Efficio_proto::GetNoteResponse;
+using Efficio_proto::GetProjectMembersRequest;
+using Efficio_proto::GetProjectMembersResponse;
 using Efficio_proto::GetProjectRequest;
 using Efficio_proto::GetProjectResponse;
 using Efficio_proto::TryJoinProjectRequest;
@@ -277,4 +279,40 @@ bool UpdateRequests::try_create_note(
     }
     *note = call->get_reply().note();
     return true;
+}
+
+std::vector<std::string> UpdateRequests::get_project_members(
+    const std::string &project_code
+) const {
+    GetProjectMembersRequest request;
+    request.set_project_code(project_code);
+
+    GetProjectMembersResponse response;
+
+    ClientContext context;
+    std::cout << "CLIENT : [get project members] : sending request"
+              << std::endl;
+
+    Status status = stub_->GetProjectMembers(&context, request, &response);
+
+    if (status.ok() && response.has_members()) {
+        std::cout << "CLIENT : [get project members] : got members!"
+                  << std::endl;
+
+        std::vector<std::string> result;
+        for (const auto &member : response.members().logins()) {
+            result.push_back(member);
+        }
+        return result;
+    }
+
+    if (response.has_error()) {
+        std::cout << "CLIENT : [get project members] : error_text : "
+                  << response.error() << std::endl;
+    } else {
+        std::cout << "CLIENT [get project members] : status is not OK"
+                  << std::endl;
+    }
+
+    return {};
 }

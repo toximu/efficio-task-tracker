@@ -29,7 +29,7 @@ void ClientImplementation::CompleteRpc() {
 
     while (cq_->Next(&got_tag, &ok)) {
         std::cout << "[CLIENT] : GET CALL FROM CQ" << std::endl;
-        CommonClientCall *call = static_cast<CommonClientCall *>(got_tag);
+        auto *call = static_cast<CommonClientCall *>(got_tag);
 
         assert(ok);
 
@@ -53,11 +53,11 @@ CompletionQueue *ClientImplementation::get_cq() {
     return cq_.get();
 }
 
-bool ClientImplementation::try_authenticate_user(User *user) {
+bool ClientImplementation::try_authenticate_user(User *user) const {
     return auth_requests_.try_authenticate_user(user);
 }
 
-bool ClientImplementation::try_register_user(User *user) {
+bool ClientImplementation::try_register_user(User *user) const {
     return auth_requests_.try_register_user(user);
 }
 
@@ -110,10 +110,17 @@ bool ClientImplementation::try_leave_project(
     return update_requests_.try_leave_project(code, user);
 }
 
+
 ClientImplementation::~ClientImplementation() {
     cq_->Shutdown();
 
     if (complete_rpc_thread_.joinable()) {
         complete_rpc_thread_.join();
     }
+
+std::vector<std::string> ClientImplementation::get_project_members(
+    const std::string &project_code
+) const {
+    return update_requests_.get_project_members(project_code);
+
 }

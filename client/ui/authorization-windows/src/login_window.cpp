@@ -168,8 +168,7 @@ void LoginWindow::on_push_enter_clicked() {
 
             connect(
                 main_window, &Ui::MainWindow::delete_account_requested,
-                app_window,
-                [app_window, this]() {
+                app_window, [app_window, this]() {
                     switch_to_registration_window(app_window);
                 }
             );

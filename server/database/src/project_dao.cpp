@@ -206,3 +206,37 @@ bool ProjectDAO::code_available(const std::string &project_code) {
     }
     return false;
 }
+
+std::vector<std::string> ProjectDAO::get_members(
+    const std::string &project_code
+) {
+    auto &connection = DatabaseManager::get_instance().get_connection();
+    pqxx::work transaction(connection);
+
+    const std::string query =
+        "SELECT members "
+        "FROM projects "
+        "WHERE code = $1";
+    const pqxx::result result = transaction.exec_params(query, project_code);
+
+    if (result.empty()) {
+        transaction.commit();
+        return {};
+    }
+
+    std::vector<std::string> members;
+    const auto &members_array = result[0]["members"].as_array();
+
+    pqxx::array_parser parser = members_array;
+    std::pair<pqxx::array_parser::juncture, std::string> elem;
+
+    while ((elem = parser.get_next()).first !=
+           pqxx::array_parser::juncture::done) {
+        if (elem.first == pqxx::array_parser::juncture::string_value) {
+            members.push_back(elem.second);
+        }
+    }
+
+    transaction.commit();
+    return members;
+}

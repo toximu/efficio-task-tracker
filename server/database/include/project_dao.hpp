@@ -59,6 +59,9 @@ public:
         const std::string &new_title
     );
     static bool code_available(const std::string &project_code);
+    static std::vector<std::string> get_members(
+        const std::string &project_code
+    );
 };
 
 template <typename T>

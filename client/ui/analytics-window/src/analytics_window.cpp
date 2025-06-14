@@ -1,5 +1,6 @@
 #include "analytics_window.h"
 #include <QString>
+#include <iostream>
 #include "analytics_window_style_sheet.h"
 #include "language_manager.h"
 #include "style_manager.h"
@@ -14,13 +15,11 @@ const std::vector<QString> AnalyticsWindow::THEMES = {
 AnalyticsWindow::AnalyticsWindow(
     QWidget *parent,
     const int created_count,
-    const int completed_count,
-    const int expired_count
+    const int completed_count
 )
     : QDialog(parent),
       m_created_count(created_count),
       m_completed_count(completed_count),
-      m_expired_count(expired_count),
       chart_view(new QChartView(this)),
       series(new QPieSeries()),
       chart(new QChart()) {
@@ -32,16 +31,11 @@ AnalyticsWindow::AnalyticsWindow(
     completed_slice->setValue(m_completed_count);
     completed_slice->setColor(QColor(46, 204, 113));
 
-    expired_slice = new QPieSlice();
-    expired_slice->setValue(m_expired_count);
-    expired_slice->setColor(QColor(231, 76, 60));
-
     created_slice = new QPieSlice();
     created_slice->setValue(m_created_count);
     created_slice->setColor(QColor(52, 152, 219));
 
     series->append(completed_slice);
-    series->append(expired_slice);
     series->append(created_slice);
 
     chart->addSeries(series);
@@ -73,7 +67,6 @@ AnalyticsWindow::AnalyticsWindow(
 
 void AnalyticsWindow::setup_chart() const {
     series->append("Завершенные", m_completed_count);
-    series->append("Просроченные", m_expired_count);
     series->append("Созданные", m_created_count);
 
     QPieSlice *completed_slice = series->slices().at(0);
@@ -113,14 +106,12 @@ void AnalyticsWindow::handle_language_changed(std::string new_language) {
     if (new_language == "RU") {
         chart->setTitle("Статистика заметок");
         completed_slice->setLabel("Завершенные");
-        expired_slice->setLabel("Просроченные");
-        created_slice->setLabel("Созданные");
+        created_slice->setLabel("Актуальные");
         setWindowTitle("Аналитическая панель");
     } else if (new_language == "EN") {
         chart->setTitle("Notes Statistics");
         completed_slice->setLabel("Completed");
-        expired_slice->setLabel("Expired");
-        created_slice->setLabel("Created");
+        created_slice->setLabel("Actual");
         setWindowTitle("Analytics Panel");
     }
     for (QPieSlice *slice : series->slices()) {

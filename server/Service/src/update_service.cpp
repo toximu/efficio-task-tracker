@@ -145,6 +145,57 @@ void UpdateService::GetProjectServerCall::Proceed(const bool ok = true) {
     }
 }
 
+UpdateService::GetProjectMembersServerCall::GetProjectMembersServerCall(
+    Update::AsyncService *service,
+    ServerCompletionQueue *cq
+)
+    : CommonServerCall(cq), responder_(&ctx_), service_(service) {
+    this->Proceed(true);
+}
+
+void UpdateService::GetProjectMembersServerCall::Proceed(bool ok) {
+    if (!ok) {
+        delete this;
+        return;
+    }
+    switch (status_) {
+        case CREATE: {
+            status_ = PROCESS;
+            service_->RequestGetProjectMembers(
+                &ctx_, &request_, &responder_, cq_, cq_, this
+            );
+            std::cout << "[SERVER] : {get project members} : start listening"
+                      << std::endl;
+            break;
+        }
+        case PROCESS: {
+            status_ = FINISH;
+            new CreateProjectServerCall(service_, cq_);
+
+            std::cout
+                << "[SERVER] : {create project} : get request, project_code="
+                << request_.project_code() << std::endl;
+
+            auto members_logins =
+                ProjectDAO::get_members(request_.project_code());
+
+            MembersList buffer;
+            for (const auto &login : members_logins) {
+                buffer.add_logins(login);
+            }
+            response_.mutable_members()->CopyFrom(buffer);
+
+            responder_.Finish(response_, grpc::Status::OK, this);
+            break;
+        }
+        case FINISH: {
+            std::cout << "[SERVER] : {create project} : deleting call"
+                      << std::endl;
+            delete this;
+        }
+    }
+}
+
 UpdateService::CreateProjectServerCall::CreateProjectServerCall(
     Update::AsyncService *service,
     ServerCompletionQueue *cq
