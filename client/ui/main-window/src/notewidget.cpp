@@ -155,14 +155,17 @@ void NoteWidget::handle_font_size_changed(const std::string &font_size_) {
     }
 }
 
-void NoteWidget::open_note_window() const {
+void NoteWidget::open_note_window() {
+    client_->try_fetch_note(model_note_);
     auto dialog = new ::NoteEditDialog(
         client_, dynamic_cast<ProjectItem *>(project_)->project_->title(),
         const_cast<QWidget *>(qobject_cast<const QWidget *>(this)),
         const_cast<Note *>(model_note_)
     );
+    client_->try_update_note(model_note_);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->exec();
+    update_tags();
     title_label_->setText(QString::fromStdString(model_note_->title()));
     main_layout_->update();
 }

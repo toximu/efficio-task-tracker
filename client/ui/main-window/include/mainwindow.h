@@ -47,6 +47,7 @@ private slots:
         Note::Type::States old_type,
         Note::Type::States new_type
     );
+    void load_project_notes(QListWidgetItem *project) const;
     void add_note();
     void on_profile_button_click();
 signals:

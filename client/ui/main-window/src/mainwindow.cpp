@@ -84,16 +84,8 @@ MainWindow::MainWindow(
     project_list_->load_projects(user_->mutable_storage());
 
     connect(
-        project_list_, &QListWidget::itemClicked, actual_notes_,
-        &NoteList::load_project_notes
-    );
-    connect(
-        project_list_, &QListWidget::itemClicked, completed_notes_,
-        &NoteList::load_project_notes
-    );
-    connect(
-        project_list_, &QListWidget::itemClicked, deleted_notes_,
-        &NoteList::load_project_notes
+        project_list_, &QListWidget::itemClicked, this,
+        &MainWindow::load_project_notes
     );
 
     connect(
@@ -324,6 +316,14 @@ void MainWindow::update_note_lists(
             this->deleted_notes_->load_project_notes(project), 1
         );
     }
+}
+
+void MainWindow::load_project_notes(QListWidgetItem *project) const {
+    auto *p = dynamic_cast<ProjectItem *>(project);
+    client_->get_project(p->project_, p->project_->code());
+    actual_notes_->load_project_notes(project);
+    completed_notes_->load_project_notes(project);
+    deleted_notes_->load_project_notes(project);
 }
 
 void MainWindow::add_note() {

@@ -60,7 +60,6 @@ int NoteList::load_project_notes(QListWidgetItem *project) {
 
     this->clear_note_list();
     note_counter_ = 0;
-
     auto &notes = *p->project_->mutable_notes();
     int notes_size = notes.size();
 

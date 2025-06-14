@@ -43,7 +43,7 @@ public:
 
 private slots:
     void good_resize();
-    void open_note_window() const;
+    void open_note_window();
     void delete_note();
     void complete_note();
     void change_type(Note::Type::States new_type);
