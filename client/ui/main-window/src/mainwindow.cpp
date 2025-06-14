@@ -153,16 +153,15 @@ void MainWindow::handle_language_changed(std::string new_language) {
         new_project_button_->setText("Создать");
         new_note_button_->setText("Новая заметка");
         tab_widget_->setTabText(0, "Актуальные");
-        tab_widget_->setTabText(1, "Просроченные");
-        tab_widget_->setTabText(2, "Выполненные");
-        tab_widget_->setTabText(3, "Удаленные");
+        tab_widget_->setTabText(1, "Выполненные");
+        tab_widget_->setTabText(2, "Удаленные");
     } else if (new_language == "EN") {
         join_project_button_->setText("Join");
         new_project_button_->setText("New project");
         new_note_button_->setText("New note");
         tab_widget_->setTabText(0, "Actual");
-        tab_widget_->setTabText(2, "Completed");
-        tab_widget_->setTabText(3, "Deleted");
+        tab_widget_->setTabText(1, "Completed");
+        tab_widget_->setTabText(2, "Deleted");
     }
 }
 
