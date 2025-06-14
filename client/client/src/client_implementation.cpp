@@ -16,18 +16,27 @@ using grpc::Status;
 ClientImplementation::ClientImplementation(
     const std::shared_ptr<Channel> &channel
 )
-    : channel_(channel),
-      update_requests_(channel, &cq_),
-      auth_requests_(channel, &cq_) {
+    : cq_(std::make_shared<CompletionQueue>()),
+      channel_(channel),
+      update_requests_(channel, cq_),
+      auth_requests_(channel, cq_) {
     complete_rpc_thread_ =
         std::thread(&ClientImplementation::CompleteRpc, this);
+}
+
+ClientImplementation::~ClientImplementation() {
+    cq_->Shutdown();
+
+    if (complete_rpc_thread_.joinable()) {
+        complete_rpc_thread_.join();
+    }
 }
 
 void ClientImplementation::CompleteRpc() {
     void *got_tag;
     bool ok = false;
 
-    while (cq_.Next(&got_tag, &ok)) {
+    while (cq_->Next(&got_tag, &ok)) {
         std::cout << "[CLIENT] : GET CALL FROM CQ" << std::endl;
         auto *call = static_cast<CommonClientCall *>(got_tag);
 
@@ -50,7 +59,7 @@ std::shared_ptr<Channel> ClientImplementation::get_channel() {
 }
 
 CompletionQueue *ClientImplementation::get_cq() {
-    return &cq_;
+    return cq_.get();
 }
 
 bool ClientImplementation::try_authenticate_user(User *user) const {

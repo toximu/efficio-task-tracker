@@ -20,7 +20,7 @@ class AuthRequests {
 public:
     explicit AuthRequests(
         const std::shared_ptr<Channel> &channel,
-        CompletionQueue *cq
+        std::shared_ptr<CompletionQueue> cq
     );
 
     bool try_authenticate_user(User *user) const;
@@ -81,5 +81,5 @@ private:
     };
 
     std::unique_ptr<Auth::Stub> stub_;
-    std::unique_ptr<CompletionQueue> cq_;
+    std::shared_ptr<CompletionQueue> cq_;
 };

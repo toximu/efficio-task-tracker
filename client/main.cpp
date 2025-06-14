@@ -27,7 +27,6 @@ int main(int argc, char *argv[]) {
     app_window->show();
 
     QApplication::exec();
-    client.complete_rpc_thread_.join();
 
     return 0;
 }

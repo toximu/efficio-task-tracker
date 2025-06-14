@@ -33,7 +33,7 @@ public:
     public:
         UpdateNoteClientCall(
             const UpdateNoteRequest &request,
-            grpc::CompletionQueue *cq,
+            CompletionQueue *cq,
             const std::unique_ptr<Update::Stub> &stub
         );
         void Proceed(bool ok) override;
@@ -94,13 +94,13 @@ public:
 
     explicit UpdateRequests(
         std::shared_ptr<Channel> channel,
-        CompletionQueue *cq
+        std::shared_ptr<CompletionQueue> cq
     )
         : stub_(Update::NewStub(channel)), cq_(cq) {
     }
 
 private:
-    CompletionQueue *cq_;
+    std::shared_ptr<CompletionQueue> cq_;
     std::unique_ptr<Update::Stub> stub_;
 };
 
