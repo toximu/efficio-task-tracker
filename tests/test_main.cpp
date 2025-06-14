@@ -72,7 +72,14 @@ TEST_F(ClientTest, create_project) {
         client->create_project(project_to_create, "testproject", *test_user),
         true
     ) << "Error creating project";
+    EXPECT_EQ(project_to_create->title(), "testproject")
+        << "Incorrect project title";
 
+    bool has_user = false;
+    for (auto member : project_to_create->members()) {
+        has_user |= member == test_user->login();
+    }
+    EXPECT_EQ(has_user, true) << "User has not been added to the project";
     test_project = project_to_create;
 }
 
@@ -122,8 +129,7 @@ TEST_F(ClientTest, update_note) {
     EXPECT_EQ(client->try_update_note(test_note), true)
         << "Error updating note";
 
-    Note* changed_note = new Note();
-
+    Note *changed_note = new Note();
 }
 #endif
 
