@@ -41,14 +41,12 @@ cmake ..
 make
 ```
 
-4. Run the server and client in different terminal windows
+4. Run the server and client in __different__ terminal windows
 
 ```bash
 build/server/Server
 build/client/EfficioTaskTracker
 ```
-
-Now try to build **EFFICIO** one more time
 
 ## Technologies Used
 - Qt 6.8.2
