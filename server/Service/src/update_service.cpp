@@ -172,13 +172,15 @@ void UpdateService::GetProjectMembersServerCall::Proceed(bool ok) {
             status_ = FINISH;
             new CreateProjectServerCall(service_, cq_);
 
-            std::cout << "[SERVER] : {create project} : get request, project_code="
-                      << request_.project_code() << std::endl;
+            std::cout
+                << "[SERVER] : {create project} : get request, project_code="
+                << request_.project_code() << std::endl;
 
-            auto members_logins = ProjectDAO::get_members(request_.project_code());
+            auto members_logins =
+                ProjectDAO::get_members(request_.project_code());
 
             MembersList buffer;
-            for (const auto& login : members_logins) {
+            for (const auto &login : members_logins) {
                 buffer.add_logins(login);
             }
             response_.mutable_members()->CopyFrom(buffer);

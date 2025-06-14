@@ -1,5 +1,6 @@
 #include "analytics_window.h"
 #include <QString>
+#include <iostream>
 #include "analytics_window_style_sheet.h"
 #include "language_manager.h"
 #include "style_manager.h"
@@ -69,6 +70,9 @@ AnalyticsWindow::AnalyticsWindow(
     handle_font_size_changed(StyleManager::instance()->current_font_size());
     handle_theme_changed(StyleManager::instance()->current_theme());
     handle_language_changed(LanguageManager::instance()->current_language());
+
+    std::cout << "[CLIENT]: " << m_completed_count << ' ' << m_expired_count
+              << ' ' << m_created_count << std::endl;
 }
 
 void AnalyticsWindow::setup_chart() const {

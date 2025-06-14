@@ -34,9 +34,9 @@ public:
         ClientImplementation *client,
         User *user,
         QWidget *parent = nullptr,
-        int actual_notes_amount = 0;
-        int overdue_notes_amount = 0;
-        int completed_notes_amount = 0;
+        int actual_notes_amount = 0,
+        int overdue_notes_amount = 0,
+        int completed_notes_amount = 0
     );
     ~ProfileWindow() override = default;
 

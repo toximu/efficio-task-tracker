@@ -50,6 +50,8 @@ private:
     void setup_ui();
 
     void add_member_avatar(const std::string &member);
+    void add_member_ui(const std::string &username);
+    QColor generate_color_from_string(const std::string &str) const;
 
     void clear_member_avatars();
     void update_tags_display();

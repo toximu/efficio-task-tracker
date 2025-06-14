@@ -109,3 +109,9 @@ bool ClientImplementation::try_leave_project(
 ) {
     return update_requests_.try_leave_project(code, user);
 }
+
+std::vector<std::string> ClientImplementation::get_project_members(
+    const std::string &project_code
+) const {
+    return update_requests_.get_project_members(project_code);
+}

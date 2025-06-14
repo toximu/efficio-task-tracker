@@ -15,6 +15,8 @@ using Efficio_proto::CreateProjectRequest;
 using Efficio_proto::CreateProjectResponse;
 using Efficio_proto::GetNoteRequest;
 using Efficio_proto::GetNoteResponse;
+using Efficio_proto::GetProjectMembersRequest;
+using Efficio_proto::GetProjectMembersResponse;
 using Efficio_proto::GetProjectRequest;
 using Efficio_proto::GetProjectResponse;
 using Efficio_proto::TryJoinProjectRequest;
@@ -24,8 +26,6 @@ using Efficio_proto::TryLeaveProjectResponse;
 using Efficio_proto::Update;
 using Efficio_proto::UpdateNoteRequest;
 using Efficio_proto::UpdateNoteResponse;
-using Efficio_proto::GetProjectMembersRequest;
-using Efficio_proto::GetProjectMembersResponse;
 
 class UpdateService final {
     Update::AsyncService service_;

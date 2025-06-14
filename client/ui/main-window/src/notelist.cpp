@@ -22,7 +22,7 @@ NoteList::NoteList(
     this->setAttribute(Qt::WA_StyledBackground);
     this->setObjectName("NoteList");
     this->setLayout(main_layout_);
-    vertical_layouts_.resize(3, nullptr);
+    vertical_layouts_.resize(2, nullptr);
     for (auto &layout : vertical_layouts_) {
         layout = new QVBoxLayout(this);
 
@@ -30,38 +30,48 @@ NoteList::NoteList(
     }
 }
 
-void NoteList::add_note_widget(const Note *note, QListWidgetItem *p) {
-    const auto current_layout = vertical_layouts_[note_counter_ % 3];
+void NoteList::add_note_widget(Note *note, QListWidgetItem *p) {
+    const auto current_layout = vertical_layouts_[note_counter_ % 2];
     if (current_layout->count() > 1) {
         current_layout->removeItem(
             current_layout->itemAt(current_layout->count() - 1)
         );
     }
-    std::cout << "[CLIENT]: PREPARING...\n";
     auto *new_note = new NoteWidget(client_, this, note, this->type_, p);
-    vertical_layouts_[note_counter_ % 3]->addWidget(new_note, 0, Qt::AlignTop);
-    std::cout << "[CLIENT]: SUCCESS!\n";
+    vertical_layouts_[note_counter_ % 2]->addWidget(new_note, 0, Qt::AlignTop);
+    current_layout->addStretch();
     connect(
         new_note, &NoteWidget::change_type_requested, this,
-        &NoteList::change_note_type_requested
+        &NoteList::change_note_type_request
     );
-    current_layout->addStretch();
     note_counter_++;
 }
 
-void NoteList::change_note_type_requested(QListWidgetItem *project) {
-    emit change_note_type_requested(project);
+void NoteList::change_note_type_request(
+    QListWidgetItem *project,
+    Note::Type::States old_type,
+    Note::Type::States new_type
+) {
+    emit change_note_type_requested(project, old_type, new_type);
 }
-
 
 int NoteList::load_project_notes(QListWidgetItem *project) {
     auto *p = dynamic_cast<ProjectItem *>(project);
+
     this->clear_note_list();
-    for (const auto &note : p->project_->notes()) {
+    note_counter_ = 0;
+
+    auto &notes = *p->project_->mutable_notes();
+    int notes_size = notes.size();
+
+    for (int i = 0; i < notes_size; ++i) {
+        auto &note = notes[i];
         if (note.type().value() == this->type_.value()) {
             this->add_note_widget(&note, project);
         }
     }
+
+    return note_counter_;
 }
 
 void NoteList::clear_note_list() {

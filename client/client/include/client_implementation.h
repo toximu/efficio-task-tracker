@@ -44,6 +44,10 @@ public:
         const User &user
     );
     bool try_leave_project(const std::string &code, const User &user);
+
+    std::vector<std::string> get_project_members(
+        const std::string &project_code
+    ) const;
 };
 
 #endif  // CLIENTIMPLEMENTATION_H

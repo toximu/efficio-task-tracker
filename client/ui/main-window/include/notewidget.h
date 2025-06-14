@@ -15,7 +15,7 @@ using Efficio_proto::Note;
 namespace Ui {
 class NoteWidget final : public QWidget {
     Q_OBJECT
-    const Note *model_note_;
+    Note *model_note_;
     QVBoxLayout *main_layout_;
     QPushButton *open_button_;
     QPushButton *delete_button_;
@@ -30,7 +30,7 @@ public:
     explicit NoteWidget(
         ClientImplementation *client,
         QWidget *parent,
-        const Note *model_note,
+        Note *model_note,
         const Note::Type &type,
         QListWidgetItem *p
     );
@@ -46,7 +46,11 @@ private slots:
     void delete_note();
     void change_type(Note::Type::States new_type);
 signals:
-    void change_type_requested(QListWidgetItem *project, Note::Type old_type, Note::Type type_);
+    void change_type_requested(
+        QListWidgetItem *project,
+        Note::Type::States old_type,
+        Note::Type::States type_
+    );
 };
 }  // namespace Ui
 #endif  // NOTEWIDGET_H

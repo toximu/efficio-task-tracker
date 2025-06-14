@@ -14,7 +14,7 @@ namespace Ui {
 NoteWidget::NoteWidget(
     ClientImplementation *client,
     QWidget *parent,
-    const Note *model_note,
+    Note *model_note,
     const Note::Type &type,
     QListWidgetItem *p
 )
@@ -23,6 +23,7 @@ NoteWidget::NoteWidget(
       model_note_(model_note),
       main_layout_(new QVBoxLayout(this)),
       open_button_(new QPushButton(tr("Открыть"))),
+      tags_layout_(new QHBoxLayout(this)),
       delete_button_(new QPushButton(tr("Удалить"))),
       type_(type),
       project_(p) {
@@ -124,9 +125,9 @@ void NoteWidget::open_note_window() const {
 }
 
 void NoteWidget::change_type(Note::Type::States new_type) {
-    auto old_type = type_.type().value();
+    auto old_type = type_.value();
     type_.set_value(new_type);
-    note.type() = new_type;
+    model_note_->mutable_type()->set_value(new_type);
     handle_language_changed(LanguageManager::instance()->current_language());
     main_layout_->update();
     emit change_type_requested(this->project_, old_type, new_type);

@@ -11,9 +11,9 @@ class AnalyticsWindow final : public QDialog {
 public:
     explicit AnalyticsWindow(
         QWidget *parent = nullptr,
-        int created_count = 3,
-        int completed_count = 4,
-        int expired_count = 5
+        int created_count = 0,
+        int completed_count = 0,
+        int expired_count = 0
     );
     ~AnalyticsWindow() override;
 
