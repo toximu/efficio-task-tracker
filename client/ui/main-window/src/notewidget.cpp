@@ -7,6 +7,8 @@
 #include "model-proto/model.pb.h"
 #include "note_edit_dialog.h"
 #include "style_manager.h"
+#include <QIcon>
+#include <QPainter>
 
 using Efficio_proto::Note;
 
@@ -25,6 +27,7 @@ NoteWidget::NoteWidget(
       open_button_(new QPushButton(tr("Открыть"))),
       tags_layout_(new QHBoxLayout(this)),
       delete_button_(new QPushButton(tr("Удалить"))),
+      complete_button_(new QPushButton()),
       type_(type),
       project_(p) {
     this->setObjectName("NoteWidget");
@@ -47,14 +50,54 @@ NoteWidget::NoteWidget(
     buttons_layout->addWidget(open_button_);
     buttons_layout->addWidget(delete_button_);
 
-    if (type_.value() == Note::Type::deleted) {
+    if (type_.value() == Note::Type::completed) {
+        complete_button_->setStyleSheet(
+            "QPushButton {"
+            "   border-radius: 12px;"
+            "   border: 1px solid #089083;"
+            "   background-color: #089083;"
+            "}"
+            "QPushButton:hover {"
+            "   background-color: #5CBF60;"
+            "}"
+        );
+        buttons_layout->addWidget(complete_button_);
+    } else if (type_.value() == Note::Type::actual) {
+        complete_button_->setStyleSheet(
+            "QPushButton {"
+            "   border-radius: 12px;"
+            "   border-radius: 12px;"
+            "   border: 1px solid #089083;"
+            "   background-color: transparent;"
+            "}"
+            "QPushButton:hover {"
+            "   background-color: #f0f0f0;"
+            "}"
+        );
+        buttons_layout->addWidget(complete_button_);
+    } else if (type_.value() == Note::Type::deleted) {
         delete_button_->setText("Восстановить");
     }
+
+    complete_button_->setFixedSize(20, 20);
+    QPixmap checkIcon(16, 16);
+    checkIcon.fill(Qt::transparent);
+    QPainter painter(&checkIcon);
+    painter.setRenderHint(QPainter::Antialiasing);
+    QPen pen(Qt::black, 2);
+    painter.setPen(pen);
+    painter.drawLine(4, 8, 7, 11);
+    painter.drawLine(7, 11, 12, 4);
+    complete_button_->setIcon(QIcon(checkIcon));
+    complete_button_->setIconSize(QSize(16, 16));
 
     main_layout_->addLayout(buttons_layout);
 
     connect(
         open_button_, &QPushButton::clicked, this, &NoteWidget::open_note_window
+    );
+    connect(
+        complete_button_, &QPushButton::clicked, this, &NoteWidget::complete_note
     );
     connect(
         delete_button_, &QPushButton::clicked, this, &NoteWidget::delete_note
@@ -129,6 +172,29 @@ void NoteWidget::change_type(Note::Type::States new_type) {
     type_.set_value(new_type);
     model_note_->mutable_type()->set_value(new_type);
     handle_language_changed(LanguageManager::instance()->current_language());
+    if (type_.value() == Note::Type::completed) {
+        complete_button_->setStyleSheet(
+            "QPushButton {"
+            "   border-radius: 12px;"
+            "   border: 1px solid #cccccc;"
+            "   background-color: #4CAF50;"
+            "}"
+            "QPushButton:hover {"
+            "   background-color: #5CBF60;"
+            "}"
+        );
+    } else if (type_.value() == Note::Type::actual) {
+        complete_button_->setStyleSheet(
+            "QPushButton {"
+            "   border-radius: 12px;"
+            "   border: 1px solid #cccccc;"
+            "   background-color: transparent;"
+            "}"
+            "QPushButton:hover {"
+            "   background-color: #f0f0f0;"
+            "}"
+        );
+    }
     main_layout_->update();
     emit change_type_requested(this->project_, old_type, new_type);
 }
@@ -138,6 +204,14 @@ void NoteWidget::delete_note() {
         this->change_type(Note::Type::actual);
     } else {
         this->change_type(Note::Type::deleted);
+    }
+}
+
+void NoteWidget::complete_note() {
+    if (type_.value() == Note::Type::completed) {
+        this->change_type(Note::Type::actual);
+    } else {
+        this->change_type(Note::Type::completed);
     }
 }
 

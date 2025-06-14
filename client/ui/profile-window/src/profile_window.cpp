@@ -18,14 +18,12 @@ ProfileWindow::ProfileWindow(
     User *user,
     QWidget *parent,
     int actual_notes_amount,
-    int overdue_notes_amount,
     int completed_notes_amount
 )
     : client_(client),
       user_(user),
       QDialog(parent),
       actual_notes_amount_(actual_notes_amount),
-      overdue_notes_amount_(overdue_notes_amount),
       completed_notes_amount_(completed_notes_amount) {
     main_layout = new QVBoxLayout(this);
 
@@ -149,7 +147,7 @@ void ProfileWindow::on_delete_account_clicked() {
 void ProfileWindow::on_stats_clicked() {
     AnalyticsWindow *new_analytics_window = new AnalyticsWindow(
         this->parentWidget(), this->actual_notes_amount_,
-        this->completed_notes_amount_, this->overdue_notes_amount_
+        this->completed_notes_amount_
     );
     this->switch_window(new_analytics_window);
 }

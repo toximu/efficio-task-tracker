@@ -19,6 +19,7 @@ class NoteWidget final : public QWidget {
     QVBoxLayout *main_layout_;
     QPushButton *open_button_;
     QPushButton *delete_button_;
+    QPushButton *complete_button_;
     QLabel *title_label_;
     QHBoxLayout *tags_layout_;
     std::vector<QLabel *> tag_labels_;
@@ -44,6 +45,7 @@ private slots:
     void good_resize();
     void open_note_window() const;
     void delete_note();
+    void complete_note();
     void change_type(Note::Type::States new_type);
 signals:
     void change_type_requested(

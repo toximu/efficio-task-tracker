@@ -26,7 +26,6 @@ class MainWindow : public QWidget {
     QHBoxLayout *content_layout_;
     ProjectList *project_list_;
     NoteList *actual_notes_;
-    NoteList *overdue_notes_;
     NoteList *completed_notes_;
     NoteList *deleted_notes_;
     QWidget *content_widget_;
@@ -34,7 +33,6 @@ class MainWindow : public QWidget {
     QPushButton *join_project_button_;
     QPushButton *new_note_button_;
     int actual_notes_amount_ = 0;
-    int overdue_notes_amount_ = 0;
     int completed_notes_amount_ = 0;
     int deleted_notes_amount_ = 0;
 

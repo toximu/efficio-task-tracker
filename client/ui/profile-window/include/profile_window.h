@@ -23,7 +23,6 @@ class ProfileWindow : public QDialog {
     ClientImplementation *client_;
     User *user_;
     int actual_notes_amount_ = 0;
-    int overdue_notes_amount_ = 0;
     int completed_notes_amount_ = 0;
 
     void setup_ui(QDialog *profile_window);
@@ -35,7 +34,6 @@ public:
         User *user,
         QWidget *parent = nullptr,
         int actual_notes_amount = 0,
-        int overdue_notes_amount = 0,
         int completed_notes_amount = 0
     );
     ~ProfileWindow() override = default;

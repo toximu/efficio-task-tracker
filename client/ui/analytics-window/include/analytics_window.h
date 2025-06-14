@@ -12,8 +12,7 @@ public:
     explicit AnalyticsWindow(
         QWidget *parent = nullptr,
         int created_count = 0,
-        int completed_count = 0,
-        int expired_count = 0
+        int completed_count = 0
     );
     ~AnalyticsWindow() override;
 
@@ -28,13 +27,11 @@ private:
 
     int m_created_count;
     int m_completed_count;
-    int m_expired_count;
 
     QChartView *chart_view;
     QPieSeries *series;
     QChart *chart;
     QPieSlice *completed_slice;
-    QPieSlice *expired_slice;
     QPieSlice *created_slice;
 };
 

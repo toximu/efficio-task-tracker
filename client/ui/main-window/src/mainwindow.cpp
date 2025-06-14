@@ -47,7 +47,6 @@ MainWindow::MainWindow(
       content_layout_(new QHBoxLayout(this)),
       project_list_(new ProjectList(this)),
       actual_notes_(new NoteList(client_, this, Note::Type::actual)),
-      overdue_notes_(new NoteList(client_, this, Note::Type::overdue)),
       completed_notes_(new NoteList(client_, this, Note::Type::completed)),
       deleted_notes_(new NoteList(client_, this, Note::Type::deleted)),
       content_widget_(new QWidget(this)),
@@ -59,7 +58,6 @@ MainWindow::MainWindow(
     this->setAttribute(Qt::WA_StyledBackground);
 
     tab_widget_->addTab(create_scroll_area(actual_notes_), "Актуальные");
-    tab_widget_->addTab(create_scroll_area(overdue_notes_), "Просроченные");
     tab_widget_->addTab(create_scroll_area(completed_notes_), "Выполненные");
     tab_widget_->addTab(create_scroll_area(deleted_notes_), "Удаленные");
 
@@ -90,10 +88,6 @@ MainWindow::MainWindow(
         &NoteList::load_project_notes
     );
     connect(
-        project_list_, &QListWidget::itemClicked, overdue_notes_,
-        &NoteList::load_project_notes
-    );
-    connect(
         project_list_, &QListWidget::itemClicked, completed_notes_,
         &NoteList::load_project_notes
     );
@@ -104,10 +98,6 @@ MainWindow::MainWindow(
 
     connect(
         actual_notes_, &NoteList::change_note_type_requested, this,
-        &Ui::MainWindow::update_note_lists
-    );
-    connect(
-        overdue_notes_, &NoteList::change_note_type_requested, this,
         &Ui::MainWindow::update_note_lists
     );
     connect(
@@ -179,7 +169,6 @@ void MainWindow::handle_language_changed(std::string new_language) {
         new_project_button_->setText("New project");
         new_note_button_->setText("New note");
         tab_widget_->setTabText(0, "Actual");
-        tab_widget_->setTabText(1, "Overdue");
         tab_widget_->setTabText(2, "Completed");
         tab_widget_->setTabText(3, "Deleted");
     }
@@ -224,7 +213,7 @@ void MainWindow::on_profile_button_click() {
     this->setEnabled(false);
     ProfileWindow *new_profile_window = new ProfileWindow(
         client_, user_.get(), this->parentWidget(), actual_notes_amount_,
-        overdue_notes_amount_, completed_notes_amount_
+        completed_notes_amount_
     );
     new_profile_window->setAttribute(Qt::WA_DeleteOnClose);
     connect(
@@ -304,12 +293,6 @@ void MainWindow::update_note_lists(
             this->actual_notes_->load_project_notes(project), -1
         );
     }
-    if (old_type == Note::Type::overdue) {
-        update_notes_amount(
-            overdue_notes_amount_,
-            this->overdue_notes_->load_project_notes(project), -1
-        );
-    }
     if (old_type == Note::Type::completed) {
         update_notes_amount(
             completed_notes_amount_,
@@ -327,12 +310,6 @@ void MainWindow::update_note_lists(
         update_notes_amount(
             actual_notes_amount_,
             this->actual_notes_->load_project_notes(project), 1
-        );
-    }
-    if (new_type == Note::Type::overdue) {
-        update_notes_amount(
-            overdue_notes_amount_,
-            this->overdue_notes_->load_project_notes(project), 1
         );
     }
     if (new_type == Note::Type::completed) {
