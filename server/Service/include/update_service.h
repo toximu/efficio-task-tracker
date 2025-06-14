@@ -24,6 +24,8 @@ using Efficio_proto::TryLeaveProjectResponse;
 using Efficio_proto::Update;
 using Efficio_proto::UpdateNoteRequest;
 using Efficio_proto::UpdateNoteResponse;
+using Efficio_proto::GetProjectMembersRequest;
+using Efficio_proto::GetProjectMembersResponse;
 
 class UpdateService final {
     Update::AsyncService service_;
@@ -68,6 +70,20 @@ public:
 
     public:
         explicit GetProjectServerCall(
+            Update::AsyncService *service,
+            ServerCompletionQueue *cq
+        );
+        void Proceed(bool) override;
+    };
+
+    class GetProjectMembersServerCall final : public CommonServerCall {
+        GetProjectMembersRequest request_;
+        GetProjectMembersResponse response_;
+        ServerAsyncResponseWriter<GetProjectMembersResponse> responder_;
+        Update::AsyncService *service_;
+
+    public:
+        explicit GetProjectMembersServerCall(
             Update::AsyncService *service,
             ServerCompletionQueue *cq
         );

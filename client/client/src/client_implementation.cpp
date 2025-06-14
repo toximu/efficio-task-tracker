@@ -29,7 +29,7 @@ void ClientImplementation::CompleteRpc() {
 
     while (cq_.Next(&got_tag, &ok)) {
         std::cout << "[CLIENT] : GET CALL FROM CQ" << std::endl;
-        CommonClientCall *call = static_cast<CommonClientCall *>(got_tag);
+        auto *call = static_cast<CommonClientCall *>(got_tag);
 
         assert(ok);
 
@@ -53,11 +53,11 @@ CompletionQueue *ClientImplementation::get_cq() {
     return &cq_;
 }
 
-bool ClientImplementation::try_authenticate_user(User *user) {
+bool ClientImplementation::try_authenticate_user(User *user) const {
     return auth_requests_.try_authenticate_user(user);
 }
 
-bool ClientImplementation::try_register_user(User *user) {
+bool ClientImplementation::try_register_user(User *user) const {
     return auth_requests_.try_register_user(user);
 }
 

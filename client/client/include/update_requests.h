@@ -74,6 +74,7 @@ public:
     bool try_fetch_note(Note *note) const;
     bool try_create_note(Note *note, const std::string &project_code) const;
     bool get_note(Note *note);
+    std::vector<std::string> get_project_members(const std::string &project_code) const;
     bool create_note(Note *note);
 
     bool get_project(Project &project, const std::string &code);

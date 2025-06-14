@@ -24,8 +24,8 @@ public:
     std::shared_ptr<Channel> get_channel();
     CompletionQueue *get_cq();
 
-    bool try_authenticate_user(User *user);
-    bool try_register_user(User *user);
+    bool try_authenticate_user(User *user) const;
+    bool try_register_user(User *user) const;
     bool try_delete_user(const User *user) const;
 
     bool try_update_note(Note *note) const;
