@@ -212,6 +212,7 @@ void NoteWidget::change_type(Note::Type::States new_type) {
             "}"
         );
     }
+    client_->try_update_note(model_note_);
     main_layout_->update();
     emit change_type_requested(this->project_, old_type, new_type);
 }
