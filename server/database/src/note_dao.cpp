@@ -37,6 +37,19 @@ std::string format_tags_array(
     return result + "}";
 }
 
+std::string get_type_string(int type) {
+    switch (type) {
+        case 0:
+            return "actual";
+        case 1:
+            return "overdue";
+        case 2:
+            return "deleted";
+        case 3:
+            return "completed";
+    }
+}
+
 }  // namespace
 
 Note NoteDao::initialize_note_for_user(const std::string &login) {
@@ -44,12 +57,12 @@ Note NoteDao::initialize_note_for_user(const std::string &login) {
     pqxx::work transaction(connection);
 
     const std::string query =
-        "INSERT INTO notes (title, content) "
-        "VALUES ($1, $2) "
+        "INSERT INTO notes (title, content, type) "
+        "VALUES ($1, $2, $3) "
         "RETURNING id, title, content";
 
     const pqxx::result result =
-        transaction.exec_params(query, "Пустая заметка", "");
+        transaction.exec_params(query, "Пустая заметка", "", "actual");
 
     if (result.empty()) {
         transaction.commit();
@@ -78,8 +91,9 @@ bool NoteDao::update_note(const Note &note) {
         "content = $2, "
         "members = $3::varchar(50)[], "
         "date = $4, "
-        "tags = $5::varchar(50)[] "
-        "WHERE id = $6";
+        "tags = $5::varchar(50)[],"
+        "type = $6 "
+        "WHERE id = $7";
 
     pqxx::params params;
     params.append(note.title());
@@ -91,7 +105,7 @@ bool NoteDao::update_note(const Note &note) {
 
     const pqxx::result result = transaction.exec_params(
         query, note.title(), note.text(), members_array, note.date(),
-        tags_array, note.id()
+        tags_array, get_type_string(note.type().value()), note.id()
     );
     transaction.commit();
     return result.affected_rows() > 0;
