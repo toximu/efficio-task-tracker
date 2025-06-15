@@ -1,13 +1,21 @@
-#include <absl/time/time.h>
-#include <grpcpp/version_info.h>
 #include "server_implementation.h"
 
-int main() {
-    std::cout << "gRPC version : " << GRPC_CPP_VERSION_STRING << std::endl;
+void print_logo() {
+    std::cout << R"(
+   / ____/ ____/ ____/  _/ ____/  _/ __ \
+  / __/ / /_  / /_   / // /    / // / / /
+ / /___/ __/ / __/ _/ // /____/ // /_/ /
+/_____/_/   /_/   /___/\____/___/\____/
+)" << std::endl;
+}
 
+int main() {
     grpc::ServerBuilder builder;
-    ServerImplementation server(50051, builder);
-    std::cout << "[SERVER]: WAITING FOR REQUESTS...\n";
+    const ServerImplementation server(50051, builder);
+    print_logo();
+    std::cout << "HI! WELCOME TO EFFICIO SERVER!\n"
+              << "LOGS IN logs/logs.txt\n"
+              << "READY. WAITING FOR REQUESTS...\n";
     server.HandleRPCs();
     return 0;
 }

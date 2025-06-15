@@ -1,5 +1,4 @@
-#ifndef NOTEDAO_HPP
-#define NOTEDAO_HPP
+#pragma once
 
 #include "model-proto/model.pb.h"
 
@@ -12,5 +11,3 @@ public:
     static bool update_note(const Note &note);
     [[nodiscard]] static Note get_note(int note_id);
 };
-
-#endif  // NOTEDAO_HPP

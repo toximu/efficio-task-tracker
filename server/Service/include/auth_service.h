@@ -1,5 +1,4 @@
-#ifndef AUTH_SERVICE_H
-#define AUTH_SERVICE_H
+#pragma once
 
 #include <efficio-rpc-proto/efficio.grpc.pb.h>
 #include <efficio-rpc-proto/efficio.pb.h>
@@ -81,5 +80,3 @@ public:
 
     void run();
 };
-
-#endif  // AUTH_SERVICE_H

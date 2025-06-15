@@ -1,5 +1,4 @@
-#ifndef UPDATE_HANDLER_H
-#define UPDATE_HANDLER_H
+#pragma once
 
 #include <efficio-rpc-proto/efficio.pb.h>
 #include <model-proto/model.pb.h>
@@ -36,5 +35,3 @@ public:
 private:
     static std::string generate_project_code();
 };
-
-#endif

@@ -1,4 +1,5 @@
 #include "auth_service.h"
+#include "logger.hpp"
 #include "lr_dao.hpp"
 #include "project_dao.hpp"
 
@@ -26,7 +27,8 @@ void AuthService::TryAuthenticateUserServerCall::Proceed(const bool ok) {
 
     switch (status_) {
         case PROCESS: {
-            std::cout << "[SERVER]: GOT AUTH REQUEST\n";
+            logger << "[SERVER(TryAuthenticateUserServerCall)] : GOT AUTH "
+                      "REQUEST\n";
             new TryAuthenticateUserServerCall(service_, cq_);
 
             AuthResponse response;
@@ -37,8 +39,9 @@ void AuthService::TryAuthenticateUserServerCall::Proceed(const bool ok) {
 
             if (query_exit_code == 1) {
                 response.mutable_user()->CopyFrom(request_.user());
-                std::cout << "[SERVER]: WELCOME, "
-                          << response.mutable_user()->login() << "\n";
+                logger
+                    << "[SERVER(TryAuthenticateUserServerCall)] : WELCOME, " +
+                           response.mutable_user()->login() + "\n";
 
                 Storage user_storage;
                 bool have_projects = ProjectDAO::get_all_user_projects(
@@ -49,15 +52,19 @@ void AuthService::TryAuthenticateUserServerCall::Proceed(const bool ok) {
                     response.mutable_user()->mutable_storage()->CopyFrom(
                         user_storage
                     );
-                    std::cout << "[SERVER]: DOWNLOADED YOUR PROJECT: "
-                              << response.user().storage().projects()[0].code()
-                              << "\n";
+                    logger
+                        << "[SERVER(TryAuthenticateUserServerCall)] : "
+                           "DOWNLOADED YOUR PROJECT " +
+                               response.user().storage().projects()[0].code() +
+                               " AND OTHERS\n";
                 } else {
-                    std::cout << "[SERVER]: YOU DONT HAVE ANY PROJECTS\n";
+                    logger << "[SERVER(TryAuthenticateUserServerCall)] : YOU "
+                              "DONT HAVE ANY PROJECTS\n";
                 }
 
             } else {
-                std::cout << "[SERVER]: SQL QUERY ERROR OR USER NOT FOUND\n";
+                logger << "[SERVER-WARNING(TryAuthenticateUserServerCall)] : "
+                          "SQL QUERY ERROR OR USER NOT FOUND\n";
                 response.set_error_text(
                     "[SERVER ERROR]: Не удалось выполнить запрос в базу данных "
                     "на проверку "
@@ -95,7 +102,8 @@ void AuthService::TryRegisterUserServerCall::Proceed(const bool ok) {
 
     switch (status_) {
         case PROCESS: {
-            std::cout << "[SERVER]: GOT REGISTER REQUEST\n";
+            logger << "[SERVER(TryRegisterUserServerCall)] : GOT REGISTER "
+                      "REQUEST\n";
             new TryRegisterUserServerCall(service_, cq_);
 
             AuthResponse response;
@@ -144,16 +152,19 @@ void AuthService::TryDeleteUserServerCall::Proceed(const bool ok) {
 
     switch (status_) {
         case PROCESS: {
-            std::cout << "[SERVER]: GOT DELETE USER REQUEST\n";
+            logger << "[SERVER(TryDeleteUserServerCall)] : GOT DELETE USER "
+                      "REQUEST\n";
             new TryDeleteUserServerCall(service_, cq_);
 
             DeleteUserResponse response;
 
             if (LRDao::try_delete_user(request_.user().login())) {
-                std::cout << "[SERVER]: DELETE USER SUCCESSFULLY\n";
+                logger << "[SERVER(TryDeleteUserServerCall)] : DELETE USER "
+                          "SUCCESSFULLY\n";
                 response.set_ok(true);
             } else {
-                std::cout << "[SERVER]: DELETE USER FAILED\n";
+                logger << "[SERVER-WARNING(TryDeleteUserServerCall)] : DELETE "
+                          "USER FAILED\n";
                 response.set_ok(false);
             }
 

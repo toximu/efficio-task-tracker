@@ -30,28 +30,6 @@ bool ProjectDAO::get_all_user_projects(
         project.set_code(project_row["code"].as<std::string>());
         project.set_title(project_row["title"].as<std::string>());
 
-        // if (!project_row["members"].is_null()) {
-        //     auto members_str = project_row["members"].as<std::string>();
-        //
-        //     if (!members_str.empty() && members_str.front() == '{' &&
-        //         members_str.back() == '}') {
-        //         members_str = members_str.substr(1, members_str.size() - 2);
-        //         std::istringstream iss(members_str);
-        //         std::string member;
-        //         while (std::getline(iss, member, ',')) {
-        //             if (member.size() >= 2 && member.front() == '"' &&
-        //                 member.back() == '"') {
-        //                 member = member.substr(1, member.size() - 2);
-        //             }
-        //
-        //             std::erase_if(member, ::isspace);
-        //             if (!member.empty()) {
-        //                 project.add_members(member);
-        //             }
-        //         }
-        //     }
-        // }
-
         storage.mutable_projects()->Add(std::move(project));
     }
 
@@ -118,7 +96,7 @@ bool ProjectDAO::get_project(const std::string &code, Project &project) {
     return true;
 }
 
-bool ProjectDAO::insert_project(Project &project) {
+bool ProjectDAO::insert_project(const Project &project) {
     auto &connection = DatabaseManager::get_instance().get_connection();
     pqxx::work transaction(connection);
 

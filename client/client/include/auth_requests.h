@@ -3,7 +3,6 @@
 #include <common_client_call.h>
 #include <efficio-rpc-proto/efficio.grpc.pb.h>
 #include <grpcpp/grpcpp.h>
-#include "common_client_call.h"
 
 using Efficio_proto::Auth;
 using Efficio_proto::AuthRequest;

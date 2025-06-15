@@ -1,5 +1,4 @@
-#ifndef CLIENTIMPLEMENTATION_H
-#define CLIENTIMPLEMENTATION_H
+#pragma once
 
 #include <grpcpp/grpcpp.h>
 #include <thread>
@@ -16,14 +15,14 @@ class ClientImplementation {
     UpdateRequests update_requests_;
     AuthRequests auth_requests_;
     std::thread complete_rpc_thread_;
+
 public:
     explicit ClientImplementation(const std::shared_ptr<Channel> &channel);
     ~ClientImplementation();
 
-
-    void CompleteRpc();
+    void CompleteRpc() const;
     std::shared_ptr<Channel> get_channel();
-    CompletionQueue *get_cq();
+    CompletionQueue *get_cq() const;
 
     bool try_authenticate_user(User *user) const;
     bool try_register_user(User *user) const;
@@ -50,5 +49,3 @@ public:
         const std::string &project_code
     ) const;
 };
-
-#endif  // CLIENTIMPLEMENTATION_H

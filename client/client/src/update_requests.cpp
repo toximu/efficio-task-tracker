@@ -3,7 +3,7 @@
 #include <efficio-rpc-proto/efficio.grpc.pb.h>
 #include <efficio-rpc-proto/efficio.pb.h>
 #include <grpcpp/grpcpp.h>
-#include <iostream>
+#include "logger.hpp"
 
 using grpc::Channel;
 using grpc::ClientAsyncResponseReader;
@@ -26,7 +26,10 @@ using Efficio_proto::TryLeaveProjectResponse;
 using Efficio_proto::Update;
 using Efficio_proto::User;
 
-bool UpdateRequests::get_project(Project &project, const std::string &code) {
+bool UpdateRequests::get_project(
+    Project &project,
+    const std::string &code
+) const {
     GetProjectRequest request;
 
     request.set_code(code);
@@ -35,21 +38,21 @@ bool UpdateRequests::get_project(Project &project, const std::string &code) {
 
     ClientContext context;
 
-    std::cout << "CLIENT : [get project] : sending request" << std::endl;
+    logger << "[CLIENT(GetProjectClientCall)] : SENDING REQUEST\n";
 
     Status status = stub_->GetProject(&context, request, &response);
 
     if (status.ok() && response.has_project()) {
-        std::cout << "CLIENT : [get project] : got project!" << std::endl;
+        logger << "[CLIENT(GetProjectClientCall)] : GOT PROJECT\n";
         project = std::move(*response.mutable_project());
         return true;
     }
 
     if (response.has_error_text()) {
-        std::cout << "CLIENT : [create project] : error_text : "
-                  << response.error_text() << std::endl;
+        logger << "[CLIENT-ERROR(GetProjectClientCall)] : " +
+                      response.error_text() + "\n";
     } else {
-        std::cout << "CLIENT [create project] : status is not OK" << std::endl;
+        logger << "[CLIENT-WARNING(GetProjectClientCall)] : STATUS IS NOT OK\n";
     }
 
     return false;
@@ -59,7 +62,7 @@ bool UpdateRequests::create_project(
     Project &project,
     const std::string &project_title,
     const User &user
-) {
+) const {
     CreateProjectRequest request;
     request.set_project_title(project_title);
     User *copy_user = new User(user);
@@ -69,20 +72,21 @@ bool UpdateRequests::create_project(
 
     ClientContext context;
 
-    std::cout << "CLIENT : [create project] : sending request" << std::endl;
+    logger << "[CLIENT(CreateProjectClientCall)] : SENDING REQUEST\n";
     Status status = stub_->CreateProject(&context, request, &response);
 
     if (status.ok() && response.has_project()) {
-        std::cout << "CLIENT : [create project] : got project!" << std::endl;
+        logger << "[CLIENT(CreateProjectClientCall)] : GOT PROJECT\n";
         project = std::move(*response.mutable_project());
         return true;
     }
 
     if (response.has_error_text()) {
-        std::cout << "CLIENT [create project] {error text} : "
-                  << response.error_text() << std::endl;
+        logger << "[CLIENT-ERROR(CreateProjectClientCall)] : " +
+                      response.error_text() + "\n";
     } else {
-        std::cout << "CLIENT [create project] status is not OK" << std::endl;
+        logger
+            << "[CLIENT-WARNING(CreateProjectClientCall)] : STATUS IS NOT OK\n";
     }
     return false;
 }
@@ -90,7 +94,7 @@ bool UpdateRequests::create_project(
 bool UpdateRequests::try_leave_project(
     const std::string &code,
     const User &user
-) {
+) const {
     TryLeaveProjectRequest request;
 
     request.set_code(code);
@@ -99,16 +103,15 @@ bool UpdateRequests::try_leave_project(
 
     TryLeaveProjectResponse response;
     ClientContext context;
-    std::cout << "CLIENT : [try leave project] : sending request" << std::endl;
+    logger << "[CLIENT(TryLeaveProjectClientCall)] : SENDING REQUEST\n";
     Status status = stub_->TryLeaveProject(&context, request, &response);
 
     if (status.ok() && response.ok()) {
-        std::cout << "CLIENT : [try leave project] : left project" << std::endl;
+        logger << "[CLIENT(TryLeaveProjectClientCall)] : LEFT PROJECT\n";
         return true;
     }
 
-    std::cout << "CLIENT : [try leave project] : can't leave project"
-              << std::endl;
+    logger << "[CLIENT-ERROR(TryLeaveProjectClientCall)] : CANT LEAVE\n";
     return false;
 }
 
@@ -116,27 +119,27 @@ bool UpdateRequests::try_join_project(
     Project &project,
     const std::string &code,
     const User &user
-) {
+) const {
     TryJoinProjectRequest request;
     request.set_code(code);
     User *copy_user = new User(user);
     request.set_allocated_user(copy_user);
     TryJoinProjectResponse response;
     ClientContext context;
-    std::cout << "CLIENT : [try join project] : sending request" << std::endl;
+    logger << "[CLIENT(TryJoinProjectClientCall)] : SENDING REQUEST\n";
     Status status = stub_->TryJoinProject(&context, request, &response);
 
     if (status.ok() && response.has_project()) {
-        std::cout << "CLIENT : [try join project] : got project!" << std::endl;
+        logger << "[CLIENT(TryJoinProjectClientCall)] : GOT PROJECT\n";
         project = std::move(*response.mutable_project());
         return true;
     }
     if (response.has_error_text()) {
-        std::cout << "CLIENT : [try join project] : error_text : "
-                  << response.error_text() << std::endl;
+        logger << "[CLIENT-ERROR(TryJoinProjectClientCall)] : " +
+                      response.error_text() + "\n";
     } else {
-        std::cout << "CLIENT : [try join project] : status is not OK"
-                  << std::endl;
+        logger << "[CLIENT-WARNING(TryJoinProjectClientCall)] : STATUS IS NOT "
+                  "OK\n";
     }
     return false;
 }
@@ -151,12 +154,12 @@ UpdateRequests::UpdateNoteClientCall::UpdateNoteClientCall(
         std::chrono::system_clock::now() + std::chrono::seconds(5)
     );
     responder_->Finish(&reply_, &status, this);
-    std::cout << "[CLIENT]: UPDATE NOTE REQUEST SENT\n";
+    logger << "[CLIENT(UpdateNoteClientCall)] : SENDING REQUEST\n";
 }
 
-void UpdateRequests::UpdateNoteClientCall::Proceed(bool ok) {
+void UpdateRequests::UpdateNoteClientCall::Proceed(const bool ok) {
     if (!ok) {
-        std::cout << "[CLIENT WARNING]: RPC failed\n";
+        logger << "[CLIENT-WARNING(UpdateNoteClientCall)] : RPC FAILED\n";
     }
     delete this;
 }
@@ -175,12 +178,12 @@ UpdateRequests::GetNoteClientCall::GetNoteClientCall(
         std::chrono::system_clock::now() + std::chrono::seconds(5)
     );
     responder_->Finish(&reply_, &status, this);
-    std::cout << "[CLIENT]: FETCH NOTE REQUEST SENT\n";
+    logger << "[CLIENT(GetNoteClientCall)] : SENDING REQUEST\n";
 }
 
 void UpdateRequests::GetNoteClientCall::Proceed(const bool ok) {
     if (!ok) {
-        std::cout << "[CLIENT WARNING]: RPC failed\n";
+        logger << "[CLIENT-WARNING(GetNoteClientCall)] : RPC FAILED\n";
     }
     delete this;
 }
@@ -207,12 +210,12 @@ UpdateRequests::CreateNoteClientCall::CreateNoteClientCall(
         std::chrono::system_clock::now() + std::chrono::seconds(5)
     );
     responder_->Finish(&reply_, &status, this);
-    std::cout << "[CLIENT]: CREATE NOTE REQUEST SENT\n";
+    logger << "[CLIENT(CreateNoteClientCall)] : SENDING REQUEST\n";
 }
 
 void UpdateRequests::CreateNoteClientCall::Proceed(const bool ok) {
     if (!ok) {
-        std::cout << "[CLIENT WARNING]: RPC failed\n";
+        logger << "[CLIENT-WARNING(CreateNoteClientCall)] : RPC FAILED\n";
     }
     delete this;
 }
@@ -226,17 +229,19 @@ bool UpdateRequests::try_update_note(Note *note) const {
     void *tag;
     bool ok = false;
     if (!cq_->Next(&tag, &ok)) {
-        std::cout << "[CLIENT]: Completion queue failed\n";
+        logger << "[CLIENT-ERROR(UpdateNoteClientCall)] : CQ FAILED\n";
         return false;
     }
 
     if (!ok) {
-        std::cout << "[CLIENT WARNING]: no note in reply\n";
+        logger << "[CLIENT-WARNING(UpdateNoteClientCall)] : NO NOTE IN SERVER "
+                  "REPLY\n";
         return false;
     }
 
     *note = call->get_reply().note();
-    std::cout << "[CLIENT]: UPDATE NOTE - " << note->title() << "\n";
+    logger << "[CLIENT(UpdateNoteClientCall)] : UPDATE NOTE - " +
+                  note->title() + "\n";
     return true;
 }
 
@@ -249,17 +254,19 @@ bool UpdateRequests::try_fetch_note(Note *note) const {
     void *tag;
     bool ok = false;
     if (!cq_->Next(&tag, &ok)) {
-        std::cout << "[CLIENT]: Completion queue failed\n";
+        logger << "[CLIENT-ERROR(GetNoteClientCall)] : CQ FAILED\n";
         return false;
     }
 
     if (!ok || !call->get_reply().has_note()) {
-        std::cout << "[CLIENT WARNING]: no note in reply\n";
+        logger << "[CLIENT-WARNING(GetNoteClientCall)] : NO NOTE IN SERVER "
+                  "REPLY\n";
         return false;
     }
 
     *note = call->get_reply().note();
-    std::cout << "[CLIENT]: GOT NOTE - " << note->title() << "\n";
+    logger << "[CLIENT-WARNING(GetNoteClientCall)] : GOT NOTE - " +
+                  note->title() + "\n";
     return true;
 }
 
@@ -274,7 +281,7 @@ bool UpdateRequests::try_create_note(
     void *tag;
     bool ok = false;
     if (!cq_->Next(&tag, &ok)) {
-        std::cout << "[CLIENT]: Completion queue failed\n";
+        logger << "[CLIENT-ERROR(CreateNoteClientCall)] : CQ FAILED\n";
         return false;
     }
     *note = call->get_reply().note();
@@ -290,14 +297,12 @@ std::vector<std::string> UpdateRequests::get_project_members(
     GetProjectMembersResponse response;
 
     ClientContext context;
-    std::cout << "CLIENT : [get project members] : sending request"
-              << std::endl;
+    logger << "[CLIENT(GetProjectMembersClientCall)] : SENDING REQUEST\n";
 
     Status status = stub_->GetProjectMembers(&context, request, &response);
 
     if (status.ok() && response.has_members()) {
-        std::cout << "CLIENT : [get project members] : got members!"
-                  << std::endl;
+        logger << "[CLIENT(GetProjectMembersClientCall)] : GOT MEMBERS\n";
 
         std::vector<std::string> result;
         for (const auto &member : response.members().logins()) {
@@ -307,11 +312,11 @@ std::vector<std::string> UpdateRequests::get_project_members(
     }
 
     if (response.has_error()) {
-        std::cout << "CLIENT : [get project members] : error_text : "
-                  << response.error() << std::endl;
+        logger << "[CLIENT-ERROR(GetProjectMembersClientCall)] " +
+                      response.error() + "\n";
     } else {
-        std::cout << "CLIENT [get project members] : status is not OK"
-                  << std::endl;
+        logger << "[CLIENT-WARNING(GetProjectMembersClientCall] : STATUS IS "
+                  "NOT OK\n";
     }
 
     return {};

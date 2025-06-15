@@ -1,4 +1,3 @@
-#include <bits/std_thread.h>
 #include <grpcpp/create_channel.h>
 #include <QApplication>
 #include <QLibraryInfo>

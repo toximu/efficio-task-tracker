@@ -1,5 +1,4 @@
-#ifndef DATABASE_MANAGER_HPP
-#define DATABASE_MANAGER_HPP
+#pragma once
 
 #include <pqxx/pqxx>
 #include "note_dao.hpp"
@@ -15,5 +14,3 @@ private:
     ~DatabaseManager() = default;
     std::unique_ptr<pqxx::connection> connection_;
 };
-
-#endif  // DATABASE_MANAGER_HPP

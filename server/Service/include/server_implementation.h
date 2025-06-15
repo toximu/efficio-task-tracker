@@ -1,5 +1,4 @@
-#ifndef SERVERIMPLEMENTATION_H
-#define SERVERIMPLEMENTATION_H
+#pragma once
 
 #include <grpc++/grpc++.h>
 #include "auth_service.h"
@@ -21,5 +20,3 @@ public:
     );
     void HandleRPCs() const;
 };
-
-#endif  // SERVERIMPLEMENTATION_H
