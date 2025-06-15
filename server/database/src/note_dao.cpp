@@ -50,6 +50,21 @@ std::string get_type_string(int type) {
     }
 }
 
+Efficio_proto::Note_Type_States get_type_enum(const std::string &type) {
+    if (type == "actual") {
+        return Note::Type::actual;
+    }
+    if (type == "overdue") {
+        return Note::Type::overdue;
+    }
+    if (type == "deleted") {
+        return Note::Type::deleted;
+    }
+    if (type == "completed") {
+        return Note::Type::completed;
+    }
+}
+
 }  // namespace
 
 Note NoteDao::initialize_note_for_user(const std::string &login) {
@@ -144,7 +159,7 @@ Note NoteDao::get_note(const int note_id) {
     note.set_id(row["id"].as<int>());
     note.set_title(row["title"].as<std::string>());
     note.set_text(row["content"].as<std::string>());
-
+    note.mutable_type()->set_value(get_type_enum(row["type"].as<std::string>()));
     if (!row["date"].is_null()) {
         note.set_date(row["date"].as<std::string>());
     }
