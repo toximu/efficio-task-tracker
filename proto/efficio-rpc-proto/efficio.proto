@@ -5,16 +5,33 @@ import "model-proto/model.proto";
 package Efficio_proto;
 
 service Update {
+  rpc UpdateNote(UpdateNoteRequest) returns (UpdateNoteResponse) {}
   rpc GetNote (GetNoteRequest) returns (GetNoteResponse) {}
   rpc GetProject (GetProjectRequest) returns (GetProjectResponse) {}
   rpc CreateNote (CreateNoteRequest) returns (CreateNoteResponse) {}
   rpc CreateProject (CreateProjectRequest) returns (CreateProjectResponse) {}
   rpc TryJoinProject (TryJoinProjectRequest) returns (TryJoinProjectResponse) {}
+  rpc TryLeaveProject (TryLeaveProjectRequest) returns (TryLeaveProjectResponse) {}
+  rpc UpdateProject (UpdateProjectRequest) returns (UpdateProjectResponse) {}
+  rpc GetProjectMembers (GetProjectMembersRequest) returns (GetProjectMembersResponse) {}
 }
 
 service Auth {
   rpc TryAuthenticateUser (AuthRequest) returns (AuthResponse) {}
-  rpc TryRegister1User (AuthRequest) returns (AuthResponse) {}
+  rpc TryRegisterUser (AuthRequest) returns (AuthResponse) {}
+  rpc TryDeleteUser (DeleteUserRequest) returns (DeleteUserResponse) {}
+}
+
+message UpdateNoteRequest {
+  Note note = 1;
+}
+
+message UpdateNoteResponse {
+  oneof response {
+    bool ok = 1;
+    Note note = 2;
+    string error_text = 3;
+  }
 }
 
 message GetNoteRequest {
@@ -36,13 +53,14 @@ message GetProjectRequest {
 message GetProjectResponse {
   oneof response {
     Project project = 1;
-    string error_string = 2;
+    string error_text = 2;
   }
 }
 
 message CreateNoteRequest {
   User user = 1;
   optional string note_title = 2; // default = "Пустая заметка"
+  optional string project_code = 3;
 }
 
 message CreateNoteResponse {
@@ -76,6 +94,24 @@ message TryJoinProjectResponse {
   }
 }
 
+message TryLeaveProjectRequest {
+  User user = 1;
+  string code = 2;
+}
+
+message TryLeaveProjectResponse {
+  int32 ok = 1;
+}
+
+message UpdateProjectRequest {
+  Project project = 1;
+}
+
+message UpdateProjectResponse {
+  bool ok = 1;
+  optional string error_text = 2;
+}
+
 message AuthRequest {
   User user = 1;
 }
@@ -85,4 +121,27 @@ message AuthResponse {
     User user = 1;
     string error_text = 2;
   }
+}
+
+message DeleteUserRequest {
+  User user = 1;
+}
+
+message DeleteUserResponse {
+  bool ok = 1;
+}
+
+message GetProjectMembersRequest {
+  string project_code = 1;
+}
+
+message GetProjectMembersResponse {
+  oneof response {
+    MembersList members = 1;
+    string error = 2;
+  }
+}
+
+message MembersList {
+  repeated string logins = 1;
 }

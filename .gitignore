@@ -4,6 +4,7 @@ build-*
 */build-*
 release/
 debug/
+protobuf/
 *.exe
 *.dll
 *.so
@@ -12,6 +13,7 @@ debug/
 *.o
 *.obj
 *.app
+translations/*.qm
 
 moc_*.cpp
 ui_*.h
@@ -55,7 +57,9 @@ doc/api/
 *.out
 
 local.properties
-
-main.cpp
+**/main.cpp
+!client/main.cpp
+!client/client/test_server.cpp
+!server/main.cpp
 
 *pb*
