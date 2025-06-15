@@ -14,7 +14,7 @@
 - **Collaborative editing of tasks:** Users can see changes made by other team members.
 - **Save change history:** Each action is saved so users can track changes made and roll back if necessary.
 - **Local data storage:** The ability to save data locally without the need to use the cloud, providing increased privacy. As a consequence the ability to work without an internet connection.
-- **Easy customization and customization:** Users can change the appearance of the application and the structure of workspaces to suit their needs.
+- **Easy customization:** Users can change the appearance of the application and the UI language to suit their needs.
 
 ## Installation
 
