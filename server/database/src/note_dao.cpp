@@ -37,7 +37,7 @@ std::string format_tags_array(
     return result + "}";
 }
 
-std::string get_type_string(int type) {
+std::string get_type_string(const int type) {
     switch (type) {
         case 0:
             return "actual";
@@ -47,6 +47,8 @@ std::string get_type_string(int type) {
             return "deleted";
         case 3:
             return "completed";
+        default:
+            return "unknown";
     }
 }
 

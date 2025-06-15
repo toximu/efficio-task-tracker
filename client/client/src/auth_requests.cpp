@@ -1,6 +1,7 @@
 #include <auth_requests.h>
 #include <grpcpp/grpcpp.h>
-#include <iostream>
+#include <utility>
+#include "logger.hpp"
 
 using grpc::Channel;
 using grpc::ClientAsyncResponseReader;
@@ -23,12 +24,14 @@ AuthRequests::TryAuthenticateUserClientCall::TryAuthenticateUserClientCall(
         std::chrono::system_clock::now() + std::chrono::seconds(5)
     );
     responder_->Finish(&reply_, &status, this);
-    std::cout << "[CLIENT]: AUTHENTICATE USER REQUEST SENT\n";
+    logger << "[CLIENT(TryAuthenticateUserClientCall)] : AUTHENTICATE USER "
+              "REQUEST SENT\n";
 }
 
 void AuthRequests::TryAuthenticateUserClientCall::Proceed(bool ok) {
     if (!ok) {
-        std::cout << "[CLIENT WARNING]: Authentication RPC failed\n";
+        logger
+            << "[CLIENT-WARNING(TryAuthenticateUserClientCall)] : RPC FAILED\n";
     }
     delete this;
 }
@@ -47,12 +50,12 @@ AuthRequests::TryRegisterUserClientCall::TryRegisterUserClientCall(
         std::chrono::system_clock::now() + std::chrono::seconds(5)
     );
     responder_->Finish(&reply_, &status, this);
-    std::cout << "[CLIENT]: REGISTER USER REQUEST SENT\n";
+    logger << "[CLIENT(TryRegisterUserClientCall)] : REQUEST SENT\n";
 }
 
 void AuthRequests::TryRegisterUserClientCall::Proceed(bool ok) {
     if (!ok) {
-        std::cout << "[CLIENT WARNING]: Registration RPC failed\n";
+        logger << "[CLIENT-WARNING(TryRegisterUserClientCall)] : RPC FAILED\n";
     }
     delete this;
 }
@@ -68,12 +71,12 @@ AuthRequests::TryDeleteUserClientCall::TryDeleteUserClientCall(
 )
     : responder_(stub->AsyncTryDeleteUser(&context, request, cq)) {
     responder_->Finish(&reply_, &status, this);
-    std::cout << "[CLIENT]: DELETE USER REQUEST SENT\n";
+    logger << "[CLIENT(TryDeleteUserClientCall)] : REQUEST SENT\n";
 }
 
 void AuthRequests::TryDeleteUserClientCall::Proceed(bool ok) {
     if (!ok) {
-        std::cout << "[CLIENT WARNING]: DELETE RPC FAILED\n";
+        logger << "[CLIENT-WARNING(TryDeleteUserClientCall)] : RPC FAILED\n";
     }
     delete this;
 }
@@ -86,7 +89,7 @@ AuthRequests::AuthRequests(
     const std::shared_ptr<Channel> &channel,
     std::shared_ptr<CompletionQueue> cq
 )
-    : stub_(Auth::NewStub(channel)), cq_(cq) {
+    : stub_(Auth::NewStub(channel)), cq_(std::move(cq)) {
 }
 
 bool AuthRequests::try_authenticate_user(User *user) const {
@@ -100,17 +103,19 @@ bool AuthRequests::try_authenticate_user(User *user) const {
     void *tag;
     bool ok = false;
     if (!cq_->Next(&tag, &ok)) {
-        std::cout << "[CLIENT]: Completion queue failed\n";
+        logger << "[CLIENT(TryAuthenticateUserClientCall)] : CQ FAILED\n";
         return false;
     }
 
     if (!ok || call->get_reply().has_error_text()) {
-        std::cout << "[CLIENT WARNING]: Authentication failed\n";
+        logger << "[CLIENT-WARNING(TryAuthenticateUserClientCall)] : "
+                  "AUTHENTICATION FAILED\n";
         return false;
     }
 
     user->CopyFrom(call->get_reply().user());
-    std::cout << "[CLIENT]: AUTHENTICATED USER - " << user->login() << "\n";
+    logger << "[CLIENT(TryAuthenticateUserClientCal)] : AUTHENTICATED USER - " +
+                  user->login() + "\n";
     return true;
 }
 
@@ -125,17 +130,20 @@ bool AuthRequests::try_register_user(User *user) const {
     void *tag;
     bool ok = false;
     if (!cq_->Next(&tag, &ok)) {
-        std::cout << "[CLIENT]: Completion queue failed\n";
+        logger << "[CLIENT(TryRegisterUserClientCall)] : CQ FAILED\n";
         return false;
     }
 
     if (!ok || call->get_reply().has_error_text()) {
-        std::cout << "[CLIENT WARNING]: Registration failed\n";
+        logger << "[CLIENT-WARNING(TryRegisterUserClientCall)] : REGISTRATION "
+                  "FAILED\n";
         return false;
     }
 
     user->CopyFrom(call->get_reply().user());
-    std::cout << "[CLIENT]: REGISTERED USER - " << user->login() << "\n";
+    logger
+        << "[CLIENT-WARNING(TryRegisterUserClientCall)] : REGISTERED USER - " +
+               user->login() + "\n";
     return true;
 }
 
@@ -149,15 +157,16 @@ bool AuthRequests::try_delete_user(const User *user) const {
     void *tag;
     bool ok = false;
     if (!cq_->Next(&tag, &ok)) {
-        std::cout << "[CLIENT]: Completion queue failed\n";
+        logger << "[CLIENT(TryDeleteUserClientCall)] : CQ FAILED\n";
         return false;
     }
 
     if (!ok || !call->get_reply().ok()) {
-        std::cout << "[CLIENT WARNING]: Deleting user failed\n";
+        logger
+            << "[CLIENT-WARNING(TryDeleteUserClientCall)] : DELETING FAILED\n";
         return false;
     }
 
-    std::cout << "[CLIENT]: USER DELETED\n";
+    logger << "[CLIENT(TryDeleteUserClientCall)] : USER DELETED\n";
     return true;
 }

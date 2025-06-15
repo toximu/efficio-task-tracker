@@ -1,14 +1,14 @@
 #include "notewidget.h"
 #include <QHBoxLayout>
+#include <QIcon>
 #include <QMessageBox>
+#include <QPainter>
 #include <QPushButton>
 #include <QWidget>
 #include "language_manager.h"
 #include "model-proto/model.pb.h"
 #include "note_edit_dialog.h"
 #include "style_manager.h"
-#include <QIcon>
-#include <QPainter>
 
 using Efficio_proto::Note;
 
@@ -103,7 +103,8 @@ NoteWidget::NoteWidget(
         open_button_, &QPushButton::clicked, this, &NoteWidget::open_note_window
     );
     connect(
-        complete_button_, &QPushButton::clicked, this, &NoteWidget::complete_note
+        complete_button_, &QPushButton::clicked, this,
+        &NoteWidget::complete_note
     );
     connect(
         delete_button_, &QPushButton::clicked, this, &NoteWidget::delete_note
@@ -143,9 +144,9 @@ void NoteWidget::handle_language_changed(const std::string &new_language) {
             title_label_->setText("Empty note");
         }
         if (type_.value() == Note::Type::deleted) {
-            delete_button_->setText("Восстановить");
+            delete_button_->setText("Restore");
         } else {
-            delete_button_->setText("Удалить");
+            delete_button_->setText("Delete");
         }
     }
 }

@@ -2,8 +2,8 @@
 #include <common_client_call.h>
 #include <grpcpp/grpcpp.h>
 #include <cassert>
-#include <iostream>
 #include <thread>
+#include "logger.hpp"
 #include "update_requests.h"
 #include "update_service.h"
 
@@ -32,33 +32,33 @@ ClientImplementation::~ClientImplementation() {
     }
 }
 
-void ClientImplementation::CompleteRpc() {
+void ClientImplementation::CompleteRpc() const {
     void *got_tag;
     bool ok = false;
 
     while (cq_->Next(&got_tag, &ok)) {
-        std::cout << "[CLIENT] : GET CALL FROM CQ" << std::endl;
+        logger << "[CLIENT] : GET CALL FROM CQ\n";
         auto *call = static_cast<CommonClientCall *>(got_tag);
 
         assert(ok);
 
         if (call->status.ok()) {
-            std::cout << "[CLIENT] : START PROCEED" << std::endl;
+            logger << "[CLIENT] : START PROCEED\n";
             call->Proceed();
         } else {
-            std::cout << "[CLIENT] : RPC FAILED" << std::endl;
+            logger << "[CLIENT] : RPC FAILED\n";
         }
 
         delete call;
     }
-    std::cout << "complete rpc ended" << std::endl;
+    logger << "[CLIENT] : FINISH\n";
 }
 
 std::shared_ptr<Channel> ClientImplementation::get_channel() {
     return channel_;
 }
 
-CompletionQueue *ClientImplementation::get_cq() {
+CompletionQueue *ClientImplementation::get_cq() const {
     return cq_.get();
 }
 

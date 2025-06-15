@@ -1,5 +1,6 @@
 #include <grpcpp/create_channel.h>
 #include <gtest/gtest.h>
+#include <random>
 #include "client_implementation.h"
 
 #define REGISTRATE_USER_TEST ;
@@ -12,6 +13,25 @@
 #define GET_PROJECT_WITH_NOTES_TEST ;
 #define TRY_LEAVE_PROJECT_TEST ;
 #define TRY_DELETE_USER_TEST ;
+
+std::string generate_random_username(const int length = 8) {
+    static constexpr char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+
+    std::mt19937 generator(
+        std::chrono::system_clock::now().time_since_epoch().count()
+    );
+    std::uniform_int_distribution<> distribution(0, sizeof(alphanum) - 2);
+
+    std::string username;
+    for (int i = 0; i < length; ++i) {
+        username += alphanum[distribution(generator)];
+    }
+
+    return username;
+}
 
 struct ClientTest : ::testing::Test {
 protected:
@@ -34,11 +54,11 @@ Note *test_note = nullptr;
 #ifdef REGISTRATE_USER_TEST
 TEST_F(ClientTest, registration_user) {
     User user_reg;
-    user_reg.set_login("testuser");
+    user_reg.set_login(generate_random_username());
     user_reg.set_hashed_password("testpassword1");
 
     EXPECT_EQ(client->try_register_user(&user_reg), true)
-        << "Error registering user. Maybe you have done it twice.";
+        << "Error registering user. May be a login collision";
 }
 #endif
 
@@ -198,7 +218,7 @@ TEST_F(ClientTest, try_leave_project) {
     ASSERT_EQ(client->try_leave_project(test_project->code(), *test_user), true)
         << "Error trying to leave project";
 
-    ASSERT_EQ(client->try_authenticate_user(test_user),true);
+    ASSERT_EQ(client->try_authenticate_user(test_user), true);
 
     bool has_not_test_project = true;
     for (const auto &project : test_user->mutable_storage()->projects()) {

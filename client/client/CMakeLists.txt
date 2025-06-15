@@ -28,7 +28,5 @@ target_include_directories(Client
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${CMAKE_CURRENT_BINARY_DIR}
+        ${CMAKE_SOURCE_DIR}/logs
 )
-
-add_executable(test-server test_server.cpp)
-target_link_libraries(test-server Client)

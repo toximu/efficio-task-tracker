@@ -1,5 +1,4 @@
-#ifndef COMMON_CLIENT_CALL_H
-#define COMMON_CLIENT_CALL_H
+#pragma once
 
 #include <grpc++/grpc++.h>
 
@@ -16,5 +15,3 @@ public:
 
     virtual void Proceed(bool = true) = 0;
 };
-
-#endif  // COMMON_CLIENT_CALL_H

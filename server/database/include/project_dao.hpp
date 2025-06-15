@@ -1,5 +1,4 @@
-#ifndef PROJECT_DAO_HPP
-#define PROJECT_DAO_HPP
+#pragma once
 
 #include <model-proto/model.pb.h>
 #include <pqxx/pqxx>
@@ -41,7 +40,7 @@ public:
     static bool
     get_all_user_projects(const std::string &login, Storage &storage);
     static bool get_project(const std::string &project_code, Project &project);
-    static bool insert_project(Project &project);
+    static bool insert_project(const Project &project);
     static bool add_member_to_project(
         const std::string &project_code,
         const std::string &member
@@ -74,5 +73,3 @@ std::vector<T> proto_arr_to_vector(
     }
     return std::move(vec);
 }
-
-#endif

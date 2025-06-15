@@ -95,7 +95,6 @@ bool LRDao::validate_user(
 ) {
     auto &connection = DatabaseManager::get_instance().get_connection();
     pqxx::work transaction(connection);
-    std::cout << "[SERVER]: AUTHENTICATING USER - " << login << "\n";
 
     const std::string query = "SELECT password FROM users WHERE login = $1";
 

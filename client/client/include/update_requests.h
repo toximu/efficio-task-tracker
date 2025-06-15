@@ -1,5 +1,4 @@
-#ifndef UPDATE_REQUESTS_H
-#define UPDATE_REQUESTS_H
+#pragma once
 
 #include <efficio-rpc-proto/efficio.grpc.pb.h>
 #include <efficio-rpc-proto/efficio.pb.h>
@@ -27,7 +26,7 @@ class UpdateRequests {
 public:
     class UpdateNoteClientCall final : public CommonClientCall {
         UpdateNoteResponse reply_;
-        std::unique_ptr<grpc::ClientAsyncResponseReader<UpdateNoteResponse>>
+        std::unique_ptr<ClientAsyncResponseReader<UpdateNoteResponse>>
             responder_;
 
     public:
@@ -42,8 +41,7 @@ public:
 
     class GetNoteClientCall final : public CommonClientCall {
         GetNoteResponse reply_;
-        std::unique_ptr<grpc::ClientAsyncResponseReader<GetNoteResponse>>
-            responder_;
+        std::unique_ptr<ClientAsyncResponseReader<GetNoteResponse>> responder_;
 
     public:
         GetNoteClientCall(
@@ -57,13 +55,13 @@ public:
 
     class CreateNoteClientCall final : public CommonClientCall {
         CreateNoteResponse reply_;
-        std::unique_ptr<grpc::ClientAsyncResponseReader<CreateNoteResponse>>
+        std::unique_ptr<ClientAsyncResponseReader<CreateNoteResponse>>
             responder_;
 
     public:
         CreateNoteClientCall(
             const CreateNoteRequest &request,
-            grpc::CompletionQueue *cq,
+            CompletionQueue *cq,
             const std::unique_ptr<Update::Stub> &stub
         );
         void Proceed(bool ok) override;
@@ -73,35 +71,31 @@ public:
     bool try_update_note(Note *note) const;
     bool try_fetch_note(Note *note) const;
     bool try_create_note(Note *note, const std::string &project_code) const;
-    bool get_note(Note *note);
     std::vector<std::string> get_project_members(
         const std::string &project_code
     ) const;
-    bool create_note(Note *note);
 
-    bool get_project(Project &project, const std::string &code);
+    bool get_project(Project &project, const std::string &code) const;
     bool create_project(
         Project &project,
         const std::string &project_title,
         const User &user
-    );
-    bool try_leave_project(const std::string &code, const User &user);
+    ) const;
+    bool try_leave_project(const std::string &code, const User &user) const;
     bool try_join_project(
         Project &project,
         const std::string &code,
         const User &user
-    );
+    ) const;
 
     explicit UpdateRequests(
-        std::shared_ptr<Channel> channel,
-        std::shared_ptr<CompletionQueue> cq
+        const std::shared_ptr<Channel> &channel,
+        const std::shared_ptr<CompletionQueue> &cq
     )
-        : stub_(Update::NewStub(channel)), cq_(cq) {
+        : cq_(cq), stub_(Update::NewStub(channel)) {
     }
 
 private:
     std::shared_ptr<CompletionQueue> cq_;
     std::unique_ptr<Update::Stub> stub_;
 };
-
-#endif  // UPDATE_REQUESTS_H

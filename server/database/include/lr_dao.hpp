@@ -1,5 +1,4 @@
-#ifndef LRDAO_H
-#define LRDAO_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -32,5 +31,3 @@ public:
 private:
     static std::string hash_password(const std::string &password);
 };
-
-#endif  // LRDAO_H
