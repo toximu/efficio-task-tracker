@@ -198,7 +198,7 @@ TEST_F(ClientTest, try_leave_project) {
     ASSERT_EQ(client->try_leave_project(test_project->code(), *test_user), true)
         << "Error trying to leave project";
 
-    ASSERT_EQ(client->try_authenticate_user(test_user),true);
+    ASSERT_EQ(client->try_authenticate_user(test_user), true);
 
     bool has_not_test_project = true;
     for (const auto &project : test_user->mutable_storage()->projects()) {
