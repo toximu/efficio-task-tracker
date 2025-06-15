@@ -59,6 +59,9 @@ build/server/Server
 build/tests/test
 ```
 
+## Screenshots
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/b7dcbcde-a283-474a-b4f9-ca596ceabcf0" />
+
 ## Technologies Used
 - googletest 1.17
 - Qt 6.8.2
