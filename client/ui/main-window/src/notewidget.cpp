@@ -144,9 +144,9 @@ void NoteWidget::handle_language_changed(const std::string &new_language) {
             title_label_->setText("Empty note");
         }
         if (type_.value() == Note::Type::deleted) {
-            delete_button_->setText("Восстановить");
+            delete_button_->setText("Restore");
         } else {
-            delete_button_->setText("Удалить");
+            delete_button_->setText("Delete");
         }
     }
 }
