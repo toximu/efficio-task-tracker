@@ -48,12 +48,13 @@ build/server/Server
 build/client/EfficioTaskTracker
 ```
 
+App logs are in `logs/logs.txt`
+
 ## Technologies Used
 - Qt 6.8.2
 - PostgreSQL 17.4
 - CMake 3.28.3
 - gRPC 1.72.0
-- pqxx 7.9.2-1
 - protobuf 31.0-2
 
 ## License
