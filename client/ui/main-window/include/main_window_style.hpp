@@ -273,6 +273,44 @@ QString main_window_dark_autumn_theme = R"(
         border: none;
         background: transparent;
     }
+
+    QTabWidget {
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    padding: 5px;
+    }
+
+    QTabWidget::pane {
+        background-color: #2c2c2c;
+        border-radius: 8px;
+        margin-top: 5px;
+    }
+
+    QTabBar::tab {
+        color: #BDD1BD;
+        font-family: 'Arial';
+        font-size: 13px;
+        font-weight: bold;
+        background: #3c3c3c;
+        padding: 6px 8px;
+        border-top-right-radius: 4px;
+        border-top-left-radius: 4px;
+        margin-right: 2px;
+    }
+
+    QTabBar::tab:hover {
+        background: #4c4c4c;
+    }
+
+    QTabBar::tab:selected {
+        background: #2c2c2c;
+        border-bottom-color: #2c2c2c;
+    }
+
+    QTabBar::tab:pressed {
+        background: #2c2c2c;
+        border-bottom-color: #2c2c2c;
+    }
     
     #ProjectList {
         background-color: black;
@@ -467,6 +505,44 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
 QScrollArea {
     border: none;
     background: transparent;
+}
+
+QTabWidget {
+    background-color: rgb(221, 210, 238);
+    border-radius: 8px;
+    padding: 5px;
+}
+
+QTabWidget::pane {
+    background-color: rgb(221, 210, 238);
+    border-radius: 8px;
+    margin-top: 5px;
+}
+
+QTabBar::tab {
+    color: rgb(42, 10, 25);
+    font-family: 'Arial';
+    font-size: 13px;
+    font-weight: bold;
+    background: rgb(206, 193, 224);
+    padding: 6px 8px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    margin-right: 2px;
+}
+
+QTabBar::tab:hover {
+    background: rgb(163, 148, 184);
+}
+
+QTabBar::tab:selected {
+    background: rgb(221, 210, 238);
+    border-bottom-color: rgb(221, 210, 238);
+}
+
+QTabBar::tab:pressed {
+    background: rgb(221, 210, 238);
+    border-bottom-color: rgb(221, 210, 238);
 }
 
 #ProjectList {
@@ -723,6 +799,44 @@ QScrollArea {
     background: none;
 }
 
+QTabWidget {
+    background-color: #221932;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+QTabWidget::pane {
+    background-color: #221932;
+    border-radius: 8px;
+    margin-top: 5px;
+}
+
+QTabBar::tab {
+    color: #9882B9;
+    font-family: 'Arial';
+    font-size: 13px;
+    font-weight: bold;
+    background: rgb(50, 41, 66);
+    padding: 6px 8px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    margin-right: 2px;
+}
+
+QTabBar::tab:hover {
+    background: rgb(97, 82, 123);
+}
+
+QTabBar::tab:selected {
+    background: #221932;
+    border-bottom-color: #221932;
+}
+
+QTabBar::tab:pressed {
+    background: #221932;
+    border-bottom-color: #221932;
+}
+
 #BottomBar {
     background-color: #221932;
     border-radius: 8px;
@@ -855,6 +969,44 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
 QScrollArea {
     border: none;
     background: transparent;
+}
+
+QTabWidget {
+    background-color: #07142B;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+QTabWidget::pane {
+    background-color: #07142B;
+    border-radius: 8px;
+    margin-top: 5px;
+}
+
+QTabBar::tab {
+    color: #BDD1BD;
+    font-family: 'Arial';
+    font-size: 13px;
+    font-weight: bold;
+    background: #173C4C;
+    padding: 6px 8px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    margin-right: 2px;
+}
+
+QTabBar::tab:hover {
+    background: rgb(37, 92, 115);
+}
+
+QTabBar::tab:selected {
+    background: #07142B;
+    border-bottom-color: #07142B;
+}
+
+QTabBar::tab:pressed {
+    background: #07142B;
+    border-bottom-color: #07142B;
 }
 
 #ProjectList {
