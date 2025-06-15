@@ -21,7 +21,7 @@
 1. Clone the repository
 
 ```bash
-git clone git@github.com:toximu/efficio-task-tracker.git
+git clone --recurse-submodules git@github.com:toximu/efficio-task-tracker.git
 ```
 
 2. Create **efficio** user
@@ -50,7 +50,17 @@ build/client/EfficioTaskTracker
 
 App logs are in `logs/logs.txt`
 
+## Testing
+
+After building project run server and tests in __different__ terminal windows
+
+```bash
+build/server/Server
+build/tests/test
+```
+
 ## Technologies Used
+- googletest 1.17
 - Qt 6.8.2
 - PostgreSQL 17.4
 - CMake 3.28.3
